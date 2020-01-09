@@ -3,23 +3,25 @@ import Header from './components/shared/headers/Header';
 import './App.css';
 import './components/shared/headers/headers.css';
 import './css/style.css';
-import 'antd/dist/antd.css';
-import {Carousel} from 'antd';
-import MainSlider from './components/shared/slider/MainSlider';
 import SearchBox from './components/shared/search/SearchBox';
 import SlickSlider from './components/shared/slider/SlickSlider';
 import ProductItem from './components/products/ProductItem';
 import ProductSection from './components/products/ProductSection';
 import ResponsiveDialog from './components/shared/dialog/CustomDialog';
+import MainSlider from './components/shared/slider/MainSlider';
+import BackToTop from './components/shared/BackToTop';
 
 class App extends React.Component {
   render(){
   return (
     <Fragment>
-    
+      <div id="back-to-top-anchor"></div>
       <Header />
       <SearchBox />
-      <MainSlider />
+      <SlickSlider settings={{slidesToShow: 1, dots: false, arrows: true,slidesToScroll: 1, autoplay: true}}>
+        <MainSlider />
+        <MainSlider />
+      </SlickSlider>
       <ProductSection><SlickSlider >
         <ProductItem />
         <ProductItem />
@@ -36,7 +38,7 @@ class App extends React.Component {
 
       </SlickSlider>
       </ProductSection> 
-      <ResponsiveDialog />
+      <ResponsiveDialog title="Thong tin san pham" />
 
       <ProductSection><SlickSlider >
         <ProductItem />
@@ -54,6 +56,7 @@ class App extends React.Component {
 
       </SlickSlider>
       </ProductSection> 
+      <BackToTop />
     </Fragment>
        
   );

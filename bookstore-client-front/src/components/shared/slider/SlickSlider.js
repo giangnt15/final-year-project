@@ -4,38 +4,38 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './sliders.css';
 
+var settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 4,
+  arrows: true,
+  accessibility: true,
+  slidesToScroll: 3,
+  responsive: [
+    {
+      breakpoint: 900,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    },
+  ]
+};
+
 class SlickSlider extends React.Component {
 
-
   render() {
-    var settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      adaptiveHeight: true,
-      slidesToShow: 4,
-      arrows: true,
-      accessibility: true,
-      slidesToScroll: 3,
-      responsive: [
-        {
-          breakpoint: 900,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 1
-          }
-        },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1
-          }
-        },
-      ]
-    };
+    
     return (
-      <Slider {...settings}>
+      <Slider {...{...settings, ...this.props.settings }} >
         {this.props.children}
       </Slider>
     );

@@ -4,20 +4,22 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import CloseIcon from '@material-ui/icons/Close';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme,withStyles } from '@material-ui/core/styles';
+import { useTheme, withStyles } from '@material-ui/core/styles';
 import ModalProduct from '../../products/ModalProduct'
+import { IconButton } from '@material-ui/core';
 
-const styles = theme => ({
-    paper: {
-        width: '80%'
-    },
-  });
+const dialogStyles = theme => ({
+  paper: {
+    minWidth: '80%',
+  },
+});
 
-  const CustomDialog = withStyles(styles)(Dialog);
+const CustomDialog = withStyles(dialogStyles)(Dialog);
 
-export default function ResponsiveDialog() {
+export default function ResponsiveDialog(props) {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -29,7 +31,7 @@ export default function ResponsiveDialog() {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const {title} = props;
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -41,18 +43,14 @@ export default function ResponsiveDialog() {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{title}
+        <IconButton aria-label="close" style={{right: 10, position: 'absolute'}} onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
+        </DialogTitle>
         <DialogContent>
           <ModalProduct />
         </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
       </CustomDialog>
     </div>
   );
