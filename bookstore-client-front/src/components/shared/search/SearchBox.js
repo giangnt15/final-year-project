@@ -11,7 +11,7 @@ function SearchBox(props){
         </div>
       </div>
     </form>
-    <div className="close__wrap">
+    <div className="close__wrap" onClick={props.onClose}>
       <span>close</span>
     </div>
   </div>)

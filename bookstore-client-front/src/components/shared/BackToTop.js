@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Zoom from '@material-ui/core/Zoom';
+import useScroll from '../../custom-hooks/useScroll';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,25 +21,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const useScroll = ()=>{
-    const [isScrolled, setIsScrolled] = useState(false);
-    document.querySelector('body').addEventListener('scroll',function(){
-        if (this.scrollTop>=100){
-            setIsScrolled(true);
-        }else {
-            setIsScrolled(false);
-        }
-    });
-    return isScrolled;
-}
-
 export default function ScrollTop(props) {
   const { children } = props;
   const classes = useStyles();
   // Note that you normally won't need to set the window ref as useScrollTrigger
   // will default to window.
   // This is only being set here because the demo is in an iframe.
-  const trigger = useScroll();//bang voi viec dung useState truc tiep, cai tra ve boi useScroll cung la mot state o trong function component nay vi trong useScroll ta dung useState
+  const trigger = useScroll(100);//bang voi viec dung useState truc tiep, cai tra ve boi useScroll cung la mot state o trong function component nay vi trong useScroll ta dung useState
 
   const handleClick = event => {
     const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');

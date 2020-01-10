@@ -3,13 +3,13 @@ import Header from './components/shared/headers/Header';
 import './App.css';
 import './components/shared/headers/headers.css';
 import './css/style.css';
-import SearchBox from './components/shared/search/SearchBox';
 import SlickSlider from './components/shared/slider/SlickSlider';
 import ProductItem from './components/products/ProductItem';
 import ProductSection from './components/products/ProductSection';
 import ResponsiveDialog from './components/shared/dialog/CustomDialog';
 import MainSlider from './components/shared/slider/MainSlider';
 import BackToTop from './components/shared/BackToTop';
+import BestSellerProductItem from './components/products/BestSellerProductItem';
 
 class App extends React.Component {
   render(){
@@ -17,7 +17,6 @@ class App extends React.Component {
     <Fragment>
       <div id="back-to-top-anchor"></div>
       <Header />
-      <SearchBox />
       <SlickSlider settings={{slidesToShow: 1, dots: false, arrows: true,slidesToScroll: 1, autoplay: true}}>
         <MainSlider />
         <MainSlider />
@@ -40,20 +39,22 @@ class App extends React.Component {
       </ProductSection> 
       <ResponsiveDialog title="Thong tin san pham" />
 
-      <ProductSection><SlickSlider  settings={{slidesToShow: 8, dots: false, arrows: true,slidesToScroll: 4, autoplay: true}}>
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-
+      <ProductSection><SlickSlider  settings={{slidesToShow: 7, centerMode: true, 
+        dots: false, arrows: true,slidesToScroll: 4, autoplay: true}}>
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
+        <BestSellerProductItem />
       </SlickSlider>
       </ProductSection> 
       <BackToTop />
