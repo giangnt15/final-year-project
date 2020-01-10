@@ -9,13 +9,21 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme, withStyles } from '@material-ui/core/styles';
 import ModalProduct from '../../products/ModalProduct'
-import { IconButton } from '@material-ui/core';
+import { IconButton, Divider } from '@material-ui/core';
 
 const dialogStyles = theme => ({
   paper: {
-    minWidth: '80%',
+    minWidth: '60%'
   },
 });
+
+const dialogContentStyles = theme => ({
+  root: {
+    padding: theme.spacing(2)
+  }
+})
+
+const DialogContentWithStyle = withStyles(dialogContentStyles)(DialogContent);
 
 const CustomDialog = withStyles(dialogStyles)(Dialog);
 
@@ -48,9 +56,10 @@ export default function ResponsiveDialog(props) {
           <CloseIcon />
         </IconButton>
         </DialogTitle>
-        <DialogContent>
+        <Divider />
+        <DialogContentWithStyle>
           <ModalProduct />
-        </DialogContent>
+        </DialogContentWithStyle>
       </CustomDialog>
     </div>
   );

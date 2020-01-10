@@ -40,7 +40,7 @@ class App extends React.Component {
       </ProductSection> 
       <ResponsiveDialog title="Thong tin san pham" />
 
-      <ProductSection><SlickSlider >
+      <ProductSection><SlickSlider  settings={{slidesToShow: 8, dots: false, arrows: true,slidesToScroll: 4, autoplay: true}}>
         <ProductItem />
         <ProductItem />
         <ProductItem />

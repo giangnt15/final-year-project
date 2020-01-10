@@ -36,10 +36,10 @@ function ModalProduct(props){
       <div className="select__color">
         <h2>Select color</h2>
         <ul className="color__list">
-          <li className="red"><a title="Red" href="#">Red</a></li>
-          <li className="gold"><a title="Gold" href="#">Gold</a></li>
-          <li className="orange"><a title="Orange" href="#">Orange</a></li>
-          <li className="orange"><a title="Orange" href="#">Orange</a></li>
+          <li className="red"><a title="Red" href="#"></a></li>
+          <li className="gold"><a title="Gold" href="#"></a></li>
+          <li className="orange"><a title="Orange" href="#"></a></li>
+          <li className="orange"><a title="Orange" href="#"></a></li>
         </ul>
       </div>
       <div className="select__size">
