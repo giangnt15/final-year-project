@@ -1,0 +1,66 @@
+type User{
+    id: ID!
+    username: String!
+    email: String!
+    phone: String
+    gender: Boolean
+    birthdate: String
+    password: String!
+    addresses: [Address!]!
+    fullName: String!
+    reviews: [Review!]!
+}
+
+type Book{
+    id: ID!
+    title: String!
+    description: String!
+    categories: [BookCategory!]!
+    authors: [Author!]!
+    reviews: [BookReview!]!
+    editions: [BookEdition!]!
+    thumbnail: String!
+    images: String!
+}
+
+type BookReview{
+    id: ID!
+    reviewHeader: String
+    reviewText: String
+    rating: Int!
+    author: User!
+    book: Book!
+}
+
+type BookCategory{
+    id: ID!
+    name: String!
+    books: [Book!]!
+}
+
+type BookEdition{
+    id: ID!
+    isbn: String!
+    format: BookFormat!
+    description: String!
+    dimensions: String
+    publicationDate: String
+    availableCopies: Int!
+    price: Float!
+    pages: Int
+    book: Book!
+}
+
+type Author{
+    id: ID!
+    realName: String
+    pseudonym: String
+    image: String
+    description: String
+    books: [Book!]!
+}
+
+enum BookFormat{
+    HardCover
+    PaperBack
+}
