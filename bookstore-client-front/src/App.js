@@ -10,6 +10,7 @@ import ResponsiveDialog from './components/shared/dialog/CustomDialog';
 import MainSlider from './components/shared/slider/MainSlider';
 import BackToTop from './components/shared/BackToTop';
 import BestSellerProductItem from './components/products/BestSellerProductItem';
+import Footer from './components/shared/footer/Footer';
 
 class App extends React.Component {
   render(){
@@ -58,6 +59,7 @@ class App extends React.Component {
       </SlickSlider>
       </ProductSection> 
       <BackToTop />
+      <Footer />
     </Fragment>
        
   );
