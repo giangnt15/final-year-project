@@ -1,26 +1,97 @@
 type User{
     id: ID!
     username: String!
+    fullName: String!
     email: String!
     phone: String
     gender: Boolean
     birthdate: String
     password: String!
-    addresses: [Address!]!
+    role: UserRole!
+    receiveEmailNotification: Boolean!
+    addresses: [UserAddress!]!
+    orders: [Order!]!
+    userEvents: [UserEvent!]!
+    reviews: [BookReview!]!
+    createdAt: String!
+    updatedAt: String!
+}
+
+# type Cart{
+#     id!: ID!
+#     customer: User!
+#     items: [Book!]!
+# }
+
+# type CartItem{
+#     id: ID!
+#     item: Book!
+#     quantity: Int!
+#     price: Float! 
+# }
+
+type Order{
+    id: ID!
+    customer: User!
+    shippingAddress: UserAddress!
+    paymentMethod: PaymentMethod!
+    deliveryStatus: Boolean!
+    paymentStatus: Boolean!
+    items: [OrderItem!]!
+    receivedDate: String!
+    beginDeliveryDate: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type PaymentMethod{
+    id: ID!
+    name: String!
+}
+
+type OrderItem{
+    id: ID!
+    order: Order!
+    item: Book!
+    price: Float!
+    quantity: Int!
+}
+
+type UserEvent{
+    id: ID!
+    user: User!
+    type: UserEventType!
+    eventDetail: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type UserAddress{
+    id: ID!
+    user: User!
+    address: String!
+    phone: String!
     fullName: String!
-    reviews: [Review!]!
 }
 
 type Book{
     id: ID!
     title: String!
-    description: String!
+    description: String
     categories: [BookCategory!]!
     authors: [Author!]!
     reviews: [BookReview!]!
-    editions: [BookEdition!]!
+    isbn: String!
+    format: BookFormat!
+    dimensions: String
+    publishedDate: String
+    publisher: Publisher!
+    availableCopies: Int!
+    basePrice: Float!
+    pages: Int
     thumbnail: String!
-    images: String!
+    images: String
+    discounts: [Discount!]!
 }
 
 type BookReview{
@@ -38,17 +109,21 @@ type BookCategory{
     books: [Book!]!
 }
 
-type BookEdition{
+type Discount{
     id: ID!
-    isbn: String!
-    format: BookFormat!
-    description: String!
-    dimensions: String
-    publicationDate: String
-    availableCopies: Int!
-    price: Float!
-    pages: Int
-    book: Book!
+    reason: String
+    discountRate: Float
+    from: String
+    to: String
+    appliedTo: [Book!]!
+}
+
+type Publisher{
+    id: ID!
+    name: String!
+    description: String
+    image: String
+    books: [Book!]!
 }
 
 type Author{
@@ -63,4 +138,86 @@ type Author{
 enum BookFormat{
     HardCover
     PaperBack
+}
+
+enum UserEventType{
+    View
+    Comment
+    Review
+    Order
+}
+
+enum UserRole{
+    User
+    Admin
+}
+
+type Query{
+    getBooks(name: String, authorName: String): [Book!]!
+    getCategories: [BookCategory!]!
+}
+
+type Mutation{
+    signUp(data: UserSignupInput!): AuthPayload!
+    login(data: UserLoginInput!): AuthPayload!
+    createBook(data: BookCreateInput!): Book!
+    updateBook(data: BookUpdateInput!): Book!
+}
+
+type Subscription{
+    user: User!
+}
+
+type AuthPayload{
+    user: User!
+    token: String!
+}
+
+input BookUpdateInput{
+    title: String
+    description: String
+    categories: [ID!]
+    authors: [ID!]
+    isbn: String
+    format: BookFormat
+    dimensions: String
+    publishedDate: String
+    publisher: ID
+    availableCopies: Int
+    basePrice: Float
+    pages: Int
+    thumbnail: String
+    images: String
+}
+
+input BookCreateInput{
+    title: String!
+    description: String
+    categories: [ID!]!
+    authors: [ID!]!
+    isbn: String!
+    format: BookFormat!
+    dimensions: String
+    publishedDate: String
+    publisher: ID!
+    availableCopies: Int!
+    basePrice: Float!
+    pages: Int
+    thumbnail: String!
+    images: String!
+}
+
+input UserLoginInput{
+    email: String!
+    password: String!
+}
+
+input UserSignupInput{
+    username: String!
+    password: String!
+    email: String!
+    phone: String
+    gender: Boolean
+    birthdate: String
+    receiveEmailNotification: Boolean!
 }
