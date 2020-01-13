@@ -7,6 +7,13 @@ RUN npm install
 
 COPY . .
 
+RUN npm i -g prisma
+
+WORKDIR /app/prisma
+
+RUN prisma deploy -e ../config/dev.env
+
+WORKDIR /app
 RUN npm run get-schema
 
 CMD ["npm","run","dev"]

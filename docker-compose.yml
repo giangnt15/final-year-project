@@ -27,8 +27,8 @@ services:
     - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: prisma
-    volumes:
-      - mysql:/var/lib/mysql
+    # volumes:
+    #   - mysql:/var/lib/mysql
   bookstore_backend:
     build:
       context: ./bookstore-backend
