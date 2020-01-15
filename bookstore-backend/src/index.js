@@ -9,7 +9,8 @@ const server = new GraphQLServer({
     context(httpContext){
         return {
             prisma,
-            httpContext
+            httpContext,
+            env
         }
     },
     fragmentReplacements
@@ -17,4 +18,4 @@ const server = new GraphQLServer({
 
 server.start({
     port: env.GRAPHQL_PORT
-},()=>console.log(`Running on port 4000 ${env.GRAPHQL_PORT}`));
+},()=>console.log(`Running on port ${env.GRAPHQL_PORT}`));

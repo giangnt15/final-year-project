@@ -1,7 +1,7 @@
 type User{
     id: ID!
     username: String!
-    fullName: String!
+    fullName: String
     email: String!
     phone: String
     gender: Boolean
@@ -215,6 +215,7 @@ input UserLoginInput{
 input UserSignupInput{
     username: String!
     password: String!
+    fullName: String
     email: String!
     phone: String
     gender: Boolean

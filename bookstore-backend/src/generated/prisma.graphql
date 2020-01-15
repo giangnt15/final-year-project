@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Sun Jan 12 2020 22:17:21 GMT+0700 (Indochina Time)
+# timestamp: Wed Jan 15 2020 22:27:49 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -5563,7 +5563,7 @@ type Subscription {
 type User implements Node {
   id: ID!
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean
@@ -6214,7 +6214,7 @@ type UserConnection {
 input UserCreateInput {
   id: ID
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean
@@ -6251,7 +6251,7 @@ input UserCreateOneWithoutUserEventsInput {
 input UserCreateWithoutAddressesInput {
   id: ID
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean
@@ -6267,7 +6267,7 @@ input UserCreateWithoutAddressesInput {
 input UserCreateWithoutOrdersInput {
   id: ID
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean
@@ -6283,7 +6283,7 @@ input UserCreateWithoutOrdersInput {
 input UserCreateWithoutReviewsInput {
   id: ID
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean
@@ -6299,7 +6299,7 @@ input UserCreateWithoutReviewsInput {
 input UserCreateWithoutUserEventsInput {
   id: ID
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean
@@ -6806,7 +6806,7 @@ enum UserOrderByInput {
 type UserPreviousValues {
   id: ID!
   username: String!
-  fullName: String!
+  fullName: String
   email: String!
   phone: String
   gender: Boolean

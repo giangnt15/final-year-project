@@ -26,7 +26,7 @@ const upload = multer({
 
 app.post('/api/image', upload.single('image') ,async (req,res,next)=>{
     console.log(req.file)
-    console.log(req.body)
+    console.log(req.body.image)
 
     res.send('ok')
 },(err,req,res,next)=>{
