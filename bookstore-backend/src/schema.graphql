@@ -161,7 +161,7 @@ type Mutation{
     signUp(data: UserSignupInput!): AuthPayload!
     login(data: UserLoginInput!): AuthPayload!
     createBook(data: BookCreateInput!): Book!
-    updateBook(data: BookUpdateInput!): Book!
+    updateBook(id: ID!, data: BookUpdateInput!): Book!
 }
 
 type Subscription{
