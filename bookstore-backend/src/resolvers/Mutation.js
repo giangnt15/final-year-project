@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import getUserId from '../utils/getUserId';
+import checkAdmin from '../utils/adminAuth';
 
 const Mutation = {
     async signUp(parent, { data }, { prisma, env }, info) {
@@ -39,19 +40,22 @@ const Mutation = {
             }, env.JWT_SECRET)
         }
     },
-    async updateBook(parent, {id,data}, { prisma, httpContext, env }, info){
+    async updateUser(parent, {data}, {prisma,httpContext},info){
         const userId = getUserId(httpContext);
-        const user = await prisma.query.user({
+        const userExist = await prisma.exists.User({
+            id: userId
+        })
+        if (!userExist) throw new Error('User not existed!');
+        return prisma.mutation.updateUser({
             where: {
                 id: userId
-            }
-        });
-        if (!user) {
-            throw new Error("Account not found!")
-        }
-        if (user.role !== "Admin") {
-            throw new Error("You don't have required privileges!")
-        }
+            },
+            data
+        },info);
+    },
+    async updateBook(parent, {id,data}, { prisma, httpContext, env }, info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId,prisma);
         const bookExists = await prisma.exists.Book({
             id
         });
@@ -94,17 +98,7 @@ const Mutation = {
     },
     async createBook(parent, {data}, { prisma, httpContext, env }, info) {
         const userId = getUserId(httpContext);
-        const user = await prisma.query.user({
-            where: {
-                id: userId
-            }
-        });
-        if (!user) {
-            throw new Error("Account not found!")
-        }
-        if (user.role !== "Admin") {
-            throw new Error("You don't have required privileges!")
-        }
+        checkAdmin(userId,prisma);
         const idsCategories = data.categories.map(item => ({
             id: item
         }));
@@ -129,7 +123,104 @@ const Mutation = {
                 }
             }
         }, info);
-    }
+    },
+    async createCollection(parent, {data}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId,prisma);
+        return prisma.mutation.createCollection({
+            data
+        },info)
+    },
+    async updateCollection(parent, {data,id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId,prisma);
+        return prisma.mutation.updateCollection({
+            where: {
+                id
+            },
+            data
+        },info)
+    },
+    async createUserAddress(parent, {data}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        return prisma.mutation.createUserAddress({
+            data: {
+                ...data,
+                user: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        },info);
+    },
+    async updateUserAddress(parent, {data,id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const addressExisted = await prisma.exists.UserAddress({
+            user: {
+                id: userId
+            },
+            id
+        })
+        if (!addressExisted) throw new Error('Address not existed!');
+        return prisma.mutation.updateUserAddress({
+            where: {
+                id
+            },
+            data
+        },info)
+    },
+    async createBookCategory(parent, {data}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.createBookCategory({
+            data
+        },info)
+    },
+    async updateBookCategory(parent, {data,id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.createBookCategory({
+            where: {
+                id
+            },
+            data
+        },info)
+    },
+    async createPublisher(parent, {data}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.createPublisher({
+            data
+        },info)
+    },
+    async updatePublisher(parent, {data,id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.updatePublisher({
+            where: {
+                id
+            },
+            data
+        },info)
+    },
+    async createAuthor(parent, {data}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.createAuthor({
+            data
+        },info)
+    },
+    async updateAuthor(parent, {data,id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.updateAuthor({
+            where: {
+                id
+            },
+            data
+        },info)
+    },
 }
 
 export default Mutation;

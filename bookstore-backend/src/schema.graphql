@@ -1,3 +1,6 @@
+#import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
+#import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput  from './generated/prisma.graphql'
+
 type User{
     id: ID!
     username: String!
@@ -15,6 +18,17 @@ type User{
     reviews: [BookReview!]!
     createdAt: String!
     updatedAt: String!
+}
+
+type Collection{
+    id: ID! 
+    collectionName: String!
+    description: String
+    thumbnail: String!
+    cover: String!
+    books: [Book!]!
+    createdAt: String!
+    updatedAt: String! 
 }
 
 # type Cart{
@@ -85,6 +99,7 @@ type Book{
     format: BookFormat!
     dimensions: String
     publishedDate: String
+    collections: [Collection!]!
     publisher: Publisher!
     availableCopies: Int!
     basePrice: Float!
@@ -154,15 +169,31 @@ enum UserRole{
 
 type Query{
     getBooks(name: String, authorName: String): [Book!]!
-    getCategories: [BookCategory!]!
+    getBook(id: ID!): Book!
+    getCategories(orderBy: AuthorOrderByInput, first: Int, skip: Int): [BookCategory!]!
+    getAuthors(name: String, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
 }
 
 type Mutation{
     signUp(data: UserSignupInput!): AuthPayload!
     login(data: UserLoginInput!): AuthPayload!
+    updateUser(data: UserUpdateInput!): User!
     createBook(data: BookCreateInput!): Book!
     updateBook(id: ID!, data: BookUpdateInput!): Book!
+    createCollection(data: CollectionCreateInput!): Collection!
+    updateCollection(id: ID!, data: CollectionUpdateInput!): Collection!
+    createUserAddress(data: UserAddressCreateInput!): UserAddress!
+    updateUserAddress(id: ID!,data: UserAddressUpdateInput!): UserAddress!
+    createBookReview(data: BookReviewCreateInput!): BookReview!
+    updateBookReview(id: ID!,data: BookReviewCreateInput!): BookReview!
+    createBookCategory(data: BookCategoryCreateInput!): BookCategory!
+    updateBookCategory(id: ID!,data: BookCategoryUpdateInput!): BookCategory!
+    createPublisher(data: PublisherCreateInput!): Publisher!
+    updatePublisher(id: ID!,data: PublisherUpdateInput!): Publisher!
+    createAuthor(data: AuthorCreateInput!): Author!
+    updateAuthor(id: ID!,data: AuthorCreateInput!): Author!
 }
+
 
 type Subscription{
     user: User!
@@ -171,6 +202,81 @@ type Subscription{
 type AuthPayload{
     user: User!
     token: String!
+}
+
+input AuthorCreateInput{
+    realName: String
+    pseudonym: String
+    image: String
+    description: String
+}
+
+input PublisherCreateInput{
+    name: String!
+    description: String
+    image: String
+}
+
+input PublisherUpdateInput{
+    name: String
+    description: String
+    image: String
+}
+
+input BookCategoryCreateInput{
+    name: String!
+}
+
+input BookCategoryUpdateInput{
+    name: String
+}
+
+input BookReviewCreateInput{
+    book: ID!
+    reviewHeader: String
+    reviewText: String
+    rating: Int!
+}
+
+input BookReviewUpdateInput{
+    book: ID!
+    reviewHeader: String
+    reviewText: String
+    rating: Int
+}
+
+input UserAddressCreateInput{
+    address: String!
+    phone: String!
+    fullName: String!
+}
+
+input UserAddressUpdateInput{
+    address: String
+    phone: String
+    fullName: String
+}
+
+input CollectionUpdateInput{
+    collectionName: String
+    description: String
+    thumbnail: String
+    cover: String
+}
+
+input CollectionCreateInput{
+    collectionName: String!
+    description: String
+    thumbnail: String!
+    cover: String!
+}
+
+input UserUpdateInput{
+    fullName: String
+    phone: String
+    gender: Boolean
+    birthdate: String
+    password: String
 }
 
 input BookUpdateInput{

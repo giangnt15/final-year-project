@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Wed Jan 15 2020 22:27:49 GMT+0700 (Indochina Time)
+# timestamp: Fri Jan 17 2020 22:34:29 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -14,6 +14,10 @@ type AggregateBookCategory {
 }
 
 type AggregateBookReview {
+  count: Int!
+}
+
+type AggregateCollection {
   count: Int!
 }
 
@@ -755,6 +759,7 @@ type Book implements Node {
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
+  collections(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Collection!]
   publisher: Publisher!
   availableCopies: Int!
   basePrice: Float!
@@ -1212,6 +1217,7 @@ input BookCreateInput {
   categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
+  collections: CollectionCreateManyWithoutBooksInput
   publisher: PublisherCreateOneWithoutBooksInput!
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
@@ -1223,6 +1229,11 @@ input BookCreateManyWithoutAuthorsInput {
 
 input BookCreateManyWithoutCategoriesInput {
   create: [BookCreateWithoutCategoriesInput!]
+  connect: [BookWhereUniqueInput!]
+}
+
+input BookCreateManyWithoutCollectionsInput {
+  create: [BookCreateWithoutCollectionsInput!]
   connect: [BookWhereUniqueInput!]
 }
 
@@ -1261,6 +1272,7 @@ input BookCreateWithoutAuthorsInput {
   images: String
   categories: BookCategoryCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
+  collections: CollectionCreateManyWithoutBooksInput
   publisher: PublisherCreateOneWithoutBooksInput!
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
@@ -1278,6 +1290,27 @@ input BookCreateWithoutCategoriesInput {
   pages: Int
   thumbnail: String!
   images: String
+  authors: AuthorCreateManyWithoutBooksInput
+  reviews: BookReviewCreateManyWithoutBookInput
+  collections: CollectionCreateManyWithoutBooksInput
+  publisher: PublisherCreateOneWithoutBooksInput!
+  discounts: DiscountCreateManyWithoutAppliedToInput
+}
+
+input BookCreateWithoutCollectionsInput {
+  id: ID
+  title: String!
+  description: String
+  isbn: String!
+  format: BookFormat!
+  dimensions: String
+  publishedDate: DateTime
+  availableCopies: Int!
+  basePrice: Float!
+  pages: Int
+  thumbnail: String!
+  images: String
+  categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
   publisher: PublisherCreateOneWithoutBooksInput!
@@ -1300,6 +1333,7 @@ input BookCreateWithoutDiscountsInput {
   categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
+  collections: CollectionCreateManyWithoutBooksInput
   publisher: PublisherCreateOneWithoutBooksInput!
 }
 
@@ -1319,6 +1353,7 @@ input BookCreateWithoutPublisherInput {
   categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
+  collections: CollectionCreateManyWithoutBooksInput
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
 
@@ -1337,6 +1372,7 @@ input BookCreateWithoutReviewsInput {
   images: String
   categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
+  collections: CollectionCreateManyWithoutBooksInput
   publisher: PublisherCreateOneWithoutBooksInput!
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
@@ -2499,6 +2535,7 @@ input BookUpdateDataInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
+  collections: CollectionUpdateManyWithoutBooksInput
   publisher: PublisherUpdateOneRequiredWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
@@ -2518,6 +2555,7 @@ input BookUpdateInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
+  collections: CollectionUpdateManyWithoutBooksInput
   publisher: PublisherUpdateOneRequiredWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
@@ -2572,6 +2610,18 @@ input BookUpdateManyWithoutCategoriesInput {
   updateMany: [BookUpdateManyWithWhereNestedInput!]
   deleteMany: [BookScalarWhereInput!]
   upsert: [BookUpsertWithWhereUniqueWithoutCategoriesInput!]
+}
+
+input BookUpdateManyWithoutCollectionsInput {
+  create: [BookCreateWithoutCollectionsInput!]
+  connect: [BookWhereUniqueInput!]
+  set: [BookWhereUniqueInput!]
+  disconnect: [BookWhereUniqueInput!]
+  delete: [BookWhereUniqueInput!]
+  update: [BookUpdateWithWhereUniqueWithoutCollectionsInput!]
+  updateMany: [BookUpdateManyWithWhereNestedInput!]
+  deleteMany: [BookScalarWhereInput!]
+  upsert: [BookUpsertWithWhereUniqueWithoutCollectionsInput!]
 }
 
 input BookUpdateManyWithoutDiscountsInput {
@@ -2631,6 +2681,7 @@ input BookUpdateWithoutAuthorsDataInput {
   images: String
   categories: BookCategoryUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
+  collections: CollectionUpdateManyWithoutBooksInput
   publisher: PublisherUpdateOneRequiredWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
@@ -2647,6 +2698,26 @@ input BookUpdateWithoutCategoriesDataInput {
   pages: Int
   thumbnail: String
   images: String
+  authors: AuthorUpdateManyWithoutBooksInput
+  reviews: BookReviewUpdateManyWithoutBookInput
+  collections: CollectionUpdateManyWithoutBooksInput
+  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  discounts: DiscountUpdateManyWithoutAppliedToInput
+}
+
+input BookUpdateWithoutCollectionsDataInput {
+  title: String
+  description: String
+  isbn: String
+  format: BookFormat
+  dimensions: String
+  publishedDate: DateTime
+  availableCopies: Int
+  basePrice: Float
+  pages: Int
+  thumbnail: String
+  images: String
+  categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
   publisher: PublisherUpdateOneRequiredWithoutBooksInput
@@ -2668,6 +2739,7 @@ input BookUpdateWithoutDiscountsDataInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
+  collections: CollectionUpdateManyWithoutBooksInput
   publisher: PublisherUpdateOneRequiredWithoutBooksInput
 }
 
@@ -2686,6 +2758,7 @@ input BookUpdateWithoutPublisherDataInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
+  collections: CollectionUpdateManyWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -2703,6 +2776,7 @@ input BookUpdateWithoutReviewsDataInput {
   images: String
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
+  collections: CollectionUpdateManyWithoutBooksInput
   publisher: PublisherUpdateOneRequiredWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
@@ -2715,6 +2789,11 @@ input BookUpdateWithWhereUniqueWithoutAuthorsInput {
 input BookUpdateWithWhereUniqueWithoutCategoriesInput {
   where: BookWhereUniqueInput!
   data: BookUpdateWithoutCategoriesDataInput!
+}
+
+input BookUpdateWithWhereUniqueWithoutCollectionsInput {
+  where: BookWhereUniqueInput!
+  data: BookUpdateWithoutCollectionsDataInput!
 }
 
 input BookUpdateWithWhereUniqueWithoutDiscountsInput {
@@ -2747,6 +2826,12 @@ input BookUpsertWithWhereUniqueWithoutCategoriesInput {
   where: BookWhereUniqueInput!
   update: BookUpdateWithoutCategoriesDataInput!
   create: BookCreateWithoutCategoriesInput!
+}
+
+input BookUpsertWithWhereUniqueWithoutCollectionsInput {
+  where: BookWhereUniqueInput!
+  update: BookUpdateWithoutCollectionsDataInput!
+  create: BookCreateWithoutCollectionsInput!
 }
 
 input BookUpsertWithWhereUniqueWithoutDiscountsInput {
@@ -3201,6 +3286,9 @@ input BookWhereInput {
   reviews_every: BookReviewWhereInput
   reviews_some: BookReviewWhereInput
   reviews_none: BookReviewWhereInput
+  collections_every: CollectionWhereInput
+  collections_some: CollectionWhereInput
+  collections_none: CollectionWhereInput
   publisher: PublisherWhereInput
   discounts_every: DiscountWhereInput
   discounts_some: DiscountWhereInput
@@ -3208,6 +3296,696 @@ input BookWhereInput {
 }
 
 input BookWhereUniqueInput {
+  id: ID
+}
+
+type Collection implements Node {
+  id: ID!
+  collectionName: String!
+  description: String
+  thumbnail: String!
+  cover: String!
+  books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type CollectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [CollectionEdge]!
+  aggregate: AggregateCollection!
+}
+
+input CollectionCreateInput {
+  id: ID
+  collectionName: String!
+  description: String
+  thumbnail: String!
+  cover: String!
+  books: BookCreateManyWithoutCollectionsInput
+}
+
+input CollectionCreateManyWithoutBooksInput {
+  create: [CollectionCreateWithoutBooksInput!]
+  connect: [CollectionWhereUniqueInput!]
+}
+
+input CollectionCreateWithoutBooksInput {
+  id: ID
+  collectionName: String!
+  description: String
+  thumbnail: String!
+  cover: String!
+}
+
+"""An edge in a connection."""
+type CollectionEdge {
+  """The item at the end of the edge."""
+  node: Collection!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum CollectionOrderByInput {
+  id_ASC
+  id_DESC
+  collectionName_ASC
+  collectionName_DESC
+  description_ASC
+  description_DESC
+  thumbnail_ASC
+  thumbnail_DESC
+  cover_ASC
+  cover_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type CollectionPreviousValues {
+  id: ID!
+  collectionName: String!
+  description: String
+  thumbnail: String!
+  cover: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CollectionScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CollectionScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CollectionScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CollectionScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  collectionName: String
+
+  """All values that are not equal to given value."""
+  collectionName_not: String
+
+  """All values that are contained in given list."""
+  collectionName_in: [String!]
+
+  """All values that are not contained in given list."""
+  collectionName_not_in: [String!]
+
+  """All values less than the given value."""
+  collectionName_lt: String
+
+  """All values less than or equal the given value."""
+  collectionName_lte: String
+
+  """All values greater than the given value."""
+  collectionName_gt: String
+
+  """All values greater than or equal the given value."""
+  collectionName_gte: String
+
+  """All values containing the given string."""
+  collectionName_contains: String
+
+  """All values not containing the given string."""
+  collectionName_not_contains: String
+
+  """All values starting with the given string."""
+  collectionName_starts_with: String
+
+  """All values not starting with the given string."""
+  collectionName_not_starts_with: String
+
+  """All values ending with the given string."""
+  collectionName_ends_with: String
+
+  """All values not ending with the given string."""
+  collectionName_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  thumbnail: String
+
+  """All values that are not equal to given value."""
+  thumbnail_not: String
+
+  """All values that are contained in given list."""
+  thumbnail_in: [String!]
+
+  """All values that are not contained in given list."""
+  thumbnail_not_in: [String!]
+
+  """All values less than the given value."""
+  thumbnail_lt: String
+
+  """All values less than or equal the given value."""
+  thumbnail_lte: String
+
+  """All values greater than the given value."""
+  thumbnail_gt: String
+
+  """All values greater than or equal the given value."""
+  thumbnail_gte: String
+
+  """All values containing the given string."""
+  thumbnail_contains: String
+
+  """All values not containing the given string."""
+  thumbnail_not_contains: String
+
+  """All values starting with the given string."""
+  thumbnail_starts_with: String
+
+  """All values not starting with the given string."""
+  thumbnail_not_starts_with: String
+
+  """All values ending with the given string."""
+  thumbnail_ends_with: String
+
+  """All values not ending with the given string."""
+  thumbnail_not_ends_with: String
+  cover: String
+
+  """All values that are not equal to given value."""
+  cover_not: String
+
+  """All values that are contained in given list."""
+  cover_in: [String!]
+
+  """All values that are not contained in given list."""
+  cover_not_in: [String!]
+
+  """All values less than the given value."""
+  cover_lt: String
+
+  """All values less than or equal the given value."""
+  cover_lte: String
+
+  """All values greater than the given value."""
+  cover_gt: String
+
+  """All values greater than or equal the given value."""
+  cover_gte: String
+
+  """All values containing the given string."""
+  cover_contains: String
+
+  """All values not containing the given string."""
+  cover_not_contains: String
+
+  """All values starting with the given string."""
+  cover_starts_with: String
+
+  """All values not starting with the given string."""
+  cover_not_starts_with: String
+
+  """All values ending with the given string."""
+  cover_ends_with: String
+
+  """All values not ending with the given string."""
+  cover_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type CollectionSubscriptionPayload {
+  mutation: MutationType!
+  node: Collection
+  updatedFields: [String!]
+  previousValues: CollectionPreviousValues
+}
+
+input CollectionSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CollectionSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CollectionSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CollectionSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: CollectionWhereInput
+}
+
+input CollectionUpdateInput {
+  collectionName: String
+  description: String
+  thumbnail: String
+  cover: String
+  books: BookUpdateManyWithoutCollectionsInput
+}
+
+input CollectionUpdateManyDataInput {
+  collectionName: String
+  description: String
+  thumbnail: String
+  cover: String
+}
+
+input CollectionUpdateManyMutationInput {
+  collectionName: String
+  description: String
+  thumbnail: String
+  cover: String
+}
+
+input CollectionUpdateManyWithoutBooksInput {
+  create: [CollectionCreateWithoutBooksInput!]
+  connect: [CollectionWhereUniqueInput!]
+  set: [CollectionWhereUniqueInput!]
+  disconnect: [CollectionWhereUniqueInput!]
+  delete: [CollectionWhereUniqueInput!]
+  update: [CollectionUpdateWithWhereUniqueWithoutBooksInput!]
+  updateMany: [CollectionUpdateManyWithWhereNestedInput!]
+  deleteMany: [CollectionScalarWhereInput!]
+  upsert: [CollectionUpsertWithWhereUniqueWithoutBooksInput!]
+}
+
+input CollectionUpdateManyWithWhereNestedInput {
+  where: CollectionScalarWhereInput!
+  data: CollectionUpdateManyDataInput!
+}
+
+input CollectionUpdateWithoutBooksDataInput {
+  collectionName: String
+  description: String
+  thumbnail: String
+  cover: String
+}
+
+input CollectionUpdateWithWhereUniqueWithoutBooksInput {
+  where: CollectionWhereUniqueInput!
+  data: CollectionUpdateWithoutBooksDataInput!
+}
+
+input CollectionUpsertWithWhereUniqueWithoutBooksInput {
+  where: CollectionWhereUniqueInput!
+  update: CollectionUpdateWithoutBooksDataInput!
+  create: CollectionCreateWithoutBooksInput!
+}
+
+input CollectionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CollectionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CollectionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CollectionWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  collectionName: String
+
+  """All values that are not equal to given value."""
+  collectionName_not: String
+
+  """All values that are contained in given list."""
+  collectionName_in: [String!]
+
+  """All values that are not contained in given list."""
+  collectionName_not_in: [String!]
+
+  """All values less than the given value."""
+  collectionName_lt: String
+
+  """All values less than or equal the given value."""
+  collectionName_lte: String
+
+  """All values greater than the given value."""
+  collectionName_gt: String
+
+  """All values greater than or equal the given value."""
+  collectionName_gte: String
+
+  """All values containing the given string."""
+  collectionName_contains: String
+
+  """All values not containing the given string."""
+  collectionName_not_contains: String
+
+  """All values starting with the given string."""
+  collectionName_starts_with: String
+
+  """All values not starting with the given string."""
+  collectionName_not_starts_with: String
+
+  """All values ending with the given string."""
+  collectionName_ends_with: String
+
+  """All values not ending with the given string."""
+  collectionName_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  thumbnail: String
+
+  """All values that are not equal to given value."""
+  thumbnail_not: String
+
+  """All values that are contained in given list."""
+  thumbnail_in: [String!]
+
+  """All values that are not contained in given list."""
+  thumbnail_not_in: [String!]
+
+  """All values less than the given value."""
+  thumbnail_lt: String
+
+  """All values less than or equal the given value."""
+  thumbnail_lte: String
+
+  """All values greater than the given value."""
+  thumbnail_gt: String
+
+  """All values greater than or equal the given value."""
+  thumbnail_gte: String
+
+  """All values containing the given string."""
+  thumbnail_contains: String
+
+  """All values not containing the given string."""
+  thumbnail_not_contains: String
+
+  """All values starting with the given string."""
+  thumbnail_starts_with: String
+
+  """All values not starting with the given string."""
+  thumbnail_not_starts_with: String
+
+  """All values ending with the given string."""
+  thumbnail_ends_with: String
+
+  """All values not ending with the given string."""
+  thumbnail_not_ends_with: String
+  cover: String
+
+  """All values that are not equal to given value."""
+  cover_not: String
+
+  """All values that are contained in given list."""
+  cover_in: [String!]
+
+  """All values that are not contained in given list."""
+  cover_not_in: [String!]
+
+  """All values less than the given value."""
+  cover_lt: String
+
+  """All values less than or equal the given value."""
+  cover_lte: String
+
+  """All values greater than the given value."""
+  cover_gt: String
+
+  """All values greater than or equal the given value."""
+  cover_gte: String
+
+  """All values containing the given string."""
+  cover_contains: String
+
+  """All values not containing the given string."""
+  cover_not_contains: String
+
+  """All values starting with the given string."""
+  cover_starts_with: String
+
+  """All values not starting with the given string."""
+  cover_not_starts_with: String
+
+  """All values ending with the given string."""
+  cover_ends_with: String
+
+  """All values not ending with the given string."""
+  cover_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  books_every: BookWhereInput
+  books_some: BookWhereInput
+  books_none: BookWhereInput
+}
+
+input CollectionWhereUniqueInput {
   id: ID
 }
 
@@ -3806,6 +4584,7 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createCollection(data: CollectionCreateInput!): Collection!
   createOrder(data: OrderCreateInput!): Order!
   createOrderItem(data: OrderItemCreateInput!): OrderItem!
   createUserEvent(data: UserEventCreateInput!): UserEvent!
@@ -3818,6 +4597,7 @@ type Mutation {
   createUserAddress(data: UserAddressCreateInput!): UserAddress!
   createPaymentMethod(data: PaymentMethodCreateInput!): PaymentMethod!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateCollection(data: CollectionUpdateInput!, where: CollectionWhereUniqueInput!): Collection
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrderItem(data: OrderItemUpdateInput!, where: OrderItemWhereUniqueInput!): OrderItem
   updateUserEvent(data: UserEventUpdateInput!, where: UserEventWhereUniqueInput!): UserEvent
@@ -3830,6 +4610,7 @@ type Mutation {
   updateUserAddress(data: UserAddressUpdateInput!, where: UserAddressWhereUniqueInput!): UserAddress
   updatePaymentMethod(data: PaymentMethodUpdateInput!, where: PaymentMethodWhereUniqueInput!): PaymentMethod
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrderItem(where: OrderItemWhereUniqueInput!): OrderItem
   deleteUserEvent(where: UserEventWhereUniqueInput!): UserEvent
@@ -3842,6 +4623,7 @@ type Mutation {
   deleteUserAddress(where: UserAddressWhereUniqueInput!): UserAddress
   deletePaymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertCollection(where: CollectionWhereUniqueInput!, create: CollectionCreateInput!, update: CollectionUpdateInput!): Collection!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrderItem(where: OrderItemWhereUniqueInput!, create: OrderItemCreateInput!, update: OrderItemUpdateInput!): OrderItem!
   upsertUserEvent(where: UserEventWhereUniqueInput!, create: UserEventCreateInput!, update: UserEventUpdateInput!): UserEvent!
@@ -3854,6 +4636,7 @@ type Mutation {
   upsertUserAddress(where: UserAddressWhereUniqueInput!, create: UserAddressCreateInput!, update: UserAddressUpdateInput!): UserAddress!
   upsertPaymentMethod(where: PaymentMethodWhereUniqueInput!, create: PaymentMethodCreateInput!, update: PaymentMethodUpdateInput!): PaymentMethod!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyCollections(data: CollectionUpdateManyMutationInput!, where: CollectionWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrderItems(data: OrderItemUpdateManyMutationInput!, where: OrderItemWhereInput): BatchPayload!
   updateManyUserEvents(data: UserEventUpdateManyMutationInput!, where: UserEventWhereInput): BatchPayload!
@@ -3866,6 +4649,7 @@ type Mutation {
   updateManyUserAddresses(data: UserAddressUpdateManyMutationInput!, where: UserAddressWhereInput): BatchPayload!
   updateManyPaymentMethods(data: PaymentMethodUpdateManyMutationInput!, where: PaymentMethodWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyCollections(where: CollectionWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrderItems(where: OrderItemWhereInput): BatchPayload!
   deleteManyUserEvents(where: UserEventWhereInput): BatchPayload!
@@ -5502,6 +6286,7 @@ input PublisherWhereUniqueInput {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  collections(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Collection]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orderItems(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderItem]!
   userEvents(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserEvent]!
@@ -5514,6 +6299,7 @@ type Query {
   userAddresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress]!
   paymentMethods(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMethod]!
   user(where: UserWhereUniqueInput!): User
+  collection(where: CollectionWhereUniqueInput!): Collection
   order(where: OrderWhereUniqueInput!): Order
   orderItem(where: OrderItemWhereUniqueInput!): OrderItem
   userEvent(where: UserEventWhereUniqueInput!): UserEvent
@@ -5526,6 +6312,7 @@ type Query {
   userAddress(where: UserAddressWhereUniqueInput!): UserAddress
   paymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  collectionsConnection(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CollectionConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orderItemsConnection(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderItemConnection!
   userEventsConnection(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserEventConnection!
@@ -5547,6 +6334,7 @@ type Query {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  collection(where: CollectionSubscriptionWhereInput): CollectionSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   orderItem(where: OrderItemSubscriptionWhereInput): OrderItemSubscriptionPayload
   userEvent(where: UserEventSubscriptionWhereInput): UserEventSubscriptionPayload

@@ -18,6 +18,17 @@ type User{
     updatedAt: DateTime! @updatedAt
 }
 
+type Collection{
+    id: ID! @id
+    collectionName: String!
+    description: String
+    thumbnail: String!
+    cover: String!
+    books: [Book!]! @relation(name: "BookToCollection")
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}
+
 # type Cart{
 #     id!: ID!
 #     customer: User!
@@ -92,6 +103,7 @@ type Book{
     format: BookFormat!
     dimensions: String
     publishedDate: DateTime
+    collections: [Collection!]! @relation(name: "BookToCollection")
     publisher: Publisher! @relation(name: "BookToPublisher")
     availableCopies: Int!
     basePrice: Float!
