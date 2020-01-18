@@ -1,6 +1,22 @@
 const Query = {
-    getBooks(parent,args, {prisma},info){
-        return prisma.query.books(null, info);
+    async getBooks(parent,args, {prisma},info){
+        let opArgs = {}
+        const {name, authorName, isbn, orderBy, first,skip} = args;
+        opArgs.where = {
+            title_contains: name,
+            isbn_contains: isbn
+        }
+        opArgs.orderBy = orderBy;
+        opArgs.first = first;
+        opArgs.skip = skip;
+        if (authorName){
+            opArgs.where.author = {
+                OR: [{
+                    realName_contains: authorName
+                }]
+            }
+        }
+        return prisma.query.books(opArgs, info);
     }
 }
 
