@@ -8,10 +8,10 @@ var settings = {
   dots: true,
   infinite: true,
   speed: 500,
-  slidesToShow: 4,
+  slidesToShow: 1,
   arrows: true,
   accessibility: true,
-  slidesToScroll: 3,
+  slidesToScroll: 2,
   responsive: [
     {
       breakpoint: 900,

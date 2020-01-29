@@ -1,22 +1,105 @@
+import getUserId from '../utils/getUserId';
+
 const Query = {
-    async getBooks(parent,args, {prisma},info){
+    async getBooks(parent, args, { prisma }, info) {
         let opArgs = {}
-        const {name, authorName, isbn, orderBy, first,skip} = args;
-        opArgs.where = {
-            title_contains: name,
-            isbn_contains: isbn
-        }
+        const { where, orderBy, first, skip } = args;
+        opArgs.where = where;
         opArgs.orderBy = orderBy;
         opArgs.first = first;
         opArgs.skip = skip;
-        if (authorName){
-            opArgs.where.author = {
+        return prisma.query.books(opArgs, info);
+    },
+    async getBook(parent, { id }, { prisma }, info) {
+        return prisma.query.book({
+            where: {
+                id
+            }
+        }, info);
+    },
+    async getCategories(parent, args, { prisma, info }) {
+        const { orderBy, first, skip } = args;
+        return prisma.query.bookCategories({
+            orderBy,
+            first,
+            skip
+        }, info);
+    },
+    async getCategory(parent, { id }, { prisma, info }) {
+        return prisma.query.bookCategory({
+            where: {
+                id
+            }
+        }, info);
+    },
+    async getAuthors(parent, args, { prisma }, info) {
+        const { name, orderBy, first, skip } = args;
+        const opArgs = {
+            orderBy,
+            first,
+            skip
+        }
+        if (name){
+            opArgs.where = {
                 OR: [{
-                    realName_contains: authorName
+                    realName_contains: name
+                },{
+                    pseudonym_contains: name
                 }]
             }
         }
-        return prisma.query.books(opArgs, info);
+        return prisma.query.authors(opArgs,info);
+    },
+    async getAuthor(parent, {id}, { prisma }, info) {
+        return prisma.query.author({
+            where: {
+                id
+            }
+        },info);
+    },
+    async getCollections(parent, args, { prisma }, info) {
+        const { name, orderBy, first, skip } = args;
+        const opArgs = {
+            orderBy,
+            first,
+            skip
+        }
+        if (name){
+            opArgs.where = {
+                collectionName_contains: name
+            }
+        }
+        return prisma.query.collections({
+            where: {
+                id
+            }
+        },info);
+    },
+    async getCollection(parent, {id},{prisma},info){
+        return prisma.query.collection({
+            where: {
+                id
+            }
+        },info);
+    },
+    async getBookReviewsByBook(parent, {id},{prisma},info){
+        return prisma.query.bookReviews({
+            where: {
+                book: {
+                    id: id
+                }
+            }
+        },info);
+    },
+    async getUserAddresses(parent, args,{prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        return prisma.query.userAddresses({
+            where: {
+                user: {
+                    id: userId
+                }
+            }
+        },info);
     }
 }
 

@@ -10,4 +10,5 @@ export default async function checkAdmin(userId, prisma){
     if (user.role !== "Admin") {
         throw new Error("You don't have required privileges!")
     }
+    return true;
 }

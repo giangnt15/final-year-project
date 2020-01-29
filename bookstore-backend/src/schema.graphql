@@ -1,5 +1,6 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput  from './generated/prisma.graphql'
+#import BookWhereInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -168,15 +169,15 @@ enum UserRole{
 }
 
 type Query{
-    getBooks(name: String, authorName: String, isbn: String, orderBy: BookOrderByInput, first: Int, skip:Int): [Book!]!
+    getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int): [Book!]!
     getBook(id: ID!): Book!
-    getCategories(orderBy: AuthorOrderByInput, first: Int, skip: Int): [BookCategory!]!
+    getCategories(orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
     getCategory(id: ID!): BookCategory!
     getAuthors(name: String, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
     getAuthor(id: ID!): Author!
     getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): [Collection!]!
     getCollection(id: ID!): Collection!
-    getBookReviews(book: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): [BookReview!]!
+    getBookReviewsByBook(book: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): [BookReview!]!
     getUserAddresses: [UserAddress!]!
 }
 

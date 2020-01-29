@@ -5,7 +5,7 @@ import './components/shared/headers/headers.css';
 import './css/style.css';
 import SlickSlider from './components/shared/slider/SlickSlider';
 import ProductItem from './components/products/ProductItem';
-import ProductSection from './components/products/ProductSection';
+import ProductSectionContainer from './containers/products/ProductSectionContainer';
 import ResponsiveDialog from './components/shared/dialog/CustomDialog';
 import MainSlider from './components/shared/slider/MainSlider';
 import BackToTop from './components/shared/BackToTop';
@@ -22,42 +22,13 @@ class App extends React.Component {
         <MainSlider />
         <MainSlider />
       </SlickSlider>
-      <ProductSection><SlickSlider >
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-        <ProductItem />
-
-      </SlickSlider>
-      </ProductSection> 
+      <ProductSectionContainer isFullWidth>
+      </ProductSectionContainer> 
       <ResponsiveDialog title="Thong tin san pham" />
 
-      <ProductSection isFullWidth><SlickSlider  settings={{slidesToShow: 7, centerMode: true, 
+      <ProductSectionContainer isFullWidth slickSettings={{slidesToShow: 7, centerMode: true, 
         dots: false,slidesToScroll: 4, autoplay: true}}>
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-        <BestSellerProductItem />
-      </SlickSlider>
-      </ProductSection> 
+      </ProductSectionContainer> 
       <BackToTop />
       <Footer />
     </Fragment>

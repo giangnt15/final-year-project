@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect, Fragment } from 'react';
+import ProductItem from './ProductItem';
 
-function ProductSection(props){
+class ProductSection extends React.Component{
 
-    const {isFullWidth} = props;
-    return( <section className="wn__product__area brown--color pt--80  pb--30">
-    <div className="container" style={{maxWidth: isFullWidth?'100%': undefined}}>
+  componentDidMount(){
+    this.props.getBooks({orderBy: "title_DESC"})
+  }
+
+  render(){
+  const { isFullWidth, books, slickSettings } = this.props;
+ 
+  const renderProducts = () => {
+    return books.books.map((book,index) => {
+      return (
+        <div key={index}><ProductItem width={250} thumbHeight={280} book={book}  /></div>
+    )})
+  }
+
+  return (<section className="wn__product__area brown--color pt--80  pb--30">
+    <div className="container" style={{ maxWidth: isFullWidth ? '100%' : undefined }}>
       <div className="row">
         <div className="col-lg-12">
           <div className="section__title text-center">
@@ -13,10 +27,12 @@ function ProductSection(props){
           </div>
         </div>
       </div>
-    {props.children}
+      <div style={{display: 'flex', flexWrap: 'wrap',justifyContent: 'center'}}>
+        {renderProducts()}
+      </div>
     </div>
-    </section>)
-
+  </section>)
+  }
 }
 
 export default ProductSection;
