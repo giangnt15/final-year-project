@@ -38,7 +38,7 @@ export default function ScrollTop(props) {
   };
 
   return (
-    <Zoom in={trigger} style={{zIndex: 99}}>
+    <Zoom in={trigger} style={{zIndex: 1}}>
       <div onClick={handleClick} role="presentation" className={classes.root}>
       <Fab color="secondary" size="small" aria-label="scroll back to top">
           <KeyboardArrowUpIcon />

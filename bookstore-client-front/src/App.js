@@ -11,30 +11,29 @@ import MainSlider from './components/shared/slider/MainSlider';
 import BackToTop from './components/shared/BackToTop';
 import BestSellerProductItem from './components/products/BestSellerProductItem';
 import Footer from './components/shared/footer/Footer';
+import { Switch, Route } from 'react-router-dom';
+import ProductPage from './components/pages/products/ProductPage';
+import HomePage from './components/pages/HomePage';
+import NotFound404Page from './components/pages/NotFound404Page';
 
 class App extends React.Component {
-  render(){
-  return (
-    <Fragment>
-      <div id="back-to-top-anchor"></div>
-      <Header />
-      <SlickSlider settings={{slidesToShow: 1, dots: false, arrows: true,slidesToScroll: 1, autoplay: true}}>
-        <MainSlider />
-        <MainSlider />
-      </SlickSlider>
-      <ProductSectionContainer isFullWidth>
-      </ProductSectionContainer> 
-      <ResponsiveDialog title="Thong tin san pham" />
+  render() {
+    return (
+      <Fragment>
+        <div id="back-to-top-anchor"></div>
+        <Header />
+        <Switch>
+          <Route path="/" exact component={HomePage}></Route>
+          <Route path="/home" exact component={HomePage}></Route>
+          <Route path="/book/:id" component={ProductPage}></Route>
+          <Route component={NotFound404Page}></Route>
+        </Switch>
+        <BackToTop />
+        <Footer />
+      </Fragment>
 
-      <ProductSectionContainer isFullWidth slickSettings={{slidesToShow: 7, centerMode: true, 
-        dots: false,slidesToScroll: 4, autoplay: true}}>
-      </ProductSectionContainer> 
-      <BackToTop />
-      <Footer />
-    </Fragment>
-       
-  );
-}
+    );
+  }
 }
 
 export default App;

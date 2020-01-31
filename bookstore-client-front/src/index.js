@@ -7,18 +7,22 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './redux/reducers';
 import { Provider } from 'react-redux';
-import {composeWithDevTools} from 'redux-devtools-extension';
-import {ApolloProvider} from '@apollo/react-hooks';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { ApolloProvider } from '@apollo/react-hooks';
 import client from './apollo-client';
+import history from './utils/history';
+import { Router } from 'react-router-dom';
 
 const composeEnhancers = composeWithDevTools({
-    // Specify here name, actionsBlacklist, actionsCreators and other options
-  });
+  // Specify here name, actionsBlacklist, actionsCreators and other options
+});
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
 ReactDOM.render(<ApolloProvider client={client}>
   <Provider store={store}>
-    <App />
+    <Router history={history}>
+      <App />
+    </Router>
   </Provider></ApolloProvider>, document.getElementById('wrapper'));
 
 // If you want your app to work offline and load faster, you can change

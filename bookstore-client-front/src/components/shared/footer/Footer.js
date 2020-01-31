@@ -11,7 +11,7 @@ function Footer(props){
             <div className="footer__widget footer__menu">
               <div className="ft__logo">
                 <a href="index.html">
-                  <img src="images/logo/3.png" alt="logo" />
+                  <img src="/images/logo/3.png" alt="logo" />
                 </a>
                 <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered duskam alteration variations of passages</p>
               </div>

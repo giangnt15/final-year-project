@@ -34,7 +34,7 @@ function Header(props) {
           <div className="col-md-6 col-sm-6 col-6 col-lg-2">
             <div className="logo">
               <a href="index.html">
-                <img src="images/logo/logo.png" alt="logo images" />
+                <img src="/images/logo/logo.png" alt="logo images" />
               </a>
             </div>
           </div>

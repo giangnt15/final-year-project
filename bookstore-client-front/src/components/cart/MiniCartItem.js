@@ -5,7 +5,7 @@ export default function MiniCartItem(props) {
     return (
         <div className="item01 d-flex mt--20">
             <div className="thumb">
-                <a href="product-details.html"><img src="images/product/sm-img/3.jpg" alt="product images" /></a>
+                <a href="product-details.html"><img src="/images/product/sm-img/3.jpg" alt="product images" /></a>
             </div>
             <div className="content">
                 <h6><a href="product-details.html">Impulse Duffle</a></h6>

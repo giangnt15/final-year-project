@@ -6,7 +6,7 @@ function ModalProduct(props){
     {/* Start product images */}
     <div className="product-images">
       <div className="main-image images">
-        <img alt="big images" src="images/product/big-img/1.jpg" />
+        <img alt="big images" src="/images/product/big-img/1.jpg" />
       </div>
     </div>
     {/* end product images */}

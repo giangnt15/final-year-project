@@ -5,7 +5,7 @@ export default function BestSellerProductItem(props){
     return(
         <div className="product product__style--3">
           <div className="product__thumb">
-            <a className="first__img" href="single-product.html"><img src="images/best-sell-product/1.jpg" alt="product image" /></a>
+            <a className="first__img" href="single-product.html"><img src="/images/best-sell-product/1.jpg" alt="product image" /></a>
           </div>
           <div className="product__content content--center">
             <div className="action">

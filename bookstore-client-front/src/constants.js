@@ -1,3 +1,8 @@
+//Book constant
 export const GETTING_BOOKS = "GETTING_BOOKS";
 export const GET_BOOKS_SUCCESSFULLY = "GET_BOOKS_SUCCESSFULLY";
 export const GET_BOOKS_FAILED = "GET_BOOKS_FAILED";
+export const GETTING_BOOK = "GETTING_BOOK";
+export const GET_BOOK_SUCCESSFULLY = "GET_BOOK_SUCCESSFULLY";
+export const GET_BOOK_FAILED = "GET_BOOK_FAILED";
+//End Book constant
