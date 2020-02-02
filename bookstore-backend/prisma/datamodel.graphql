@@ -100,6 +100,8 @@ type Book{
     authors: [Author!]! @relation(name: "BookToAuthor")
     reviews: [BookReview!]! @relation(name: "ReviewToBook", onDelete: CASCADE)
     isbn: String!
+    # photos: [StaticResource!]!
+    translator: String
     format: BookFormat!
     dimensions: String
     publishedDate: DateTime
@@ -114,6 +116,13 @@ type Book{
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
 }
+
+# type StaticResource{
+#     id: ID! @id
+#     url: String!
+#     createdAt: DateTime @createdAt
+#     updatedAt: DateTime @createdAt
+# }
 
 type BookReview{
     id: ID! @id

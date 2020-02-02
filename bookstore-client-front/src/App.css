@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+a:hover{
+  color: #D78868 !important;
+}
+
 .ant-carousel .slick-slide {
   text-align: center;
   height: 320px;

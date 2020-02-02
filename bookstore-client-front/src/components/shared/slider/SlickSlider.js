@@ -35,7 +35,7 @@ class SlickSlider extends React.Component {
   render() {
     
     return (
-      <Slider {...{...settings, ...this.props.settings }} >
+      <Slider style={{width: '100%'}} {...{...settings, ...this.props.settings }} >
         {this.props.children}
       </Slider>
     );

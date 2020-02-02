@@ -7,7 +7,8 @@ function ProductItem(props) {
   const { width, thumbHeight } = props;
   return (<div className="product product__style--3" style={{ width }}>
     <div className="col-12">
-      <div className="product__thumb" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: thumbHeight }}>
+    <div className="product__thumb" style={{height: 200}}>
+      {/* <div className="product__thumb" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: thumbHeight }}> */}
         <NavLink className="first__img" to={`/book/${id}`}><img src={thumbnail} alt="product image" /></NavLink>
         {/* <a className="second__img animation1" href="single-product.html"><img src={thumbnail} alt="product image" /></a> */}
         <div className="hot__box">

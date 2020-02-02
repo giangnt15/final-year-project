@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Fri Jan 17 2020 22:34:29 GMT+0700 (Indochina Time)
+# timestamp: Sun Feb 02 2020 15:58:43 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -756,6 +756,7 @@ type Book implements Node {
   authors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Author!]
   reviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookReview!]
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1206,6 +1207,7 @@ input BookCreateInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1262,6 +1264,7 @@ input BookCreateWithoutAuthorsInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1282,6 +1285,7 @@ input BookCreateWithoutCategoriesInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1302,6 +1306,7 @@ input BookCreateWithoutCollectionsInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1322,6 +1327,7 @@ input BookCreateWithoutDiscountsInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1342,6 +1348,7 @@ input BookCreateWithoutPublisherInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1362,6 +1369,7 @@ input BookCreateWithoutReviewsInput {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -1400,6 +1408,8 @@ enum BookOrderByInput {
   description_DESC
   isbn_ASC
   isbn_DESC
+  translator_ASC
+  translator_DESC
   format_ASC
   format_DESC
   dimensions_ASC
@@ -1427,6 +1437,7 @@ type BookPreviousValues {
   title: String!
   description: String
   isbn: String!
+  translator: String
   format: BookFormat!
   dimensions: String
   publishedDate: DateTime
@@ -2219,6 +2230,46 @@ input BookScalarWhereInput {
 
   """All values not ending with the given string."""
   isbn_not_ends_with: String
+  translator: String
+
+  """All values that are not equal to given value."""
+  translator_not: String
+
+  """All values that are contained in given list."""
+  translator_in: [String!]
+
+  """All values that are not contained in given list."""
+  translator_not_in: [String!]
+
+  """All values less than the given value."""
+  translator_lt: String
+
+  """All values less than or equal the given value."""
+  translator_lte: String
+
+  """All values greater than the given value."""
+  translator_gt: String
+
+  """All values greater than or equal the given value."""
+  translator_gte: String
+
+  """All values containing the given string."""
+  translator_contains: String
+
+  """All values not containing the given string."""
+  translator_not_contains: String
+
+  """All values starting with the given string."""
+  translator_starts_with: String
+
+  """All values not starting with the given string."""
+  translator_not_starts_with: String
+
+  """All values ending with the given string."""
+  translator_ends_with: String
+
+  """All values not ending with the given string."""
+  translator_not_ends_with: String
   format: BookFormat
 
   """All values that are not equal to given value."""
@@ -2524,6 +2575,7 @@ input BookUpdateDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2544,6 +2596,7 @@ input BookUpdateInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2564,6 +2617,7 @@ input BookUpdateManyDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2578,6 +2632,7 @@ input BookUpdateManyMutationInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2671,6 +2726,7 @@ input BookUpdateWithoutAuthorsDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2690,6 +2746,7 @@ input BookUpdateWithoutCategoriesDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2709,6 +2766,7 @@ input BookUpdateWithoutCollectionsDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2728,6 +2786,7 @@ input BookUpdateWithoutDiscountsDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2747,6 +2806,7 @@ input BookUpdateWithoutPublisherDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -2766,6 +2826,7 @@ input BookUpdateWithoutReviewsDataInput {
   title: String
   description: String
   isbn: String
+  translator: String
   format: BookFormat
   dimensions: String
   publishedDate: DateTime
@@ -3015,6 +3076,46 @@ input BookWhereInput {
 
   """All values not ending with the given string."""
   isbn_not_ends_with: String
+  translator: String
+
+  """All values that are not equal to given value."""
+  translator_not: String
+
+  """All values that are contained in given list."""
+  translator_in: [String!]
+
+  """All values that are not contained in given list."""
+  translator_not_in: [String!]
+
+  """All values less than the given value."""
+  translator_lt: String
+
+  """All values less than or equal the given value."""
+  translator_lte: String
+
+  """All values greater than the given value."""
+  translator_gt: String
+
+  """All values greater than or equal the given value."""
+  translator_gte: String
+
+  """All values containing the given string."""
+  translator_contains: String
+
+  """All values not containing the given string."""
+  translator_not_contains: String
+
+  """All values starting with the given string."""
+  translator_starts_with: String
+
+  """All values not starting with the given string."""
+  translator_not_starts_with: String
+
+  """All values ending with the given string."""
+  translator_ends_with: String
+
+  """All values not ending with the given string."""
+  translator_not_ends_with: String
   format: BookFormat
 
   """All values that are not equal to given value."""

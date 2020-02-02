@@ -3,18 +3,13 @@ import Header from './components/shared/headers/Header';
 import './App.css';
 import './components/shared/headers/headers.css';
 import './css/style.css';
-import SlickSlider from './components/shared/slider/SlickSlider';
-import ProductItem from './components/products/ProductItem';
-import ProductSectionContainer from './containers/products/ProductSectionContainer';
-import ResponsiveDialog from './components/shared/dialog/CustomDialog';
-import MainSlider from './components/shared/slider/MainSlider';
 import BackToTop from './components/shared/BackToTop';
-import BestSellerProductItem from './components/products/BestSellerProductItem';
 import Footer from './components/shared/footer/Footer';
 import { Switch, Route } from 'react-router-dom';
 import ProductPage from './components/pages/products/ProductPage';
 import HomePage from './components/pages/HomePage';
 import NotFound404Page from './components/pages/NotFound404Page';
+import ShopGrid from './components/shared/shop/ShopGrid';
 
 class App extends React.Component {
   render() {
@@ -26,6 +21,7 @@ class App extends React.Component {
           <Route path="/" exact component={HomePage}></Route>
           <Route path="/home" exact component={HomePage}></Route>
           <Route path="/book/:id" component={ProductPage}></Route>
+          <Route path="/books" component={ShopGrid}></Route>
           <Route component={NotFound404Page}></Route>
         </Switch>
         <BackToTop />

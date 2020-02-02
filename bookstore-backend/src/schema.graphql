@@ -99,6 +99,7 @@ type Book{
     isbn: String!
     format: BookFormat!
     dimensions: String
+    translator: String
     publishedDate: String
     collections: [Collection!]!
     publisher: Publisher!
@@ -293,6 +294,7 @@ input BookUpdateInput{
     authors: [ID!]
     isbn: String
     format: BookFormat
+    translator: String
     dimensions: String
     publishedDate: String
     publisher: ID
@@ -307,6 +309,7 @@ input BookCreateInput{
     title: String!
     description: String
     categories: [ID!]!
+    translator: String
     authors: [ID!]!
     isbn: String!
     format: BookFormat!

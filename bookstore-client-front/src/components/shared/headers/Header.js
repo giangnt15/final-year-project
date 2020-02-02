@@ -3,6 +3,7 @@ import MiniCart from '../../cart/MiniCart'
 import { Fade, Collapse, Zoom } from '@material-ui/core';
 import SearchBox from '../search/SearchBox';
 import useScroll from '../../../custom-hooks/useScroll';
+import { NavLink } from 'react-router-dom';
 
 function Header(props) {
 
@@ -33,15 +34,15 @@ function Header(props) {
         <div className="row">
           <div className="col-md-6 col-sm-6 col-6 col-lg-2">
             <div className="logo">
-              <a href="index.html">
+              <NavLink to="/">
                 <img src="/images/logo/logo.png" alt="logo images" />
-              </a>
+              </NavLink>
             </div>
           </div>
           <div className="col-lg-8 d-none d-lg-block">
             <nav className="mainmenu__nav">
               <ul className="meninmenu d-flex justify-content-start">
-                <li className="drop with--one--item"><a href="index.html">Home</a></li>
+                <li className="drop with--one--item"><NavLink to="/">Home</NavLink></li>
                 <li className="drop"><a href="#">Shop</a>
                   <div className="megamenu mega03">
                     <ul className="item item03">

@@ -8,6 +8,26 @@ export const GET_BOOKS = gql`
       basePrice
       description
       thumbnail
+      images
+      dimensions
+      translator
+      format
+      isbn
+      publishedDate
+      availableCopies
+      pages
+      publisher{
+        id
+        name
+      }
+      authors{
+        id
+        pseudonym
+      }
+      categories{
+        id
+        name
+      }
     }
   }
 `;
@@ -20,6 +40,26 @@ export const GET_BOOK = gql`
       basePrice
       description
       thumbnail
+      images
+      dimensions
+      translator
+      format
+      isbn
+      publishedDate
+      availableCopies
+      pages
+      publisher{
+        id
+        name
+      }
+      authors{
+        id
+        pseudonym
+      }
+      categories{
+        id
+        name
+      }
     }
   }
 `;

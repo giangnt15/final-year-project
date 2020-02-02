@@ -16,10 +16,11 @@ function HomePage(props) {
             {/* <ResponsiveDialog title="Thong tin san pham" /> */}
     
         <ProductSectionContainer isFullWidth slickSettings={{
-                slidesToShow: 7, centerMode: true,
+                slidesToShow: 5, centerMode: true,
+                rows: 2,
                 dots: false, slidesToScroll: 4, autoplay: true
             }}>
-            </ProductSectionContainer>
+        </ProductSectionContainer>
         </Fragment>
     )
 }
