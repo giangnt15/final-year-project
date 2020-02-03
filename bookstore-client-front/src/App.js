@@ -9,7 +9,7 @@ import { Switch, Route } from 'react-router-dom';
 import ProductPage from './components/pages/products/ProductPage';
 import HomePage from './components/pages/HomePage';
 import NotFound404Page from './components/pages/NotFound404Page';
-import ShopGrid from './components/shared/shop/ShopGrid';
+import ShopGridContainer from './containers/products/ShopGridContainer'
 
 class App extends React.Component {
   render() {
@@ -21,7 +21,7 @@ class App extends React.Component {
           <Route path="/" exact component={HomePage}></Route>
           <Route path="/home" exact component={HomePage}></Route>
           <Route path="/book/:id" component={ProductPage}></Route>
-          <Route path="/books" component={ShopGrid}></Route>
+          <Route path="/books" render={(props) => <ShopGridContainer {...props} />}></Route>
           <Route component={NotFound404Page}></Route>
         </Switch>
         <BackToTop />
