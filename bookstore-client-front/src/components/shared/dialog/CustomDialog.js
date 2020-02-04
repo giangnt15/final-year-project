@@ -39,26 +39,26 @@ export default function ResponsiveDialog(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const {title} = props;
+  const {title, render} = props;
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Open responsive dialog
       </Button>
-      <CustomDialog
+      <CustomDialog 
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{title}
+        {/*<DialogTitle id="responsive-dialog-title">{title}
         <IconButton aria-label="close" style={{right: 10, position: 'absolute'}} onClick={handleClose}>
           <CloseIcon />
         </IconButton>
-        </DialogTitle>
+  </DialogTitle>*/}
         <Divider />
-        <DialogContentWithStyle>
-          <ModalProduct />
+        <DialogContentWithStyle style={{width: 500}}>
+          {render()}
         </DialogContentWithStyle>
       </CustomDialog>
     </div>
