@@ -15,10 +15,9 @@ const getBooksFailed = (error) => ({
     error
 });
 
-export const getBooks = (client, { where, orderBy, skip, first }) => {
+export const getBooks = (client, { where, orderBy, skip, first,selection }) => {
     return async dispatch => {
         dispatch(gettingBooks())
-        console.log(client)
         try {
             const res = await client.query({
                 query: GET_BOOKS,
@@ -26,9 +25,12 @@ export const getBooks = (client, { where, orderBy, skip, first }) => {
                     where,
                     orderBy,
                     skip,
-                    first
+                    first,
+                    selection
                 }
             })
+            console.log(res.data.getBooks)
+
             dispatch(getBooksSuccessfully(res.data.getBooks))
         } catch (error) {
             dispatch(getBooksFailed(error))

@@ -2,6 +2,7 @@ import { GETTING_BOOKS, GET_BOOKS_SUCCESSFULLY } from "../../constants"
 
 let initialState = {
     books: [],
+    totalCount: 0,
     error: undefined,
     loading: false
 }
@@ -14,10 +15,12 @@ const bookReducer = (state = initialState, action) => {
                 loading: true
             }
         case GET_BOOKS_SUCCESSFULLY:
+            console.log(action)
             return {
                 ...state,
                 loading: false,
-                books: action.books
+                books: action.books.books,
+                totalCount: action.books.totalCount
             }
         case GET_BOOKS_SUCCESSFULLY:
             return {

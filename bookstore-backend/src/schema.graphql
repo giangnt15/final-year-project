@@ -170,7 +170,7 @@ enum UserRole{
 }
 
 type Query{
-    getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int): [Book!]!
+    getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String!): BooksPayload!
     getBook(id: ID!): Book!
     getCategories(orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
     getCategory(id: ID!): BookCategory!
@@ -205,6 +205,11 @@ type Mutation{
 
 type Subscription{
     user: User!
+}
+
+type BooksPayload{
+    books: [Book!]!
+    totalCount: Int
 }
 
 type AuthPayload{

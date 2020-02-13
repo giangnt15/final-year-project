@@ -1,26 +1,65 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductItem from '../../products/ProductItem';
+import Pagination from '../pagination/Pagination';
 
-function ShopGrid(props){
+function ShopGrid(props) {
+  const [currentPage, setCurrentPage] = useState(1);
 
-    useEffect(()=>{
-      props.getBooks({
-        orderBy: "title_DESC"
-      })
-    },[])
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  }
 
-    const {books} = props;
-    const renderProducts = () => {
-      return books.books.map((book, index) => {
-        return (
-          <div key={index}><ProductItem width={300} thumbHeight={360} book={book} /></div>
-        )
-      })
+  useEffect(() => {
+    props.getBooks({
+      orderBy: "title_DESC",
+      selection: `{
+          id
+          title
+          basePrice
+          description
+          thumbnail
+          images
+          dimensions
+          translator
+          format
+          isbn
+          publishedDate
+          availableCopies
+          pages
+          publisher{
+            id
+            name
+          }
+          authors{
+            id
+            pseudonym
+          }
+          categories{
+            id
+            name
+          }
+        }`,
+      skip: (currentPage - 1) * 9,
+      first: 9
+    });
+  }, [currentPage])
+
+  const { books } = props;
+  const renderProducts = () => {
+    const listWrapper = document.querySelector(".shop__list__wrapper");
+    if (listWrapper) {
+      listWrapper.scrollIntoView();
     }
+    return books.books.map((book, index) => {
+      return (
+        <div key={index}><ProductItem width={300} thumbHeight={360} book={book} /></div>
+      )
+    });
+  }
 
-    return (
-        
-      <div className="page-shop-sidebar left--sidebar bg--white section-padding--lg">
+  return (
+
+    <div className="page-shop-sidebar left--sidebar bg--white section-padding--lg">
       <div className="container">
         <div className="row">
           <div className="col-lg-3 col-12 order-2 order-lg-1 md-mt-40 sm-mt-40">
@@ -101,7 +140,8 @@ function ShopGrid(props){
                     <a className="nav-item nav-link active" data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
                     <a className="nav-item nav-link" data-toggle="tab" href="#nav-list" role="tab"><i className="fa fa-list" /></a>
                   </div>
-                  <p>Showing 1–12 of 40 results</p>
+                  <p>Hiển thị {(currentPage - 1) * 9 + 1} – {(currentPage - 1) * 9 + 9 >
+                    books.totalCount ? books.totalCount : (currentPage-1) * 9 + 9} trên {books.totalCount} kết quả</p>
                   <div className="orderby__wrapper">
                     <span>Sort By</span>
                     <select className="shot__byselect">
@@ -119,15 +159,10 @@ function ShopGrid(props){
             <div className="tab__container">
               <div className="shop-grid tab-pane fade show active" id="nav-grid" role="tabpanel">
                 <div className="row">
-                    {renderProducts()}
+                  {renderProducts()}
                 </div>
-                <ul className="wn__pagination">
-                  <li className="active"><a href="#">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#"><i className="zmdi zmdi-chevron-right" /></a></li>
-                </ul>
+                <Pagination page={currentPage} goToPage={goToPage}
+                  totalCount={books.totalCount} itemsPerPage={9} />
               </div>
               <div className="shop-grid tab-pane fade" id="nav-list" role="tabpanel">
                 <div className="list__view__wrapper">
@@ -283,7 +318,7 @@ function ShopGrid(props){
         </div>
       </div>
     </div>
-    )
+  )
 }
 
 export default ShopGrid;

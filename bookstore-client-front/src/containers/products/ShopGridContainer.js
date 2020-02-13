@@ -10,8 +10,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    getBooks: ({ where, orderBy, skip, first }) => {
-        dispatch(getBooks(ownProps.client, { where, orderBy, skip, first }));
+    getBooks: ({ where, orderBy, skip, first,selection }) => {
+        dispatch(getBooks(ownProps.client, { where, orderBy, skip, first, selection }));
     }
 })
 

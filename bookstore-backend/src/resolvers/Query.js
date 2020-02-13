@@ -3,12 +3,18 @@ import getUserId from '../utils/getUserId';
 const Query = {
     async getBooks(parent, args, { prisma }, info) {
         let opArgs = {}
-        const { where, orderBy, first, skip } = args;
+        const { where, orderBy, first, skip ,selection} = args;
         opArgs.where = where;
         opArgs.orderBy = orderBy;
         opArgs.first = first;
         opArgs.skip = skip;
-        return prisma.query.books(opArgs, info);
+        const books = await prisma.query.books(opArgs, selection);
+        const count = await prisma.query.booksConnection(null, `{aggregate {count}}`);
+        const totalCount = count.aggregate.count;
+        return {
+            books,
+            totalCount
+        }
     },
     async getBook(parent, { id }, { prisma }, info) {
         return prisma.query.book({
