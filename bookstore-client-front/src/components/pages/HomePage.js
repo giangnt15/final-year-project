@@ -3,6 +3,7 @@ import SlickSlider from '../shared/slider/SlickSlider';
 import MainSlider from '../shared/slider/MainSlider';
 import ProductSectionContainer from '../../containers/products/ProductSectionContainer';
 import ResponsiveDialog from '../shared/dialog/CustomDialog';
+import { TextField } from '@material-ui/core';
 
 function HomePage(props) {
     return (
@@ -15,6 +16,9 @@ function HomePage(props) {
             </ProductSectionContainer>
             {/* <ResponsiveDialog title="Thong tin san pham" /> */}
     
+        <ResponsiveDialog render={(attrs)=>(
+            <TextField label="Email" placeholder="Email..."/>
+        )}/>
         <ProductSectionContainer isFullWidth slickSettings={{
                 slidesToShow: 5, centerMode: true,
                 rows: 2,
