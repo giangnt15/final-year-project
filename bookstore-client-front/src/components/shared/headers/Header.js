@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import MiniCart from '../../cart/MiniCart'
 import { Fade, Collapse, Zoom } from '@material-ui/core';
-import SearchBox from '../search/SearchBox';
 import useScroll from '../../../custom-hooks/useScroll';
 import { NavLink } from 'react-router-dom';
+import SearchBoxContainer from '../../../containers/shared/search/SearchBoxContainer';
 
 function Header(props) {
 
@@ -28,7 +28,7 @@ function Header(props) {
   return (
     <header id="wn__header" className={`header__area header__absolute sticky__header ${isSticky&&"is-sticky"}`}>
         <Fade in={showSearch} timeout={300}>
-          <div><SearchBox onClose={closeSearch}/></div>
+          <div><SearchBoxContainer onClose={closeSearch}/></div>
         </Fade>
       <div className="container-fluid">
         <div className="row">

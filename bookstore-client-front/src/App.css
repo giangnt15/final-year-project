@@ -1369,49 +1369,7 @@ Elements Styles
 .block-bg.close__top .close__wrap {
   right: 90px;
   top: 50px; }
-.minisearch .field__search {
-  left: 0;
-  margin: 0 auto auto;
-  max-width: 1000px;
-  padding: 0 5px;
-  position: fixed;
-  right: 0;
-  top: 50%; }
-  .minisearch .field__search input {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background: transparent none repeat scroll 0 0;
-    border-color: currentcolor currentcolor #ebebeb;
-    -o-border-image: none;
-       border-image: none;
-    border-style: none none solid;
-    border-width: 0 0 1px;
-    color: #fff;
-    height: 60px;
-    padding: 10px 60px 10px 10px;
-    position: static;
-    transition: all 0.3s ease-in-out 0s;
-    width: 100%;
-    z-index: 1;
-    font-size: 16px;
-    outline: none; }
-  .minisearch .field__search .action {
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 2; }
-    .minisearch .field__search .action a i {
-      color: #fff;
-      display: inline-block;
-      font-size: 26px;
-      height: 60px;
-      left: 0;
-      line-height: 60px;
-      text-align: center;
-      top: 0;
-      width: 60px; }
+
 .yellow--color.block-bg .close__wrap:hover,
 .yellow--color.box-menu-content .ppnav .ppmainmenu li:hover a,
 .yellow--color.box-menu-content .ppnav .ppmainmenu li.drop .ppmegamenu .item li a:hover {
