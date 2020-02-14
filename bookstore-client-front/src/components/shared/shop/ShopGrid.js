@@ -1,17 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import ProductItem from '../../products/ProductItem';
+import ListProductItem from '../../products/ListProductItem';
 import Pagination from '../pagination/Pagination';
+import { VIEW_MODE_GRID, VIEW_MODE_LIST, SORT_DIRECTION_LATEST, SORT_DIRECTION_NAME_AZ, SORT_DIRECTION_NAME_ZA, SORT_DIRECTION_PRICE_ASC, SORT_DIRECTION_PRICE_DESC } from '../../../constants';
+
+const sortDirections = [
+  {
+    value: SORT_DIRECTION_LATEST,
+    label: "Mới nhất",
+  }, {
+    value: SORT_DIRECTION_NAME_AZ,
+    label: "Tên A-Z",
+  },{
+    value: SORT_DIRECTION_NAME_ZA,
+    label: "Tên Z-A"
+  },{
+    value: SORT_DIRECTION_PRICE_ASC,
+    label: "Giá tăng dần"
+  },{
+    value: SORT_DIRECTION_PRICE_DESC,
+    label: "Giá giảm dần"
+  }
+]
 
 function ShopGrid(props) {
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [viewMode,setViewMode] = useState('grid');
 
-  const goToPage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  }
+  // console.log(viewMode)
+
+  // const goToPage = (pageNumber) => {
+  //   setCurrentPage(pageNumber);
+  // }
+  const { books, userSettings, changeShopPage,changeSortDirection,changeViewMode } = props;
+  console.log(books)
 
   useEffect(() => {
     props.getBooks({
-      orderBy: "title_DESC",
+      orderBy: userSettings.sortDirection,
       selection: `{
           id
           title
@@ -39,12 +65,11 @@ function ShopGrid(props) {
             name
           }
         }`,
-      skip: (currentPage - 1) * 9,
+      skip: (userSettings.shopPage - 1) * 9,
       first: 9
     });
-  }, [currentPage])
+  }, [userSettings.shopPage,userSettings.sortDirection])//effect này chỉ chạy khi một trong những giá trị trong array thay đổi với lần render trước đó
 
-  const { books } = props;
   const renderProducts = () => {
     const listWrapper = document.querySelector(".shop__list__wrapper");
     if (listWrapper) {
@@ -53,6 +78,18 @@ function ShopGrid(props) {
     return books.books.map((book, index) => {
       return (
         <div key={index}><ProductItem width={300} thumbHeight={360} book={book} /></div>
+      )
+    });
+  }
+
+  const renderProductsList = ()=>{
+    const listWrapper = document.querySelector(".shop__list__wrapper");
+    if (listWrapper) {
+      listWrapper.scrollIntoView();
+    }
+    return books.books.map((book, index) => {
+      return (
+        <div key={index}><ListProductItem width={300} thumbHeight={360} book={book} /></div>
       )
     });
   }
@@ -137,183 +174,41 @@ function ShopGrid(props) {
               <div className="col-lg-12">
                 <div className="shop__list__wrapper d-flex flex-wrap flex-md-nowrap justify-content-between">
                   <div className="shop__list nav justify-content-center" role="tablist">
-                    <a className="nav-item nav-link active" data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
-                    <a className="nav-item nav-link" data-toggle="tab" href="#nav-list" role="tab"><i className="fa fa-list" /></a>
+                    <a className={`nav-item nav-link${userSettings.viewMode===VIEW_MODE_GRID?" active":""}`} 
+                    onClick={()=>changeViewMode(VIEW_MODE_GRID)} data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
+                    <a className={`nav-item nav-link${userSettings.viewMode===VIEW_MODE_LIST?" active":""}`} 
+                    data-toggle="tab" onClick={()=>changeViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
                   </div>
-                  <p>Hiển thị {(currentPage - 1) * 9 + 1} – {(currentPage - 1) * 9 + 9 >
-                    books.totalCount ? books.totalCount : (currentPage-1) * 9 + 9} trên {books.totalCount} kết quả</p>
+                  <p>Hiển thị {(userSettings.shopPage - 1) * 9 + 1} – {(userSettings.shopPage - 1) * 9 + 9 >
+                    books.totalCount ? books.totalCount : (userSettings.shopPage-1) * 9 + 9} trên {books.totalCount} kết quả</p>
                   <div className="orderby__wrapper">
-                    <span>Sort By</span>
-                    <select className="shot__byselect">
-                      <option>Default sorting</option>
-                      <option>HeadPhone</option>
-                      <option>Furniture</option>
-                      <option>Jewellery</option>
-                      <option>Handmade</option>
-                      <option>Kids</option>
+                    <span>Sắp xếp theo: </span>
+                    <select className="shot__byselect" value={userSettings.sortDirection} onChange={(e)=>{changeSortDirection(e.target.value)}}>
+                      {sortDirections.map(item=>{
+                        return (<option key={item.value} value={item.value}>{item.label}</option>)
+                      })}
                     </select>
                   </div>
                 </div>
               </div>
             </div>
             <div className="tab__container">
-              <div className="shop-grid tab-pane fade show active" id="nav-grid" role="tabpanel">
+              <div className={`shop-grid tab-pane fade${userSettings.viewMode===VIEW_MODE_GRID?" show active":""}`} id="nav-grid" role="tabpanel">
                 <div className="row">
-                  {renderProducts()}
+                  {userSettings.viewMode===VIEW_MODE_GRID && renderProducts()}
                 </div>
-                <Pagination page={currentPage} goToPage={goToPage}
-                  totalCount={books.totalCount} itemsPerPage={9} />
+                
               </div>
-              <div className="shop-grid tab-pane fade" id="nav-list" role="tabpanel">
+              <div className={`shop-grid tab-pane fade${userSettings.viewMode===VIEW_MODE_LIST?" show active":""}`}  id="nav-list" role="tabpanel">
                 <div className="list__view__wrapper">
-                  {/* Start Single Product */}
-                  <div className="list__view">
-                    <div className="thumb">
-                      <a className="first__img" href="single-product.html"><img src="images/product/1.jpg" alt="product images" /></a>
-                      <a className="second__img animation1" href="single-product.html"><img src="images/product/2.jpg" alt="product images" /></a>
-                    </div>
-                    <div className="content">
-                      <h2><a href="single-product.html">Ali Smith</a></h2>
-                      <ul className="rating d-flex">
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                      </ul>
-                      <ul className="prize__box">
-                        <li>$111.00</li>
-                        <li className="old__prize">$220.00</li>
-                      </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
-                      <ul className="cart__action d-flex">
-                        <li className="cart"><a href="cart.html">Add to cart</a></li>
-                        <li className="wishlist"><a href="cart.html" /></li>
-                        <li className="compare"><a href="cart.html" /></li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* End Single Product */}
-                  {/* Start Single Product */}
-                  <div className="list__view mt--40">
-                    <div className="thumb">
-                      <a className="first__img" href="single-product.html"><img src="images/product/2.jpg" alt="product images" /></a>
-                      <a className="second__img animation1" href="single-product.html"><img src="images/product/4.jpg" alt="product images" /></a>
-                    </div>
-                    <div className="content">
-                      <h2><a href="single-product.html">Blood In Water</a></h2>
-                      <ul className="rating d-flex">
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                      </ul>
-                      <ul className="prize__box">
-                        <li>$111.00</li>
-                        <li className="old__prize">$220.00</li>
-                      </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
-                      <ul className="cart__action d-flex">
-                        <li className="cart"><a href="cart.html">Add to cart</a></li>
-                        <li className="wishlist"><a href="cart.html" /></li>
-                        <li className="compare"><a href="cart.html" /></li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* End Single Product */}
-                  {/* Start Single Product */}
-                  <div className="list__view mt--40">
-                    <div className="thumb">
-                      <a className="first__img" href="single-product.html"><img src="images/product/3.jpg" alt="product images" /></a>
-                      <a className="second__img animation1" href="single-product.html"><img src="images/product/6.jpg" alt="product images" /></a>
-                    </div>
-                    <div className="content">
-                      <h2><a href="single-product.html">Madeness Overated</a></h2>
-                      <ul className="rating d-flex">
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                      </ul>
-                      <ul className="prize__box">
-                        <li>$111.00</li>
-                        <li className="old__prize">$220.00</li>
-                      </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
-                      <ul className="cart__action d-flex">
-                        <li className="cart"><a href="cart.html">Add to cart</a></li>
-                        <li className="wishlist"><a href="cart.html" /></li>
-                        <li className="compare"><a href="cart.html" /></li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* End Single Product */}
-                  {/* Start Single Product */}
-                  <div className="list__view mt--40">
-                    <div className="thumb">
-                      <a className="first__img" href="single-product.html"><img src="images/product/4.jpg" alt="product images" /></a>
-                      <a className="second__img animation1" href="single-product.html"><img src="images/product/6.jpg" alt="product images" /></a>
-                    </div>
-                    <div className="content">
-                      <h2><a href="single-product.html">Watching You</a></h2>
-                      <ul className="rating d-flex">
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                      </ul>
-                      <ul className="prize__box">
-                        <li>$111.00</li>
-                        <li className="old__prize">$220.00</li>
-                      </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
-                      <ul className="cart__action d-flex">
-                        <li className="cart"><a href="cart.html">Add to cart</a></li>
-                        <li className="wishlist"><a href="cart.html" /></li>
-                        <li className="compare"><a href="cart.html" /></li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* End Single Product */}
-                  {/* Start Single Product */}
-                  <div className="list__view mt--40">
-                    <div className="thumb">
-                      <a className="first__img" href="single-product.html"><img src="images/product/5.jpg" alt="product images" /></a>
-                      <a className="second__img animation1" href="single-product.html"><img src="images/product/9.jpg" alt="product images" /></a>
-                    </div>
-                    <div className="content">
-                      <h2><a href="single-product.html">Court Wings Run</a></h2>
-                      <ul className="rating d-flex">
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li className="on"><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                        <li><i className="fa fa-star-o" /></li>
-                      </ul>
-                      <ul className="prize__box">
-                        <li>$111.00</li>
-                        <li className="old__prize">$220.00</li>
-                      </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
-                      <ul className="cart__action d-flex">
-                        <li className="cart"><a href="cart.html">Add to cart</a></li>
-                        <li className="wishlist"><a href="cart.html" /></li>
-                        <li className="compare"><a href="cart.html" /></li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* End Single Product */}
+                    {userSettings.viewMode===VIEW_MODE_LIST && renderProductsList()}
                 </div>
               </div>
             </div>
+            <br />
+            <br />
+            <Pagination page={userSettings.shopPage} goToPage={changeShopPage}
+                  totalCount={books.totalCount} itemsPerPage={9} />
           </div>
         </div>
       </div>

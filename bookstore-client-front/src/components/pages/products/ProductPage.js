@@ -3,6 +3,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_BOOK } from '../../../api/bookApi';
 import { Link, NavLink } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
+import moment from 'moment';
+import './product-page.css';
 
 function ProductPage(props) {
   const { showReadMore, setShowReadMore } = useState(false);
@@ -132,12 +134,34 @@ function ProductPage(props) {
               {/* Start Single Tab Content */}
               <div className="pro__tab_label tab-pane fade" id="nav-details" role="tabpanel">
                 <div className="description__attribute">
-                  <p>Ideal for cold-weather training or work outdoors, the Chaz Hoodie promises superior warmth with every wear. Thick material blocks out the wind as ribbed cuffs and bottom band seal in body heat.Ideal for cold-weather training or work outdoors, the Chaz Hoodie promises superior warmth with every wear. Thick material blocks out the wind as ribbed cuffs and bottom band seal in body heat.Ideal for cold-weather training or work outdoors, the Chaz Hoodie promises superior warmth with every wear. Thick material blocks out the wind as ribbed cuffs and bottom band seal in body heat.Ideal for cold-weather training or work outdoors, the Chaz Hoodie promises superior warmth with every wear. Thick material blocks out the wind as ribbed cuffs and bottom band seal in body heat.</p>
-                  <ul>
-                    <li>• Two-tone gray heather hoodie.</li>
-                    <li>• Drawstring-adjustable hood. </li>
-                    <li>• Machine wash/dry.</li>
-                  </ul>
+                  <table className="table-book-details">
+                        <tbody>
+                          <tr>
+                            <td><b>Nhà xuất bản</b></td>
+                            <td className="text-align-right"><i>{publisher.name}</i></td>
+                          </tr>
+                          <tr>
+                            <td><b>Ngày xuất bản</b></td>
+                            <td className="text-align-right"><i>{moment(publishedDate).format('DD/MM/YYYY')}</i></td>
+                          </tr>
+                          <tr>
+                            <td><b>Kích thước</b></td>
+                            <td className="text-align-right"><i>{dimensions}</i></td>
+                          </tr>
+                          <tr>
+                            <td><b>Số trang</b></td>
+                            <td className="text-align-right"><i>{pages}</i></td>
+                          </tr>
+                          <tr>
+                            <td><b>ISBN</b></td>
+                            <td className="text-align-right"><i>{isbn}</i></td>
+                          </tr>
+                          <tr>
+                            <td><b>Dịch giả</b></td>
+                            <td className="text-align-right"><i>{translator}</i></td>
+                          </tr>
+                        </tbody>
+                  </table>
                 </div>
               </div>
               {/* End Single Tab Content */}
