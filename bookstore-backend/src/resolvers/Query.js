@@ -9,7 +9,7 @@ const Query = {
         opArgs.first = first;
         opArgs.skip = skip;
         const books = await prisma.query.books(opArgs, selection);
-        const count = await prisma.query.booksConnection(null, `{aggregate {count}}`);
+        const count = await prisma.query.booksConnection({where}, `{aggregate {count}}`);
         const totalCount = count.aggregate.count;
         return {
             books,
@@ -17,19 +17,23 @@ const Query = {
         }
     },
     async getBook(parent, { id }, { prisma }, info) {
-        return prisma.query.book({
+        const book = await prisma.query.book({
             where: {
                 id
             }
-        }, info);
+        },info);
+        console.log(book);
+        return book;
     },
-    async getCategories(parent, args, { prisma, info }) {
-        const { orderBy, first, skip } = args;
-        return prisma.query.bookCategories({
+    async getCategories(parent, args, { prisma}, info ) {
+        const {where, orderBy, first, skip } = args;
+        const categories = await prisma.query.bookCategories({
+            where,
             orderBy,
             first,
             skip
         }, info);
+        return categories;
     },
     async getCategory(parent, { id }, { prisma, info }) {
         return prisma.query.bookCategory({
@@ -39,20 +43,12 @@ const Query = {
         }, info);
     },
     async getAuthors(parent, args, { prisma }, info) {
-        const { name, orderBy, first, skip } = args;
+        const { where, orderBy, first, skip } = args;
         const opArgs = {
+            where,
             orderBy,
             first,
             skip
-        }
-        if (name){
-            opArgs.where = {
-                OR: [{
-                    realName_contains: name
-                },{
-                    pseudonym_contains: name
-                }]
-            }
         }
         return prisma.query.authors(opArgs,info);
     },
@@ -105,6 +101,14 @@ const Query = {
                     id: userId
                 }
             }
+        },info);
+    },
+    async getPublishers(parent,{where,orderBy,first,skip}, {prisma},info){
+        return prisma.query.publishers({
+            where,
+            orderBy,
+            first,
+            skip
         },info);
     }
 }

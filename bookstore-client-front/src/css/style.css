@@ -3873,6 +3873,12 @@ a.checkout__title {
     font-weight: 400;
 }
 
+.wedget__categories.poroduct--cat ul li a.active {
+    color: #e59285;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 .wedget__categories.poroduct--cat ul li a:hover {
     color: #e59285;
 }

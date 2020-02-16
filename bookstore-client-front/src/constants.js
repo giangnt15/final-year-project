@@ -22,3 +22,12 @@ export const SORT_DIRECTION_LATEST = "createdAt_DESC";
 export const SORT_DIRECTION_PRICE_ASC = "basePrice_ASC";
 export const SORT_DIRECTION_PRICE_DESC = "basePrice_DESC";
 //end common constants
+
+//filter types
+export const FILTER_TYPE_CAT = 'poroduct--cat';
+export const FILTER_TYPE_PRICE = 'pro--range';
+export const FILTER_TYPE_TAG = 'poroduct--tag poroduct--cat';
+export const FILTER_TYPE_AUTHOR = 'poroduct--auth poroduct--cat';
+export const FILTER_TYPE_PUBLISHER = 'poroduct--pub poroduct--cat';
+
+//end filter types

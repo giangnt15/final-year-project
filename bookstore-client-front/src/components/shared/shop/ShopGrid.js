@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import ProductItem from '../../products/ProductItem';
 import ListProductItem from '../../products/ListProductItem';
 import Pagination from '../pagination/Pagination';
-import { VIEW_MODE_GRID, VIEW_MODE_LIST, SORT_DIRECTION_LATEST, SORT_DIRECTION_NAME_AZ, SORT_DIRECTION_NAME_ZA, SORT_DIRECTION_PRICE_ASC, SORT_DIRECTION_PRICE_DESC } from '../../../constants';
+import { VIEW_MODE_GRID, VIEW_MODE_LIST, SORT_DIRECTION_LATEST, SORT_DIRECTION_NAME_AZ, SORT_DIRECTION_NAME_ZA, SORT_DIRECTION_PRICE_ASC, SORT_DIRECTION_PRICE_DESC, FILTER_TYPE_CAT, FILTER_TYPE_AUTHOR, FILTER_TYPE_PUBLISHER } from '../../../constants';
+import CommonFilter from '../filters/CommonFilter';
+import { GET_CATEGORIES } from '../../../api/categoryApi';
+import { GET_AUTHORS } from '../../../api/authorApi';
+import { GET_PUBLISHERS } from '../../../api/publisherApi';
 
 const sortDirections = [
   {
@@ -32,11 +36,114 @@ function ShopGrid(props) {
   // const goToPage = (pageNumber) => {
   //   setCurrentPage(pageNumber);
   // }
-  const { books, userSettings, changeShopPage,changeSortDirection,changeViewMode } = props;
-  console.log(books)
+  const { books, userSettings, changeShopPage,changeSortDirection,changeViewMode,filters,client } = props;
+
+  const [categories,setCategories] = useState([]);
+  const [authors,setAuthors] = useState([]);
+  const [publishers,setPublishers] = useState([]);
+
+  useEffect(()=>{
+    (async function getFilters(){
+      const resCat = await client.query({
+        query: GET_CATEGORIES,
+        variables: {
+          bookWhere: {
+            authors_some: {
+              id: filters.author
+            },
+            categories_some: {
+              id: filters.category
+            },
+            publisher: {
+              id: filters.publisher
+            }
+          },
+          where: {
+            books_some: {
+              authors_some: {
+                id: filters.author
+              },
+              publisher: {
+                id: filters.publisher
+              }
+            }
+          },
+          orderBy: "name_ASC"
+        }
+      });
+      const resAuth = await client.query({
+        query: GET_AUTHORS,
+        variables: {
+          bookWhere: {
+            authors_some: {
+              id: filters.author
+            },
+            categories_some: {
+              id: filters.category
+            },
+            publisher: {
+              id: filters.publisher
+            }
+          },
+          where: {
+            books_some: {
+              categories_some: {
+                id: filters.category
+              },
+              publisher: {
+                id: filters.publisher
+              }
+            }
+          },
+          orderBy: "pseudonym_ASC"
+        }
+      });
+      const resPub = await client.query({
+        query: GET_PUBLISHERS,
+        variables: {
+          bookWhere: {
+            authors_some: {
+              id: filters.author
+            },
+            categories_some: {
+              id: filters.category
+            },
+            publisher: {
+              id: filters.publisher
+            }
+          },
+          where: {
+            books_some: {
+              authors_some: {
+                id: filters.author
+              },
+              categories_some: {
+                id: filters.category
+              },
+            }
+          },
+          orderBy: "name_ASC"
+        }
+      });
+      setAuthors(resAuth.data.getAuthors);
+      setCategories(resCat.data.getCategories);
+      setPublishers(resPub.data.getPublishers);
+    } )()
+
+  },[filters.category, filters.author, filters.publisher])
 
   useEffect(() => {
     props.getBooks({
+      where: {
+        categories_some: {
+          id: filters.category
+        },
+        authors_some: {
+          id: filters.author
+        },
+        price: filters.price,
+        publisher: filters.publisher
+      },
       orderBy: userSettings.sortDirection,
       selection: `{
           id
@@ -68,7 +175,13 @@ function ShopGrid(props) {
       skip: (userSettings.shopPage - 1) * 9,
       first: 9
     });
-  }, [userSettings.shopPage,userSettings.sortDirection])//effect này chỉ chạy khi một trong những giá trị trong array thay đổi với lần render trước đó
+  }, [userSettings.shopPage,
+    userSettings.sortDirection,
+    filters.price,filters.publisher,
+    filters.category,
+  filters.author])//effect này chỉ chạy khi một trong những giá trị trong array thay đổi với lần render trước đó
+
+  
 
   const renderProducts = () => {
     const listWrapper = document.querySelector(".shop__list__wrapper");
@@ -101,65 +214,10 @@ function ShopGrid(props) {
         <div className="row">
           <div className="col-lg-3 col-12 order-2 order-lg-1 md-mt-40 sm-mt-40">
             <div className="shop__sidebar">
-              <aside className="wedget__categories poroduct--cat">
-                <h3 className="wedget__title">Product Categories</h3>
-                <ul>
-                  <li><a href="#">Biography <span>(3)</span></a></li>
-                  <li><a href="#">Business <span>(4)</span></a></li>
-                  <li><a href="#">Cookbooks <span>(6)</span></a></li>
-                  <li><a href="#">Health &amp; Fitness <span>(7)</span></a></li>
-                  <li><a href="#">History <span>(8)</span></a></li>
-                  <li><a href="#">Mystery <span>(9)</span></a></li>
-                  <li><a href="#">Inspiration <span>(13)</span></a></li>
-                  <li><a href="#">Romance <span>(20)</span></a></li>
-                  <li><a href="#">Fiction/Fantasy <span>(22)</span></a></li>
-                  <li><a href="#">Self-Improvement <span>(13)</span></a></li>
-                  <li><a href="#">Humor Books <span>(17)</span></a></li>
-                  <li><a href="#">Harry Potter <span>(20)</span></a></li>
-                  <li><a href="#">Land of Stories <span>(34)</span></a></li>
-                  <li><a href="#">Kids' Music <span>(60)</span></a></li>
-                  <li><a href="#">Toys &amp; Games <span>(3)</span></a></li>
-                  <li><a href="#">hoodies <span>(3)</span></a></li>
-                </ul>
-              </aside>
-              <aside className="wedget__categories pro--range">
-                <h3 className="wedget__title">Filter by price</h3>
-                <div className="content-shopby">
-                  <div className="price_filter s-filter clear">
-                    <form action="#" method="GET">
-                      <div id="slider-range" />
-                      <div className="slider__range--output">
-                        <div className="price__output--wrap">
-                          <div className="price--output">
-                            <span>Price :</span><input type="text" id="amount" readOnly />
-                          </div>
-                          <div className="price--filter">
-                            <a href="#">Filter</a>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </aside>
-              <aside className="wedget__categories poroduct--tag">
-                <h3 className="wedget__title">Product Tags</h3>
-                <ul>
-                  <li><a href="#">Biography</a></li>
-                  <li><a href="#">Business</a></li>
-                  <li><a href="#">Cookbooks</a></li>
-                  <li><a href="#">Health &amp; Fitness</a></li>
-                  <li><a href="#">History</a></li>
-                  <li><a href="#">Mystery</a></li>
-                  <li><a href="#">Inspiration</a></li>
-                  <li><a href="#">Religion</a></li>
-                  <li><a href="#">Fiction</a></li>
-                  <li><a href="#">Fantasy</a></li>
-                  <li><a href="#">Music</a></li>
-                  <li><a href="#">Toys</a></li>
-                  <li><a href="#">Hoodies</a></li>
-                </ul>
-              </aside>
+              <CommonFilter filterType={FILTER_TYPE_CAT} filterName="Thể loại" filterItems={categories} />
+              <CommonFilter filterType={FILTER_TYPE_AUTHOR} filterName="Tác giả" filterItems={authors} />
+              <CommonFilter filterType={FILTER_TYPE_PUBLISHER} filterName="Nhà xuất bản" filterItems={publishers} />
+              
               <aside className="wedget__categories sidebar--banner">
                 <img src="images/others/banner_left.jpg" alt="banner images" />
                 <div className="text">
@@ -179,7 +237,7 @@ function ShopGrid(props) {
                     <a className={`nav-item nav-link${userSettings.viewMode===VIEW_MODE_LIST?" active":""}`} 
                     data-toggle="tab" onClick={()=>changeViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
                   </div>
-                  <p>Hiển thị {(userSettings.shopPage - 1) * 9 + 1} – {(userSettings.shopPage - 1) * 9 + 9 >
+                  <p>Hiển thị {(userSettings.shopPage - 1) * 9 + 1>books.totalCount?books.totalCount:(userSettings.shopPage - 1) * 9 + 1} – {(userSettings.shopPage - 1) * 9 + 9 >
                     books.totalCount ? books.totalCount : (userSettings.shopPage-1) * 9 + 9} trên {books.totalCount} kết quả</p>
                   <div className="orderby__wrapper">
                     <span>Sắp xếp theo: </span>

@@ -1,6 +1,6 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
-#import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput  from './generated/prisma.graphql'
-#import BookWhereInput from './generated/prisma.graphql';
+#import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
+#import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -123,7 +123,7 @@ type BookReview{
 type BookCategory{
     id: ID!
     name: String!
-    books: [Book!]!
+    books(where: BookWhereInput): [Book!]!
 }
 
 type Discount{
@@ -140,7 +140,7 @@ type Publisher{
     name: String!
     description: String
     image: String
-    books: [Book!]!
+    books(where: BookWhereInput): [Book!]!
 }
 
 type Author{
@@ -149,7 +149,7 @@ type Author{
     pseudonym: String
     image: String
     description: String
-    books: [Book!]!
+    books(where: BookWhereInput): [Book!]!
 }
 
 enum BookFormat{
@@ -172,14 +172,15 @@ enum UserRole{
 type Query{
     getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String!): BooksPayload!
     getBook(id: ID!): Book!
-    getCategories(orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
+    getCategories(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
     getCategory(id: ID!): BookCategory!
-    getAuthors(name: String, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
+    getAuthors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
     getAuthor(id: ID!): Author!
     getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): [Collection!]!
     getCollection(id: ID!): Collection!
     getBookReviewsByBook(book: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): [BookReview!]!
     getUserAddresses: [UserAddress!]!
+    getPublishers(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): [Publisher!]!
 }
 
 type Mutation{

@@ -42,7 +42,7 @@ function Header(props) {
           <div className="col-lg-8 d-none d-lg-block">
             <nav className="mainmenu__nav">
               <ul className="meninmenu d-flex justify-content-start">
-                <li className="drop with--one--item"><NavLink to="/">Home</NavLink></li>
+                <li className="drop with--one--item"><NavLink to="/">Trang chủ</NavLink></li>
                 <li className="drop"><a href="#">Shop</a>
                   <div className="megamenu mega03">
                     <ul className="item item03">
@@ -69,7 +69,7 @@ function Header(props) {
                     </ul>
                   </div>
                 </li>
-                <li className="drop"><a href="shop-grid.html">Books</a>
+                <li className="drop"><NavLink to="/books">Sách</NavLink>
                   <div className="megamenu mega03">
                     <ul className="item item03">
                       <li className="title">Categories</li>

@@ -7,7 +7,8 @@ import { changeViewMode, changeSortDirection, changeShopPage } from '../../redux
 const mapStateToProps = state => {
     return {
         books: state.books,
-        userSettings: state.userSettings
+        userSettings: state.userSettings,
+        filters: state.filters
     }
 }
 
