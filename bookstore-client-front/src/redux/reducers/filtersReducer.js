@@ -1,4 +1,5 @@
 import { FILTER_TYPE_CAT, FILTER_TYPE_PRICE, FILTER_TYPE_AUTHOR, FILTER_TYPE_PUBLISHER } from "../../constants"
+import _ from 'lodash';
 
 const initialState = {
     category: undefined,
@@ -17,7 +18,7 @@ export default function filtersReducer(state = initialState, action) {
         case FILTER_TYPE_PRICE:
             return {
                 ...state,
-                price: action.value
+                price: !_.isEqual(action.value,state.price)?action.value:undefined
             }
         case FILTER_TYPE_AUTHOR:
             return {

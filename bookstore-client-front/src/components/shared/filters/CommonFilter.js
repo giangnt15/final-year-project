@@ -24,7 +24,7 @@ function CommonFilter(props) {
         <ul>
             {filterItems.map(item => {
                 return (<li key={item.id} onClick={() => changeFilter(filterType, item.id)}>
-                    <a className={isFilterActive(item.id)&&"active"}>{item.name || item.pseudonym} <span>({item.books.length})</span></a>
+                    <a className={isFilterActive(item.id)&&"active"}>{item.name || item.pseudonym} <span>{filterType!==FILTER_TYPE_PRICE&&`(${item.books.length})`}</span></a>
                 </li>)
             })}
         </ul>

@@ -4015,6 +4015,7 @@ a.checkout__title {
 
 .price--output {
     display: inline-block;
+    width: 100%;
 }
 
 .price--filter a {
