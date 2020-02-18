@@ -295,3 +295,203 @@
     background-color: #da7187; }
   .color--pink .product.product__style--3 .product__content h4 a:hover {
     color: #da7187; }
+
+    #express-buy-dialog {
+      width: 300px;
+      z-index: 100000;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      min-height: 200px;
+      border: 1px solid #f5f4f3;
+      padding: 5px 10px;
+      background: #f5f4f3;
+      -moz-box-shadow: 0 1px 5px #b1b3b3;
+      -webkit-box-shadow: 0 1px 5px #b1b3b3;
+      box-shadow: 0 1px 5px #b1b3b3
+  }
+  
+  #express-buy-dialog .add-to-cart {
+      background: #00bfa5
+  }
+  
+  #express-buy-dialog .add-to-cart:hover {
+      background: #f15c22
+  }
+  
+  #express-buy-dialog .t-view {
+      padding: 3px 0;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 0 2px
+  }
+  
+  #express-buy-dialog .au-view {
+      padding: 3px 2px
+  }
+  
+  #express-buy-dialog .au-view a {
+      color: #1d9d74
+  }
+  
+  #express-buy-dialog .des-view a {
+      color: #0066c0
+  }
+  
+  #express-buy-dialog .p-view {
+      padding: 3px 2px
+  }
+  
+  #express-buy-dialog .p-view .real-price {
+      font-size: 13px;
+      color: #f15c22;
+      font-weight: bold
+  }
+  
+  #express-buy-dialog .p-view .real-price span.cur {
+      font-size: 12px;
+      font-weight: normal
+  }
+  
+  #express-buy-dialog .p-view .price {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 10px
+  }
+  
+  #express-buy-dialog .p-view .sale-off {
+      color: #fff;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+      line-height: 15px;
+      text-transform: uppercase;
+      font-size: 1.2rem;
+      padding: 3px;
+      background: #f51919;
+      font-size: 10px
+  }
+  
+  #express-buy-dialog .note-view {
+      padding: 3px 0;
+      font-weight: bold;
+      font-size: 13px;
+      color: #f15c22
+  }
+  
+  #express-buy-dialog .discount-percent {
+      padding: 3px 0
+  }
+  
+  #express-buy-dialog .discount-percent label {
+      font-weight: normal
+  }
+  
+  #express-buy-dialog .discount-percent span {
+      font-size: 13px;
+      font-weight: bold;
+      color: red
+  }
+  
+  #express-buy-dialog .size-choose {
+      padding: 5px 0 10px 0
+  }
+  
+  #express-buy-dialog .size-choose span {
+      float: left;
+      font-weight: bold
+  }
+  
+  #express-buy-dialog .size-choose .content {
+      display: table
+  }
+  
+  #express-buy-dialog .size-choose .content ul {
+      list-style-type: none;
+      float: left;
+      padding-left: 5px
+  }
+  
+  #express-buy-dialog .size-choose .content ul li {
+      cursor: pointer;
+      list-style-type: none;
+      float: left
+  }
+  
+  #express-buy-dialog .size-choose .content ul .bg-size {
+      display: block;
+      margin: 1px;
+      height: 20px;
+      border: 1px outset #f15c22
+  }
+  
+  #express-buy-dialog .size-choose .content ul .bg-size .actived {
+      background: #ff6100
+  }
+  
+  #express-buy-dialog .size-choose .content ul .bg-size span {
+      width: 100%;
+      padding-left: 7px;
+      padding-right: 7px
+  }
+  
+  #express-buy-dialog .color-choose {
+      padding: 5px 0 10px 0
+  }
+  
+  #express-buy-dialog .color-choose span {
+      float: left;
+      font-weight: bold
+  }
+  
+  #express-buy-dialog .color-choose ul {
+      list-style-type: none;
+      float: left;
+      padding-left: 5px
+  }
+  
+  #express-buy-dialog .color-choose ul li {
+      cursor: pointer;
+      list-style-type: none;
+      float: left;
+      padding-right: 7px
+  }
+  
+  #express-buy-dialog .color-choose ul .bg-size {
+      display: block
+  }
+  
+  #express-buy-dialog .color-choose ul .bg-size .color-pattern {
+      width: 20px;
+      height: 20px
+  }
+  
+  #express-buy-dialog .color-choose ul .bg-size .actived {
+      border: 2px solid #f15c22
+  }
+  
+  #express-buy-dialog .gift-view .l {
+      float: left;
+      width: 35px
+  }
+  
+  #express-buy-dialog .gift-view .l .fa-gift {
+      color: #f15c22
+  }
+  
+  #express-buy-dialog .gift-view .r {
+      float: left;
+      width: 140px
+  }
+  
+  #express-buy-dialog .btn {
+      width: 100%;
+      margin-bottom: 10px
+  }
+  
+  #express-buy-dialog .btn-fav i.fa-heart {
+      color: red
+  }
