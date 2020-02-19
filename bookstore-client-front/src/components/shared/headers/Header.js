@@ -4,12 +4,13 @@ import { Fade, Collapse, Zoom } from '@material-ui/core';
 import useScroll from '../../../custom-hooks/useScroll';
 import { NavLink } from 'react-router-dom';
 import SearchBoxContainer from '../../../containers/shared/search/SearchBoxContainer';
+import { Popover } from 'antd';
 
 function Header(props) {
 
   const [showCart, setShowCart] = useState(false);
 
-  const [showSearch,setShowSearch] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const isSticky = useScroll(200);
 
@@ -18,7 +19,7 @@ function Header(props) {
   }
 
   const toggleSearch = () => {
-    setShowSearch(prevShowSearch=> !prevShowSearch);//the call back must return a value
+    setShowSearch(prevShowSearch => !prevShowSearch);//the call back must return a value
   }
 
   const closeSearch = () => {
@@ -26,10 +27,10 @@ function Header(props) {
   }
 
   return (
-    <header id="wn__header" className={`header__area header__absolute sticky__header ${isSticky&&"is-sticky"}`}>
-        <Fade in={showSearch} timeout={300}>
-          <div><SearchBoxContainer onClose={closeSearch}/></div>
-        </Fade>
+    <header id="wn__header" className={`header__area header__absolute sticky__header ${isSticky && "is-sticky"}`}>
+      <Fade in={showSearch} timeout={300}>
+        <div><SearchBoxContainer onClose={closeSearch} /></div>
+      </Fade>
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-6 col-sm-6 col-6 col-lg-2">
@@ -156,77 +157,14 @@ function Header(props) {
               <li className="shopcart" onClick={toggleCart}><a className="cartbox_active" href="#"><span className="product_qun">3</span></a>
                 <Fade in={showCart}>
                   {/* Start Shopping Cart */}
-                  <div><MiniCart onToggle={toggleCart}/></div>
+                  <div><MiniCart onToggle={toggleCart} /></div>
                   {/* End Shopping Cart */}
                 </Fade>
               </li>
-              <li className="setting__bar__icon"><a className="setting__active" href="#" />
-                <div className="searchbar__content setting__block">
-                  <div className="content-inner">
-                    <div className="switcher-currency">
-                      <strong className="label switcher-label">
-                        <span>Currency</span>
-                      </strong>
-                      <div className="switcher-options">
-                        <div className="switcher-currency-trigger">
-                          <span className="currency-trigger">USD - US Dollar</span>
-                          <ul className="switcher-dropdown">
-                            <li>GBP - British Pound Sterling</li>
-                            <li>EUR - Euro</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="switcher-currency">
-                      <strong className="label switcher-label">
-                        <span>Language</span>
-                      </strong>
-                      <div className="switcher-options">
-                        <div className="switcher-currency-trigger">
-                          <span className="currency-trigger">English01</span>
-                          <ul className="switcher-dropdown">
-                            <li>English02</li>
-                            <li>English03</li>
-                            <li>English04</li>
-                            <li>English05</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="switcher-currency">
-                      <strong className="label switcher-label">
-                        <span>Select Store</span>
-                      </strong>
-                      <div className="switcher-options">
-                        <div className="switcher-currency-trigger">
-                          <span className="currency-trigger">Fashion Store</span>
-                          <ul className="switcher-dropdown">
-                            <li>Furniture</li>
-                            <li>Shoes</li>
-                            <li>Speaker Store</li>
-                            <li>Furniture</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="switcher-currency">
-                      <strong className="label switcher-label">
-                        <span>My Account</span>
-                      </strong>
-                      <div className="switcher-options">
-                        <div className="switcher-currency-trigger">
-                          <div className="setting__menu">
-                            <span><a href="#">Compare Product</a></span>
-                            <span><a href="#">My Account</a></span>
-                            <span><a href="#">My Wishlist</a></span>
-                            <span><a href="#">Sign In</a></span>
-                            <span><a href="#">Create An Account</a></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <li className="setting__bar__icon">
+                <Popover content={"vclcllclcl"}>
+                  <a className="setting__active" href="#" />
+                </Popover>
               </li>
             </ul>
           </div>
