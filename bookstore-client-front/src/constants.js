@@ -31,3 +31,14 @@ export const FILTER_TYPE_AUTHOR = 'poroduct--auth poroduct--cat';
 export const FILTER_TYPE_PUBLISHER = 'poroduct--pub poroduct--cat';
 
 //end filter types
+
+//auth 
+
+export const SIGNING_UP = 'SIGNING_UP';
+export const SIGN_UP_SUCCESSFULLY = 'SIGN_UP_SUCCESSFULLY';
+export const SIGN_UP_FAILED = 'SIGN_UP_FAILED';
+export const LOGGING_IN = 'LOGGING_IN';
+export const LOG_IN_SUCCESSFULLY = 'LOG_IN_SUCCESSFULLY';
+export const LOG_IN_FAILED = 'LOG_IN_FAILED';
+
+//end auth

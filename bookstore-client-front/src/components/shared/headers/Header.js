@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import MiniCart from '../../cart/MiniCart'
-import { Fade, Collapse, Zoom } from '@material-ui/core';
+import { Fade, Collapse, Zoom, Button } from '@material-ui/core';
 import useScroll from '../../../custom-hooks/useScroll';
 import { NavLink } from 'react-router-dom';
 import SearchBoxContainer from '../../../containers/shared/search/SearchBoxContainer';
@@ -25,6 +25,24 @@ function Header(props) {
   const closeSearch = () => {
     setShowSearch(false);
   }
+
+  const authDropDown = (<Fragment>
+    <div className="p-b-8">
+      <NavLink to="/auth/login">
+        <Button variant="contained" color="primary">
+          Đăng nhập
+      </Button>
+      </NavLink>
+    </div>
+    <div >
+    <NavLink to="/auth/signup">
+      <Button variant="contained" className='w-100' color="primary">
+        Đăng ký
+      </Button>
+      </NavLink>
+    </div>
+  </Fragment>
+  )
 
   return (
     <header id="wn__header" className={`header__area header__absolute sticky__header ${isSticky && "is-sticky"}`}>
@@ -162,7 +180,7 @@ function Header(props) {
                 </Fade>
               </li>
               <li className="setting__bar__icon">
-                <Popover content={"vclcllclcl"}>
+                <Popover content={authDropDown} placement="bottom">
                   <a className="setting__active" href="#" />
                 </Popover>
               </li>

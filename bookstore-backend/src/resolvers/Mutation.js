@@ -9,6 +9,8 @@ const Mutation = {
         const user = await prisma.mutation.createUser({
             data: {
                 ...data,
+                receiveEmailNotification: false,
+                role: 'User',
                 password: hashed
             }
         });
@@ -21,14 +23,19 @@ const Mutation = {
     },
     async login(parent, { data }, { prisma, env }, info) {
         const { email, password } = data;
-        const user = await prisma.query.user({
+        const users = await prisma.query.users({
             where: {
-                email
+                OR: [{
+                    email
+                },{
+                    username: email
+                }]
             }
         });
-        if (!user) {
+        if (!users.length) {
             throw new Error("Wrong username or password!");
         }
+        const user = users[0];
         const matched = await bcrypt.compare(password, user.password);
         if (!matched) {
             throw new Error("Wrong username or password!");
