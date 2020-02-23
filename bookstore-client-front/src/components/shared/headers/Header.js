@@ -5,8 +5,14 @@ import useScroll from '../../../custom-hooks/useScroll';
 import { NavLink } from 'react-router-dom';
 import SearchBoxContainer from '../../../containers/shared/search/SearchBoxContainer';
 import { Popover } from 'antd';
+import { connect } from 'react-redux';
+import isTokenValid from '../../../utils/tokenValidation';
+import { logout } from '../../../redux/actions/authAction';
 
 function Header(props) {
+
+  const {user,token} = props.auth;
+  const {logout} = props;
 
   const [showCart, setShowCart] = useState(false);
 
@@ -26,7 +32,7 @@ function Header(props) {
     setShowSearch(false);
   }
 
-  const authDropDown = (<Fragment>
+  const authDropDown = !isTokenValid(token)?(<Fragment>
     <div className="p-b-8">
       <NavLink to="/auth/login">
         <Button variant="contained" color="primary">
@@ -42,7 +48,14 @@ function Header(props) {
       </NavLink>
     </div>
   </Fragment>
-  )
+  ): (<Fragment>
+    <ul style={{listStyleType: 'none', lineHeight: 2}}>
+      <li><NavLink to="/auth/order"><i className="fa fa-list-ol"></i>&nbsp;Đơn hàng</NavLink></li>
+      <li><NavLink to="/auth/account"><i className="fa fa-user-circle"></i>&nbsp;Tài khoản</NavLink></li>
+      <li><NavLink to="/auth/wish-list"><i className="fa fa-heart"></i>&nbsp;Sản phẩm yêu thích</NavLink></li>
+      <li><a onClick={logout} ><i className="fa fa-sign-out"></i>&nbsp;Đăng xuất</a></li>
+    </ul>
+  </Fragment>);
 
   return (
     <header id="wn__header" className={`header__area header__absolute sticky__header ${isSticky && "is-sticky"}`}>
@@ -236,4 +249,18 @@ function Header(props) {
     </header>);
 }
 
-export { Header as default };
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  }
+}
+
+const mapDispatchToProps = dispatch=>{
+  return {
+    logout: ()=>{
+      dispatch(logout());
+    }
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Header);

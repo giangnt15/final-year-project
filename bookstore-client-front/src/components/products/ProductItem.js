@@ -21,10 +21,10 @@ function ProductItem(props) {
         {/* <a href="/tac-gia/chu-viet-nga-auth43519/p1" ng-repeat="item in productItem.Authors" className="ng-binding ng-scope">{}</a>end ngRepeat: item in productItem.Authors */}
       </div>
       <div className="des-view ng-binding">
-        <div class="product__info__main">
-          <div class="product__overview">
-            <div class="product_overview_content" style={{height: 200}} dangerouslySetInnerHTML={{ __html: description }}></div>
-            <div class="fade-footer"><NavLink to={`/book/${id}`} class="read-more text-primary font-weight-bold">Xem thêm</NavLink></div></div>
+        <div className="product__info__main">
+          <div className="product__overview">
+            <div className="product_overview_content" style={{height: 200}} dangerouslySetInnerHTML={{ __html: description }}></div>
+            <div className="fade-footer"><NavLink to={`/book/${id}`} className="read-more text-primary font-weight-bold">Xem thêm</NavLink></div></div>
         </div>
       </div>
       <div className="p-view">

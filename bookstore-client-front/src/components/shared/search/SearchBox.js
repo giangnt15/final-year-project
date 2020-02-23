@@ -23,7 +23,7 @@ function SearchBox(props) {
   const renderSearchPreview = (books) => {
     return books.length ? books.map(item => (
       <NavLink to={`/book/${item.id}`} key={item.id}>
-        <div style={{ margin: 6 }}>
+        <div style={{ margin: 6 }} onClick={()=>document.querySelector(".close__wrap").click()}>
           <div style={{ backgroundColor: "#fff" }}>
             <img style={{ height: 200 }} src={item.thumbnail} />
           </div>

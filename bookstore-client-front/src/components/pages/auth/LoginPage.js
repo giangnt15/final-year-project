@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink, Redirect, useLocation } from 'react-router-dom';
 import './main.css';
 import './util.css';
 import { login as loginAction } from '../../../redux/actions/authAction';
 import { connect } from 'react-redux';
 import { withApollo } from '@apollo/react-hoc';
 import { Button } from 'antd';
+import isTokenValid from '../../../utils/tokenValidation';
 
 function LoginPage(props) {
 
@@ -15,6 +16,8 @@ function LoginPage(props) {
     username: '',
     password: ''
   });
+
+  const location = useLocation()
 
   const handleInputsChange = (e) => {
     const { target } = e;
@@ -34,12 +37,11 @@ function LoginPage(props) {
       login(username, password);
     }
   }
-
-  if (auth.token) {
-    return <Redirect to="/" />
+  if (isTokenValid(auth.token)){
+    return <Redirect to={location.state&&location.state.from?location.state.from:'/'} />
   }
 
-  return (<div>
+  return (<div className="auth-page">
     <div className="limiter">
       <div className="container-login100" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80")' }}>
         <div className="wrap-login100 p-l-70 p-r-70 p-t-50 p-b-33">

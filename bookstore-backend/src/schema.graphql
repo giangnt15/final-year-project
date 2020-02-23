@@ -9,6 +9,7 @@ type User{
     email: String!
     phone: String
     gender: Boolean
+    avatar: String
     birthdate: String
     password: String!
     role: UserRole!
@@ -118,6 +119,8 @@ type BookReview{
     rating: Int!
     author: User!
     book: Book!
+    createdAt: String!
+    updatedAt: String!
 }
 
 type BookCategory{
@@ -170,7 +173,7 @@ enum UserRole{
 }
 
 type Query{
-    getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String!): BooksPayload!
+    getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String): BooksPayload!
     getBook(id: ID!): Book!
     getCategories(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
     getCategory(id: ID!): BookCategory!
@@ -178,7 +181,7 @@ type Query{
     getAuthor(id: ID!): Author!
     getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): [Collection!]!
     getCollection(id: ID!): Collection!
-    getBookReviewsByBook(book: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): [BookReview!]!
+    getBookReviewsByBook(bookId: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
     getUserAddresses: [UserAddress!]!
     getPublishers(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): [Publisher!]!
 }
@@ -194,7 +197,7 @@ type Mutation{
     createUserAddress(data: UserAddressCreateInput!): UserAddress!
     updateUserAddress(id: ID!,data: UserAddressUpdateInput!): UserAddress!
     createBookReview(data: BookReviewCreateInput!): BookReview!
-    updateBookReview(id: ID!,data: BookReviewCreateInput!): BookReview!
+    updateBookReview(id: ID!,data: BookReviewUpdateInput!): BookReview!
     createBookCategory(data: BookCategoryCreateInput!): BookCategory!
     updateBookCategory(id: ID!,data: BookCategoryUpdateInput!): BookCategory!
     createPublisher(data: PublisherCreateInput!): Publisher!
@@ -203,9 +206,19 @@ type Mutation{
     updateAuthor(id: ID!,data: AuthorCreateInput!): Author!
 }
 
-
 type Subscription{
     user: User!
+}
+
+type GetBookReviewsByBookPayload{
+    bookReviews: [BookReview!]!
+    totalCount: Int
+    avgScore: Float
+    fiveStar: Int
+    fourStar: Int
+    threeStar: Int
+    twoStar: Int
+    oneStar: Int
 }
 
 type BooksPayload{

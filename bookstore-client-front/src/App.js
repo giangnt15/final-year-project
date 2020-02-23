@@ -3,7 +3,6 @@ import Header from './components/shared/headers/Header';
 import 'antd/dist/antd.css';
 import './App.css';
 import './components/shared/headers/headers.css';
-import './css/style.css';
 import BackToTop from './components/shared/BackToTop';
 import Footer from './components/shared/footer/Footer';
 import { Switch, Route, useHistory } from 'react-router-dom';
@@ -13,6 +12,8 @@ import NotFound404Page from './components/pages/NotFound404Page';
 import ShopGridContainer from './containers/products/ShopGridContainer'
 import LoginPage from './components/pages/auth/LoginPage';
 import SignupPage from './components/pages/auth/SignupPage';
+import './css/style.css';
+import './components/pages/auth/util.css'
 
 function App(props) {
     let history = useHistory();

@@ -4,6 +4,7 @@ type User{
     fullName: String
     email: String! @unique
     phone: String @unique
+    avatar: String @default(value: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")
     gender: Boolean
     birthdate: DateTime
     password: String!
@@ -123,7 +124,6 @@ type Book{
 #     createdAt: DateTime @createdAt
 #     updatedAt: DateTime @createdAt
 # }
-
 type BookReview{
     id: ID! @id
     reviewHeader: String

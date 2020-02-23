@@ -1952,12 +1952,12 @@ h3.widget-title-modal {
     margin: 0 0 8px;
 }
 
-.product__info__detailed .review-fieldset .review_form_field .input__box span::after {
+/* .product__info__detailed .review-fieldset .review_form_field .input__box span::after {
     color: #e02b27;
     content: "*";
     font-size: 1.2rem;
     margin: 0 0 0 5px;
-}
+} */
 
 .product__info__detailed .review-fieldset .review_form_field .input__box input {
     background: #fff none repeat scroll 0 0;

@@ -12,11 +12,14 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import client from './apollo-client';
 import history from './utils/history';
 import { Router } from 'react-router-dom';
+import moment from 'moment';
+import 'moment/locale/vi';
 
 const composeEnhancers = composeWithDevTools({
   // Specify here name, actionsBlacklist, actionsCreators and other options
 });
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+moment.locale('vi');
 
 ReactDOM.render(<ApolloProvider client={client}>
   <Provider store={store}>

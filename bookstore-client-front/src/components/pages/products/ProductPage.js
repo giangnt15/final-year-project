@@ -1,21 +1,39 @@
 import React, { Fragment, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BOOK } from '../../../api/bookApi';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import './product-page.css';
+import BookReviewSection from '../../reivews/BookReviewSection';
+import { connect } from 'react-redux';
+import isTokenValid from '../../../utils/tokenValidation';
+import { GET_REVIEWS_BY_BOOK } from '../../../api/reviewApi';
+import { message, Rate } from 'antd';
 
 function ProductPage(props) {
   const { showReadMore, setShowReadMore } = useState(false);
+  const { auth } = props;
+  const { id: bookId } = useParams()
+  const isAuthenticated = isTokenValid(auth.token);
   const { loading, error, data } = useQuery(GET_BOOK, {
+    onError() {
+      message.error('Có lỗi xảy ra, vui lòng thử tải lại trang.')
+    },
     variables: {
-      id: props.match.params.id
+      id: bookId
     }
   });
+  const { loading: loadingBookReviews, data: dataBookReviews,
+    error: errorBookReviews, refetch: refetchBookReviews } = useQuery(GET_REVIEWS_BY_BOOK, {
+      variables: {
+        bookId,
+        orderBy: 'createdAt_DESC'
+      }
+    });
 
-  const onReadMoreClick = () => {
-    document.querySelector('.nav-item[href="#nav-description"]').click();
+  const onReadMoreClick = (tab='description') => {
+    document.querySelector(`.nav-item[href="#nav-${tab}"]`).click();
     document.querySelector('.product__info__detailed').scrollIntoView({
       behavior: 'smooth'
     });
@@ -24,7 +42,21 @@ function ProductPage(props) {
   if (loading) return (
     <div>Loading...</div>
   )
-  if (error) return `Error! ${error.message}`;
+
+  const getTotalScore = (data) => {
+    if (!data) return 0;
+    return data.fiveStar * 5 + data.fourStar * 4 + data.threeStar * 3
+      + data.twoStar * 2 + data.oneStar * 1;
+  }
+
+  const calculateReviewScore = (data) => {
+    if (!data) return 0;
+    const totalScore = getTotalScore(data);
+    return Math.round((totalScore / data.totalCount) * 10) / 10;
+  }
+  
+  const avgScore = calculateReviewScore(dataBookReviews?dataBookReviews.getBookReviewsByBook:undefined);
+
   const { id, title, basePrice, description, thumbnail, dimensions, translator, format, isbn, publishedDate, availableCopies, pages, publisher, authors, categories } = data.getBook;
   return (<div className="maincontent bg--white pt--80 pb--55">
     <div className="container">
@@ -51,13 +83,8 @@ function ProductPage(props) {
                     </div>
                   </div>
                   <div className="product-reviews-summary d-flex">
-                    <ul className="rating-summary d-flex">
-                      <li><i className="zmdi zmdi-star-outline" /></li>
-                      <li><i className="zmdi zmdi-star-outline" /></li>
-                      <li><i className="zmdi zmdi-star-outline" /></li>
-                      <li className="off"><i className="zmdi zmdi-star-outline" /></li>
-                      <li className="off"><i className="zmdi zmdi-star-outline" /></li>
-                    </ul>
+                    <Rate disabled value={avgScore} style={{color: '#FF5501', fontSize: 16}}/>
+                    <a onClick={()=>onReadMoreClick('review')}>(Xem {dataBookReviews?dataBookReviews.getBookReviewsByBook.totalCount:0} đánh giá)</a>
                   </div>
                   <div className="price-box">
                     <span><NumberFormat value={basePrice} displayType={'text'}
@@ -66,7 +93,7 @@ function ProductPage(props) {
                   <div className="product__overview">
                     <div className="product_overview_content" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className="fade-footer">
-                      <span onClick={onReadMoreClick}
+                      <span onClick={()=>onReadMoreClick('description')}
                         className="read-more text-primary font-weight-bold">Xem thêm</span>
                     </div>
                   </div>
@@ -135,136 +162,41 @@ function ProductPage(props) {
               <div className="pro__tab_label tab-pane fade" id="nav-details" role="tabpanel">
                 <div className="description__attribute">
                   <table className="table-book-details">
-                        <tbody>
-                          <tr>
-                            <td><b>Nhà xuất bản</b></td>
-                            <td className="text-align-right"><i>{publisher.name}</i></td>
-                          </tr>
-                          <tr>
-                            <td><b>Ngày xuất bản</b></td>
-                            <td className="text-align-right"><i>{moment(publishedDate).format('DD/MM/YYYY')}</i></td>
-                          </tr>
-                          <tr>
-                            <td><b>Kích thước</b></td>
-                            <td className="text-align-right"><i>{dimensions}</i></td>
-                          </tr>
-                          <tr>
-                            <td><b>Số trang</b></td>
-                            <td className="text-align-right"><i>{pages}</i></td>
-                          </tr>
-                          <tr>
-                            <td><b>ISBN</b></td>
-                            <td className="text-align-right"><i>{isbn}</i></td>
-                          </tr>
-                          <tr>
-                            <td><b>Dịch giả</b></td>
-                            <td className="text-align-right"><i>{translator}</i></td>
-                          </tr>
-                        </tbody>
+                    <tbody>
+                      <tr>
+                        <td><b>Nhà xuất bản</b></td>
+                        <td className="text-align-right"><i>{publisher.name}</i></td>
+                      </tr>
+                      <tr>
+                        <td><b>Ngày xuất bản</b></td>
+                        <td className="text-align-right"><i>{moment(publishedDate).format('DD/MM/YYYY')}</i></td>
+                      </tr>
+                      <tr>
+                        <td><b>Kích thước</b></td>
+                        <td className="text-align-right"><i>{dimensions}</i></td>
+                      </tr>
+                      <tr>
+                        <td><b>Số trang</b></td>
+                        <td className="text-align-right"><i>{pages}</i></td>
+                      </tr>
+                      <tr>
+                        <td><b>ISBN</b></td>
+                        <td className="text-align-right"><i>{isbn}</i></td>
+                      </tr>
+                      <tr>
+                        <td><b>Dịch giả</b></td>
+                        <td className="text-align-right"><i>{translator}</i></td>
+                      </tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
               {/* End Single Tab Content */}
               {/* Start Single Tab Content */}
               <div className="pro__tab_label tab-pane fade" id="nav-review" role="tabpanel">
-                <div className="review__attribute">
-                  <h1>Customer Reviews</h1>
-                  <h2>Hastech</h2>
-                  <div className="review__ratings__type d-flex">
-                    <div className="review-ratings">
-                      <div className="rating-summary d-flex">
-                        <span>Quality</span>
-                        <ul className="rating d-flex">
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                        </ul>
-                      </div>
-                      <div className="rating-summary d-flex">
-                        <span>Price</span>
-                        <ul className="rating d-flex">
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                        </ul>
-                      </div>
-                      <div className="rating-summary d-flex">
-                        <span>value</span>
-                        <ul className="rating d-flex">
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="review-content">
-                      <p>Hastech</p>
-                      <p>Review by Hastech</p>
-                      <p>Posted on 11/6/2018</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="review-fieldset">
-                  <h2>You're reviewing:</h2>
-                  <h3>Chaz Kangeroo Hoodie</h3>
-                  <div className="review-field-ratings">
-                    <div className="product-review-table">
-                      <div className="review-field-rating d-flex">
-                        <span>Quality</span>
-                        <ul className="rating d-flex">
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                        </ul>
-                      </div>
-                      <div className="review-field-rating d-flex">
-                        <span>Price</span>
-                        <ul className="rating d-flex">
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                        </ul>
-                      </div>
-                      <div className="review-field-rating d-flex">
-                        <span>Value</span>
-                        <ul className="rating d-flex">
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                          <li className="off"><i className="zmdi zmdi-star" /></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="review_form_field">
-                    <div className="input__box">
-                      <span>Nickname</span>
-                      <input id="nickname_field" type="text" name="nickname" />
-                    </div>
-                    <div className="input__box">
-                      <span>Summary</span>
-                      <input id="summery_field" type="text" name="summery" />
-                    </div>
-                    <div className="input__box">
-                      <span>Review</span>
-                      <textarea name="review" defaultValue={""} />
-                    </div>
-                    <div className="review-form-actions">
-                      <button>Submit Review</button>
-                    </div>
-                  </div>
-                </div>
+                <BookReviewSection isAuthenticated={isAuthenticated} refetchBookReviews={refetchBookReviews}
+                  loading={loadingBookReviews} data={dataBookReviews} error={errorBookReviews}
+                  bookId={id} bookTitle={title} avgScore={avgScore} />
               </div>
               {/* End Single Tab Content */}
             </div>
@@ -737,4 +669,16 @@ function ProductPage(props) {
   </div>)
 }
 
-export default ProductPage;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

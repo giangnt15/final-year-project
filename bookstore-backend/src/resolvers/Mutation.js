@@ -18,7 +18,9 @@ const Mutation = {
             user,
             token: jwt.sign({
                 userId: user.id,
-            }, env.JWT_SECRET)
+            }, env.JWT_SECRET,{
+                expiresIn: '1d'
+            })
         }
     },
     async login(parent, { data }, { prisma, env }, info) {
@@ -44,7 +46,9 @@ const Mutation = {
             user,
             token: jwt.sign({
                 userId: user.id,
-            }, env.JWT_SECRET)
+            }, env.JWT_SECRET,{
+                expiresIn: '1d'
+            })
         }
     },
     async updateUser(parent, {data}, {prisma,httpContext},info){
@@ -228,6 +232,27 @@ const Mutation = {
             data
         },info)
     },
+    async createBookReview(parent, {data}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        if (data.rating>5||data.rating<=0){
+            throw new Error("Rating score is invalid");
+        }
+        return prisma.mutation.createBookReview({
+            data: {
+                ...data,
+                book: {
+                    connect: {
+                        id: data.book
+                    }
+                },
+                author: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        },info);
+    }
 }
 
 export default Mutation;

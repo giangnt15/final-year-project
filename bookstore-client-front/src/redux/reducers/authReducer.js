@@ -1,4 +1,4 @@
-import { LOGGING_IN, LOG_IN_SUCCESSFULLY, LOG_IN_FAILED, SIGNING_UP, SIGN_UP_SUCCESSFULLY, SIGN_UP_FAILED } from "../../constants";
+import { LOGGING_IN, LOG_IN_SUCCESSFULLY, LOG_IN_FAILED, SIGNING_UP, SIGN_UP_SUCCESSFULLY, SIGN_UP_FAILED, LOG_OUT } from "../../constants";
 
 let authPayload = localStorage.getItem('authPayload');
 try {
@@ -52,6 +52,14 @@ export default function authReducer(state = initialState, action) {
             return {
                 ...state,
                 loading: false
+            }
+        case LOG_OUT:
+            return {
+                user: undefined,
+                token: undefined,
+                loading: false,
+                errorLogin: false,
+                errorSignup: false
             }
         default: return state;
     }

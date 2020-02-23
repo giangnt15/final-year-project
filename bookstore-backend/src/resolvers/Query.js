@@ -84,14 +84,37 @@ const Query = {
             }
         },info);
     },
-    async getBookReviewsByBook(parent, {id},{prisma},info){
-        return prisma.query.bookReviews({
+    async getBookReviewsByBook(parent, {bookId, orderBy, first,skip},{prisma},info){
+        console.log(bookId)
+        const bookReviews = await prisma.query.bookReviews({
             where: {
                 book: {
-                    id: id
+                    id: bookId
                 }
+            },
+            orderBy,
+            first,
+            skip
+        },`{id reviewHeader reviewText rating createdAt updatedAt author{id username avatar}}`);
+        const totalCount = await prisma.query.bookReviewsConnection({where: {
+            book: {
+                id: bookId
             }
-        },info);
+        }}, `{aggregate {count}}`);
+        const fiveStar = await prisma.query.bookReviewsConnection({where: {rating: 5, book: {id: bookId}}},`{aggregate {count}}`);
+        const fourStar = await prisma.query.bookReviewsConnection({where: {rating: 4, book: {id: bookId}}},`{aggregate {count}}`);
+        const threeStar = await prisma.query.bookReviewsConnection({where: {rating: 3, book: {id: bookId}}},`{aggregate {count}}`);
+        const twoStar = await prisma.query.bookReviewsConnection({where: {rating: 2, book: {id: bookId}}},`{aggregate {count}}`);
+        const oneStar = await prisma.query.bookReviewsConnection({where: {rating: 1, book: {id: bookId}}},`{aggregate {count}}`);
+        return {
+            bookReviews,
+            totalCount: totalCount.aggregate.count,
+            fiveStar: fiveStar.aggregate.count,
+            fourStar: fourStar.aggregate.count,
+            threeStar: threeStar.aggregate.count,
+            twoStar: twoStar.aggregate.count,
+            oneStar: oneStar.aggregate.count
+        }
     },
     async getUserAddresses(parent, args,{prisma,httpContext},info){
         const userId = getUserId(httpContext);

@@ -26,7 +26,7 @@
 }
 
 /*---------------------------------------------*/
-a {
+.auth-page a {
 	font-size: 14px;
 	line-height: 1.7;
 	color: #666666;
@@ -76,7 +76,7 @@ textarea {
   border: none;
 }
 
-textarea:focus, input:focus {
+.auth-page textarea:focus, .auth-page input:focus {
   border-color: transparent !important;
 }
 
@@ -247,7 +247,7 @@ iframe {
 }
 
 .btn-face {
-  color: #fff;
+  color: #fff !important;
   background-color: #3b5998;
 }
 

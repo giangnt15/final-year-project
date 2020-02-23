@@ -12,19 +12,81 @@ function HomePage(props) {
                 <MainSlider />
                 <MainSlider />
             </SlickSlider>
-            <ProductSectionContainer isFullWidth>
-            </ProductSectionContainer>
-            {/* <ResponsiveDialog title="Thong tin san pham" /> */}
-    
-        <ResponsiveDialog render={(attrs)=>(
-            <TextField label="Email" placeholder="Email..."/>
-        )}/>
-        <ProductSectionContainer isFullWidth slickSettings={{
-                slidesToShow: 5, centerMode: true,
-                rows: 2,
+            <ProductSectionContainer isFullWidth slickSettings={{
+                slidesToShow: 5,
+                rows: 1,
                 dots: false, slidesToScroll: 4, autoplay: true
+            }} sectionName={"Sách mới"} variables={{
+                orderBy: 'createdAt_DESC',
+                skip: 0,
+                first: 20,
+                selection: `{id
+                title
+                basePrice
+                description
+                thumbnail
+                images
+                dimensions
+                translator
+                format
+                isbn
+                publishedDate
+                availableCopies
+                pages
+                publisher{
+                  id
+                  name
+                }
+                authors{
+                  id
+                  pseudonym
+                }
+                categories{
+                  id
+                  name
+                }}`
             }}>
-        </ProductSectionContainer>
+            </ProductSectionContainer>
+            <ProductSectionContainer isFullWidth slickSettings={{
+                slidesToShow: 5,
+                rows: 1,
+                dots: false, slidesToScroll: 4, autoplay: true
+            }} sectionName={"Kinh điển"} variables={{
+                where: {
+                    categories_some: {
+                        id: "ck63t10bb00c30818qwhmi7no"
+                    }
+                },
+                orderBy: 'createdAt_DESC',
+                skip: 0,
+                first: 20,
+                selection: `{id
+                title
+                basePrice
+                description
+                thumbnail
+                images
+                dimensions
+                translator
+                format
+                isbn
+                publishedDate
+                availableCopies
+                pages
+                publisher{
+                  id
+                  name
+                }
+                authors{
+                  id
+                  pseudonym
+                }
+                categories{
+                  id
+                  name
+                }}`
+            }}>
+            </ProductSectionContainer>
         </Fragment>
     )
 }

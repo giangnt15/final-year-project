@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { withApollo } from '@apollo/react-hoc';
 import validator from 'validator';
 import { Button } from 'antd';
+import isTokenValid from '../../../utils/tokenValidation';
 
 function SignupPage(props) {
 
@@ -54,11 +55,11 @@ function SignupPage(props) {
     signUp(email, username, password);
   }
 
-  if (auth.token){
+  if (isTokenValid(auth.token)){
     return <Redirect to="/" />
   }
 
-  return (<div>
+  return (<div className="auth-page">
     <div className="limiter">
       <div className="container-login100" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80")' }}>
         <div className="wrap-login100 p-l-70 p-r-70 p-t-50 p-b-33">
