@@ -356,7 +356,7 @@ function ShopGrid(props) {
     }
     return books.books.map((book, index) => {
       return (
-        <div key={index}><ProductItem width={300} thumbHeight={360} book={book} /></div>
+        <div key={index}><ProductItem width={220} thumbHeight={360} book={book} /></div>
       )
     });
   }

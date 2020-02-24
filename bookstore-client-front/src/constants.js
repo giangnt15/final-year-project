@@ -29,7 +29,7 @@ export const FILTER_TYPE_PRICE = 'pro--range';
 export const FILTER_TYPE_TAG = 'poroduct--tag poroduct--cat';
 export const FILTER_TYPE_AUTHOR = 'poroduct--auth poroduct--cat';
 export const FILTER_TYPE_PUBLISHER = 'poroduct--pub poroduct--cat';
-
+export const RESET_FILTERS = 'RESET_FILTERS';
 //end filter types
 
 //auth 

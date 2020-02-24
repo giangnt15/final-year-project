@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BOOK } from '../../../api/bookApi';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import './product-page.css';
@@ -10,10 +10,13 @@ import { connect } from 'react-redux';
 import isTokenValid from '../../../utils/tokenValidation';
 import { GET_REVIEWS_BY_BOOK } from '../../../api/reviewApi';
 import { message, Rate } from 'antd';
+import { changeFilter } from '../../../redux/actions/filtersActions';
+import { RESET_FILTERS, FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER } from '../../../constants';
 
 function ProductPage(props) {
   const { showReadMore, setShowReadMore } = useState(false);
-  const { auth } = props;
+  const { auth, changeFilter } = props;
+  const history = useHistory();
   const { id: bookId } = useParams()
   const isAuthenticated = isTokenValid(auth.token);
   const { loading, error, data } = useQuery(GET_BOOK, {
@@ -32,7 +35,7 @@ function ProductPage(props) {
       }
     });
 
-  const onReadMoreClick = (tab='description') => {
+  const onReadMoreClick = (tab = 'description') => {
     document.querySelector(`.nav-item[href="#nav-${tab}"]`).click();
     document.querySelector('.product__info__detailed').scrollIntoView({
       behavior: 'smooth'
@@ -54,8 +57,8 @@ function ProductPage(props) {
     const totalScore = getTotalScore(data);
     return Math.round((totalScore / data.totalCount) * 10) / 10;
   }
-  
-  const avgScore = calculateReviewScore(dataBookReviews?dataBookReviews.getBookReviewsByBook:undefined);
+
+  const avgScore = calculateReviewScore(dataBookReviews ? dataBookReviews.getBookReviewsByBook : undefined);
 
   const { id, title, basePrice, description, thumbnail, dimensions, translator, format, isbn, publishedDate, availableCopies, pages, publisher, authors, categories } = data.getBook;
   return (<div className="maincontent bg--white pt--80 pb--55">
@@ -74,7 +77,11 @@ function ProductPage(props) {
                     <div className="book-authors">
                       Tác giả:&nbsp;
                       {authors.map((item, index) => (
-                        <Fragment key={item.id} ><NavLink to="#" className="text-primary">{item.pseudonym}</NavLink>{index !== authors.length - 1 && ','} </Fragment>
+                        <Fragment key={item.id} ><a onClick={() => {
+                          changeFilter(RESET_FILTERS);
+                          changeFilter(FILTER_TYPE_AUTHOR, item.id);
+                          history.push('/books');
+                        }} className="text-primary">{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
                       ))}
                     </div>
                     &nbsp;&nbsp;&nbsp;
@@ -83,8 +90,8 @@ function ProductPage(props) {
                     </div>
                   </div>
                   <div className="product-reviews-summary d-flex">
-                    <Rate disabled value={avgScore} style={{color: '#FF5501', fontSize: 16}}/>
-                    <a onClick={()=>onReadMoreClick('review')}>(Xem {dataBookReviews?dataBookReviews.getBookReviewsByBook.totalCount:0} đánh giá)</a>
+                    <Rate disabled value={avgScore} style={{ color: '#FF5501', fontSize: 16 }} />
+                    <a onClick={() => onReadMoreClick('review')}>(Xem {dataBookReviews ? dataBookReviews.getBookReviewsByBook.totalCount : 0} đánh giá)</a>
                   </div>
                   <div className="price-box">
                     <span><NumberFormat value={basePrice} displayType={'text'}
@@ -93,7 +100,7 @@ function ProductPage(props) {
                   <div className="product__overview">
                     <div className="product_overview_content" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className="fade-footer">
-                      <span onClick={()=>onReadMoreClick('description')}
+                      <span onClick={() => onReadMoreClick('description')}
                         className="read-more text-primary font-weight-bold">Xem thêm</span>
                     </div>
                   </div>
@@ -111,7 +118,11 @@ function ProductPage(props) {
                   <div className="product_meta">
                     <span className="posted_in">Thể loại:&nbsp;
                       {categories.map((item, index) => (
-                      <Fragment key={item.id} ><NavLink to="#">{item.name}</NavLink>{index !== categories.length - 1 && ','} </Fragment>
+                      <Fragment key={item.id} ><a onClick={() => {
+                        changeFilter(RESET_FILTERS);
+                        changeFilter(FILTER_TYPE_CAT, item.id);
+                        history.push('/books');
+                      }}>{item.name}</a>{index !== categories.length - 1 && ','} </Fragment>
                     ))}
                     </span>
                   </div>
@@ -165,7 +176,11 @@ function ProductPage(props) {
                     <tbody>
                       <tr>
                         <td><b>Nhà xuất bản</b></td>
-                        <td className="text-align-right"><i>{publisher.name}</i></td>
+                        <td className="text-align-right"><i><a onClick={() => {
+                          changeFilter(RESET_FILTERS);
+                          changeFilter(FILTER_TYPE_PUBLISHER, publisher.id);
+                          history.push('/books');
+                        }} className="text-primary">{publisher.name}</a></i></td>
                       </tr>
                       <tr>
                         <td><b>Ngày xuất bản</b></td>
@@ -677,7 +692,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
+    changeFilter: (type, value) => {
+      dispatch(changeFilter(type, value));
+    }
   }
 }
 

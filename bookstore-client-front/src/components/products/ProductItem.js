@@ -1,12 +1,15 @@
 import React, { Fragment } from 'react';
 import './products.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { Popover } from 'antd';
-import Truncate from 'react-truncate';
+import { FILTER_TYPE_AUTHOR, RESET_FILTERS } from '../../constants';
+import { connect } from 'react-redux';
+import { changeFilter } from '../../redux/actions/filtersActions';
 
 function ProductItem(props) {
   const { id, thumbnail, basePrice, title, authors, description } = props.book;
-  const { width, thumbHeight } = props;
+  const { width, thumbHeight,changeFilter } = props;
+  const history = useHistory();
   const productDialog = (<div id="express-buy-dialog" className="express-buy-l" >
     <div className="loading" style={{}} />
     <div className="content" id={105165} ng-show="productItem">
@@ -16,7 +19,11 @@ function ProductItem(props) {
       <div className="au-view">
         {/* ngRepeat: item in productItem.Authors */}
         {authors.map((item, index) => (
-          <Fragment key={item.id} ><NavLink to="#">{item.pseudonym}</NavLink>{index !== authors.length - 1 && ','} </Fragment>
+          <Fragment key={item.id} ><a onClick={()=>{
+            changeFilter(RESET_FILTERS);
+            changeFilter(FILTER_TYPE_AUTHOR,item.id);
+            history.push('/books');
+          }}>{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
         ))}
         {/* <a href="/tac-gia/chu-viet-nga-auth43519/p1" ng-repeat="item in productItem.Authors" className="ng-binding ng-scope">{}</a>end ngRepeat: item in productItem.Authors */}
       </div>
@@ -117,4 +124,12 @@ function ProductItem(props) {
     </div></Popover>)
 }
 
-export default ProductItem;
+const mapDispatchToProps = dispatch => {
+  return {
+    changeFilter: (type, value) => {
+      dispatch(changeFilter(type, value));
+    }
+  }
+}
+
+export default connect(null,mapDispatchToProps)(ProductItem);
