@@ -46,4 +46,6 @@ export const LOG_OUT = 'LOG_OUT';
 
 //datetime
 export const DATE_TIME_VN_24H = "HH:mm:ss DD-MM-YYYY"
+export const DATE_VN = "DD-MM-YYYY"
+
 //end datetime
