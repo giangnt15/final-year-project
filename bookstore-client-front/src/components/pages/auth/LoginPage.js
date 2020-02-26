@@ -17,6 +17,11 @@ function LoginPage(props) {
     password: ''
   });
 
+  const [inputChanged, setInputChanged] = useState({
+    username: false,
+    password: false
+  })
+
   const location = useLocation()
 
   const handleInputsChange = (e) => {
@@ -25,6 +30,10 @@ function LoginPage(props) {
     setInputs(prev => ({
       ...prev,
       [name]: value
+    }));
+    setInputChanged(prev => ({
+      ...prev,
+      [name]: true
     }))
     if (!value) {
     }
@@ -69,9 +78,9 @@ function LoginPage(props) {
               <div className={`wrap-input100 validate-input${inputs.username?'':' error'}`} data-validate="Username is required">
                 <input className={`input100`} type="text" name="username"
                   onChange={handleInputsChange} value={inputs.username} />
-                <span className={`focus-input100${inputs.username?'':' error'}`} />
+                  <span className={`focus-input100${inputChanged.username && inputs.username ? '' : ' error'}`} />
               </div>
-              {!inputs.username&&<span className="error-txt">Username không được để trống</span>}
+              {inputChanged.username && !inputs.username && <span className="error-txt">Username không được để trống</span>}
             </div>
             <div className="p-t-13 p-b-9">
               <span className="txt1">
@@ -85,9 +94,9 @@ function LoginPage(props) {
               <div className={`wrap-input100 validate-input`} data-validate="Password is required">
                 <input className={`input100`} type="password" name="password"
                   onChange={handleInputsChange} value={inputs.password} />
-                <span className={`focus-input100${inputs.password?'':' error'}`} />
+                  <span className={`focus-input100${inputChanged.password && inputs.password ? '' : ' error'}`} />
               </div>
-              {!inputs.password&&<span className="error-txt">Password không được để trống</span>}
+              {inputChanged.password && !inputs.password && <span className="error-txt">Password không được để trống</span>}
             </div>
             <div className="container-login100-form-btn m-t-17">
               <Button htmlType="submit" type="primary" loading={auth.loading} className="login100-form-btn">
