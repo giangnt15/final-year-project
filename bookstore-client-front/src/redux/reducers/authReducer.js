@@ -1,17 +1,28 @@
-import { LOGGING_IN, LOG_IN_SUCCESSFULLY, LOG_IN_FAILED, SIGNING_UP, SIGN_UP_SUCCESSFULLY, SIGN_UP_FAILED, LOG_OUT } from "../../constants";
+import {
+    LOGGING_IN,
+    LOG_IN_SUCCESSFULLY,
+    LOG_IN_FAILED,
+    SIGNING_UP,
+    SIGN_UP_SUCCESSFULLY,
+    SIGN_UP_FAILED,
+    LOG_OUT
+} from "../../constants";
 
-let authPayload = localStorage.getItem('authPayload');
+let token = localStorage.getItem('token');
+let user = localStorage.getItem('userInfo');
+
 try {
-    if (authPayload) {
-        authPayload = JSON.parse(authPayload);
+    if (user) {
+        user = JSON.parse(user);
     }
-} catch{
-    authPayload = undefined;
+
+} catch {
+    user = undefined;
 }
 
 const initialState = {
-    user: authPayload ? authPayload.user : undefined,
-    token: authPayload ? authPayload.token : undefined,
+    user: user,
+    token: token,
     loading: false,
     errorLogin: false,
     errorSignup: false
@@ -24,43 +35,44 @@ export default function authReducer(state = initialState, action) {
                 ...state,
                 loading: true,
             }
-        case LOG_IN_SUCCESSFULLY:
-            return {
-                ...state,
-                user: action.authPayload.user,
-                token: action.authPayload.token,
-                loading: false,
-            }
-        case LOG_IN_FAILED:
-            return {
-                ...state,
-                loading: false
-            }
-        case SIGNING_UP:
-            return {
-                ...state,
-                loading: true,
-            }
-        case SIGN_UP_SUCCESSFULLY:
-            return {
-                ...state,
-                user: action.authPayload.user,
-                token: action.authPayload.token,
-                loading: false,
-            }
-        case SIGN_UP_FAILED:
-            return {
-                ...state,
-                loading: false
-            }
-        case LOG_OUT:
-            return {
-                user: undefined,
-                token: undefined,
-                loading: false,
-                errorLogin: false,
-                errorSignup: false
-            }
-        default: return state;
+            case LOG_IN_SUCCESSFULLY:
+                return {
+                    ...state,
+                    user: action.authPayload.user,
+                        token: action.authPayload.token,
+                        loading: false,
+                }
+                case LOG_IN_FAILED:
+                    return {
+                        ...state,
+                        loading: false
+                    }
+                    case SIGNING_UP:
+                        return {
+                            ...state,
+                            loading: true,
+                        }
+                        case SIGN_UP_SUCCESSFULLY:
+                            return {
+                                ...state,
+                                user: action.authPayload.user,
+                                    token: action.authPayload.token,
+                                    loading: false,
+                            }
+                            case SIGN_UP_FAILED:
+                                return {
+                                    ...state,
+                                    loading: false
+                                }
+                                case LOG_OUT:
+                                    return {
+                                        user: undefined,
+                                            token: undefined,
+                                            loading: false,
+                                            errorLogin: false,
+                                            errorSignup: false
+                                    }
+                                    default:
+                                        return state;
     }
 }

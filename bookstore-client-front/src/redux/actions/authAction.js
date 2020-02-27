@@ -51,7 +51,7 @@ export const login = (client, { email, password }) => {
                     }
                 }
             });
-            localStorage.setItem('authPayload', JSON.stringify(res.data.login));
+            localStorage.setItem('userInfo', JSON.stringify(res.data.login.user));
             localStorage.setItem('token', res.data.login.token);
             dispatch(loginSuccessfully(res.data.login));
         } catch (ex) {
@@ -75,7 +75,7 @@ export const signUp = (client, { email, username, password }) => {
                     }
                 }
             });
-            localStorage.setItem('authPayload', JSON.stringify(res.data.signUp));
+            localStorage.setItem('userInfo', JSON.stringify(res.data.signUp.user));
             localStorage.setItem('token', res.data.signUp.token);
             dispatch(signUpSuccessfully(res.data.signUp));
         } catch (ex) {
