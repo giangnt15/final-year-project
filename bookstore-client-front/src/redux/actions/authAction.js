@@ -1,6 +1,7 @@
-import { LOGGING_IN, LOG_IN_SUCCESSFULLY, SIGNING_UP, SIGN_UP_SUCCESSFULLY, SIGN_UP_FAILED, LOG_IN_FAILED, LOG_OUT } from "../../constants";
-import { LOGIN, SIGNUP } from "../../api/authApi";
+import { LOGGING_IN, LOG_IN_SUCCESSFULLY, SIGNING_UP, SIGN_UP_SUCCESSFULLY, SIGN_UP_FAILED, LOG_IN_FAILED, LOG_OUT, UPDATING_USER, UPDATE_USER_SUCCESSFULLY, UPDATE_USER_FAILED } from "../../constants";
+import { LOGIN, SIGNUP, UPDATE_USER } from "../../api/authApi";
 import history from "../../utils/history";
+import { message } from "antd";
 
 const loggingIn = () => ({
     type: LOGGING_IN
@@ -29,7 +30,23 @@ const signUpFailed = () => ({
     type: SIGN_UP_FAILED,
 })
 
-export const logout = ()=>{
+const updatingUser = () => ({
+    type: UPDATING_USER
+});
+
+export const updateUserSucessfully = (user) => {
+    localStorage.setItem('userInfo', JSON.stringify(user));
+    return {
+        type: UPDATE_USER_SUCCESSFULLY,
+        user
+    }
+};
+
+const updateUserFailed = (error) => ({
+    type: UPDATE_USER_FAILED
+})
+
+export const logout = () => {
     localStorage.removeItem('authPayload');
     localStorage.removeItem('token');
     history.push('/');
@@ -57,6 +74,26 @@ export const login = (client, { email, password }) => {
         } catch (ex) {
             console.log(ex)
             dispatch(loginFailed());
+        }
+    }
+}
+
+export const updateUser = (client, data) => {
+    return async dispatch => {
+        dispatch(updatingUser());
+        try {
+            const res = await client.mutate({
+                mutation: UPDATE_USER,
+                variables: {
+                    data
+                }
+            });
+            localStorage.setItem('userInfo', JSON.stringify(res.data.updateUser));
+            dispatch(updateUserSucessfully(res.data.updateUser));
+        } catch (ex) {
+            console.log(ex);
+            message.error("Cập nhật thất bại, vui lòng kiểm tra lại thông tin.")
+            updateUserFailed();
         }
     }
 }

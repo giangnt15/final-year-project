@@ -189,7 +189,7 @@ type Query{
 type Mutation{
     signUp(data: UserSignupInput!): AuthPayload!
     login(data: UserLoginInput!): AuthPayload!
-    updateUser(data: UserUpdateInput!): User!
+    updateUser(data: CustomUserUpdateInput!): User!
     createBook(data: BookCreateInput!): Book!
     updateBook(id: ID!, data: BookUpdateInput!): Book!
     createCollection(data: CollectionCreateInput!): Collection!
@@ -298,12 +298,14 @@ input CollectionCreateInput{
     cover: String!
 }
 
-input UserUpdateInput{
+input CustomUserUpdateInput{
     fullName: String
+    changePassword: Boolean
     phone: String
     gender: Boolean
     birthdate: String
     password: String
+    currentPassword: String
 }
 
 input BookUpdateInput{

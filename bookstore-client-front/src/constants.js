@@ -41,6 +41,9 @@ export const LOGGING_IN = 'LOGGING_IN';
 export const LOG_IN_SUCCESSFULLY = 'LOG_IN_SUCCESSFULLY';
 export const LOG_IN_FAILED = 'LOG_IN_FAILED';
 export const LOG_OUT = 'LOG_OUT';
+export const UPDATING_USER = 'UPDATING_USER';
+export const UPDATE_USER_SUCCESSFULLY = 'UPDATE_USER_SUCCESSFULLY';
+export const UPDATE_USER_FAILED = 'UPDATE_USER_FAILED';
 
 //end auth
 

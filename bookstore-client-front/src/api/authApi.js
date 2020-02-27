@@ -7,6 +7,7 @@ export const LOGIN = gql`
                 id
                 username
                 fullName
+                avatar
                 email
                 phone
                 gender
@@ -15,6 +16,24 @@ export const LOGIN = gql`
                 role
             }
             token
+        }
+    }
+
+`
+
+export const UPDATE_USER = gql`
+    mutation updateUser($data: CustomUserUpdateInput!){
+        updateUser(data: $data){
+            id
+            username
+            fullName
+            avatar
+            email
+            phone
+            gender
+            birthdate
+            password
+            role
         }
     }
 `
@@ -27,6 +46,7 @@ export const SIGNUP = gql`
                 username
                 fullName
                 email
+                avatar
                 phone
                 gender
                 birthdate

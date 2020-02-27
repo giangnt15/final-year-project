@@ -18,7 +18,7 @@ const Mutation = {
             user,
             token: jwt.sign({
                 userId: user.id,
-            }, env.JWT_SECRET,{
+            }, env.JWT_SECRET, {
                 expiresIn: '1d'
             })
         }
@@ -29,7 +29,7 @@ const Mutation = {
             where: {
                 OR: [{
                     email
-                },{
+                }, {
                     username: email
                 }]
             }
@@ -46,31 +46,49 @@ const Mutation = {
             user,
             token: jwt.sign({
                 userId: user.id,
-            }, env.JWT_SECRET,{
+            }, env.JWT_SECRET, {
                 expiresIn: '1d'
             })
         }
     },
-    async updateUser(parent, {data}, {prisma,httpContext},info){
+    async updateUser(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const userExist = await prisma.exists.User({
-            id: userId
-        })
-        if (!userExist) throw new Error('User not existed!');
+        const user = await prisma.query.user({
+            where: {
+                id: userId
+            }
+        });
+        if (!user) throw new Error('User not existed!');
+        if (data.changePassword) {
+            const currentPasswordMatched = await bcrypt.compare(data.currentPassword, user.password);
+            if (!currentPasswordMatched) throw new Error('Password hiện tại không đúng.');
+        }
+        const dataToChange = {
+            fullName: data.fullName,
+            gender: data.gender,
+            phone: data.phone,
+            birthdate: data.birthdate
+        }
+        if (data.changePassword){
+            if (!data.password||data.password.length<8) throw new Error('Password length is invalid');
+            dataToChange.password = await bcrypt.hash(data.password,10);
+        }
         return prisma.mutation.updateUser({
             where: {
                 id: userId
             },
-            data
-        },info);
+            data: {
+                ...dataToChange
+            }
+        }, info);
     },
-    async updateBook(parent, {id,data}, { prisma, httpContext, env }, info){
+    async updateBook(parent, { id, data }, { prisma, httpContext, env }, info) {
         const userId = getUserId(httpContext);
-        checkAdmin(userId,prisma);
+        checkAdmin(userId, prisma);
         const bookExists = await prisma.exists.Book({
             id
         });
-        if (!bookExists){
+        if (!bookExists) {
             throw new Error("Book not found");
         }
         const opArgs = {
@@ -81,7 +99,7 @@ const Mutation = {
                 ...data,
             }
         }
-        if (data.categories){
+        if (data.categories) {
             const categories = data.categories.map(item => ({
                 id: item
             }));
@@ -89,7 +107,7 @@ const Mutation = {
                 connect: categories
             }
         }
-        if (data.authors){
+        if (data.authors) {
             const authors = data.authors.map(item => ({
                 id: item
             }));
@@ -97,7 +115,7 @@ const Mutation = {
                 connect: authors
             }
         }
-        if (data.publisher){
+        if (data.publisher) {
             const publisher = {
                 connect: {
                     id: data.publisher
@@ -105,11 +123,11 @@ const Mutation = {
             }
             opArgs.data.publisher = publisher;
         }
-        return prisma.mutation.updateBook(opArgs,info);
+        return prisma.mutation.updateBook(opArgs, info);
     },
-    async createBook(parent, {data}, { prisma, httpContext, env }, info) {
+    async createBook(parent, { data }, { prisma, httpContext, env }, info) {
         const userId = getUserId(httpContext);
-        checkAdmin(userId,prisma);
+        checkAdmin(userId, prisma);
         const idsCategories = data.categories.map(item => ({
             id: item
         }));
@@ -117,7 +135,7 @@ const Mutation = {
         const idsAuthors = data.authors.map(item => ({
             id: item
         }));
-      
+
         return prisma.mutation.createBook({
             data: {
                 ...data,
@@ -135,24 +153,24 @@ const Mutation = {
             }
         }, info);
     },
-    async createCollection(parent, {data}, {prisma,httpContext},info){
+    async createCollection(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        checkAdmin(userId,prisma);
+        checkAdmin(userId, prisma);
         return prisma.mutation.createCollection({
             data
-        },info)
+        }, info)
     },
-    async updateCollection(parent, {data,id}, {prisma,httpContext},info){
+    async updateCollection(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        checkAdmin(userId,prisma);
+        checkAdmin(userId, prisma);
         return prisma.mutation.updateCollection({
             where: {
                 id
             },
             data
-        },info)
+        }, info)
     },
-    async createUserAddress(parent, {data}, {prisma,httpContext},info){
+    async createUserAddress(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         return prisma.mutation.createUserAddress({
             data: {
@@ -163,9 +181,9 @@ const Mutation = {
                     }
                 }
             }
-        },info);
+        }, info);
     },
-    async updateUserAddress(parent, {data,id}, {prisma,httpContext},info){
+    async updateUserAddress(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         const addressExisted = await prisma.exists.UserAddress({
             user: {
@@ -179,16 +197,16 @@ const Mutation = {
                 id
             },
             data
-        },info)
+        }, info)
     },
-    async createBookCategory(parent, {data}, {prisma,httpContext},info){
+    async createBookCategory(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
         return prisma.mutation.createBookCategory({
             data
-        },info)
+        }, info)
     },
-    async updateBookCategory(parent, {data,id}, {prisma,httpContext},info){
+    async updateBookCategory(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
         return prisma.mutation.createBookCategory({
@@ -196,16 +214,16 @@ const Mutation = {
                 id
             },
             data
-        },info)
+        }, info)
     },
-    async createPublisher(parent, {data}, {prisma,httpContext},info){
+    async createPublisher(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
         return prisma.mutation.createPublisher({
             data
-        },info)
+        }, info)
     },
-    async updatePublisher(parent, {data,id}, {prisma,httpContext},info){
+    async updatePublisher(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
         return prisma.mutation.updatePublisher({
@@ -213,16 +231,16 @@ const Mutation = {
                 id
             },
             data
-        },info)
+        }, info)
     },
-    async createAuthor(parent, {data}, {prisma,httpContext},info){
+    async createAuthor(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
         return prisma.mutation.createAuthor({
             data
-        },info)
+        }, info)
     },
-    async updateAuthor(parent, {data,id}, {prisma,httpContext},info){
+    async updateAuthor(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
         return prisma.mutation.updateAuthor({
@@ -230,11 +248,11 @@ const Mutation = {
                 id
             },
             data
-        },info)
+        }, info)
     },
-    async createBookReview(parent, {data}, {prisma,httpContext},info){
+    async createBookReview(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        if (data.rating>5||data.rating<=0){
+        if (data.rating > 5 || data.rating <= 0) {
             throw new Error("Rating score is invalid");
         }
         return prisma.mutation.createBookReview({
@@ -251,7 +269,7 @@ const Mutation = {
                     }
                 }
             }
-        },info);
+        }, info);
     }
 }
 
