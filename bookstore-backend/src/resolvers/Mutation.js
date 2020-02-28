@@ -34,6 +34,8 @@ const Mutation = {
                 }]
             }
         });
+        console.log(data)
+
         if (!users.length) {
             throw new Error("Wrong username or password!");
         }
@@ -42,6 +44,7 @@ const Mutation = {
         if (!matched) {
             throw new Error("Wrong username or password!");
         }
+        console.log(data)
         return {
             user,
             token: jwt.sign({

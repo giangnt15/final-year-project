@@ -71,7 +71,7 @@
         transition: 0.4s; }
         .minicart-content-wrapper .mini_action .checkout__btn:hover {
           background: #e59285 none repeat scroll 0 0;
-          color: #fff; }
+          color: #fff !important; }
       .minicart-content-wrapper .mini_action .cart__btn {
         border: 1px solid #ebebeb;
         border-radius: 3px;

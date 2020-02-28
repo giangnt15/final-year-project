@@ -12,7 +12,7 @@ import { logout } from '../../../redux/actions/authAction';
 function Header(props) {
 
   const {user,token} = props.auth;
-  const {logout} = props;
+  const {logout,cart} = props;
 
   const [showCart, setShowCart] = useState(false);
 
@@ -185,10 +185,10 @@ function Header(props) {
             <ul className="header__sidebar__right d-flex justify-content-end align-items-center">
               <li className="shop_search" onClick={toggleSearch}><a className="search__active" href="#" /></li>
               <li className="wishlist"><a href="#" /></li>
-              <li className="shopcart" onClick={toggleCart}><a className="cartbox_active" href="#"><span className="product_qun">3</span></a>
+  <li className="shopcart" onClick={toggleCart}><a className="cartbox_active" href="#"><span className="product_qun">{cart.cartTotalQty}</span></a>
                 <Fade in={showCart}>
                   {/* Start Shopping Cart */}
-                  <div><MiniCart onToggle={toggleCart} /></div>
+                  <div><MiniCart cart={cart} onToggle={toggleCart} /></div>
                   {/* End Shopping Cart */}
                 </Fade>
               </li>
@@ -251,7 +251,8 @@ function Header(props) {
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    cart: state.cart
   }
 }
 

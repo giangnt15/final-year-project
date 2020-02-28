@@ -1,17 +1,21 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+import NumberFormat from 'react-number-format';
 
 export default function MiniCartItem(props) {
-
+    const { title, id, basePrice, qty, thumbnail } = props.cartItem;
     return (
         <div className="item01 d-flex mt--20">
             <div className="thumb">
-                <a href="product-details.html"><img src="/images/product/sm-img/3.jpg" alt="product images" /></a>
+                <NavLink to={`/book/${id}`}><img src={thumbnail} alt="product images" /></NavLink>
             </div>
             <div className="content">
-                <h6><a href="product-details.html">Impulse Duffle</a></h6>
-                <span className="prize">$40.00</span>
+                <h6><NavLink to={`/book/${id}`} className="text-ellipsis">{title}</NavLink></h6>
+                <span className="prize"><NumberFormat value={basePrice*qty} displayType={'text'}
+                      suffix="đ" thousandSeparator={true} /></span>
                 <div className="product_prize d-flex justify-content-between">
-                    <span className="qun">Qty: 03</span>
+                    <span className="qun"><NumberFormat value={qty} displayType={'text'}
+                      prefix="SL: " thousandSeparator={true} /></span>
                     <ul className="d-flex justify-content-end">
                         <li><a href="#"><i className="zmdi zmdi-settings" /></a></li>
                         <li><a href="#"><i className="zmdi zmdi-delete" /></a></li>

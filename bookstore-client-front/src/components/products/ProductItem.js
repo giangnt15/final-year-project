@@ -5,10 +5,11 @@ import { Popover } from 'antd';
 import { FILTER_TYPE_AUTHOR, RESET_FILTERS } from '../../constants';
 import { connect } from 'react-redux';
 import { changeFilter } from '../../redux/actions/filtersActions';
+import { addSingleItemToCart } from '../../redux/actions/cartAction';
 
 function ProductItem(props) {
   const { id, thumbnail, basePrice, title, authors, description } = props.book;
-  const { width, thumbHeight,changeFilter } = props;
+  const { width, thumbHeight, changeFilter,addSingleItemToCart } = props;
   const history = useHistory();
   const productDialog = (<div id="express-buy-dialog" className="express-buy-l" >
     <div className="loading" style={{}} />
@@ -19,9 +20,9 @@ function ProductItem(props) {
       <div className="au-view">
         {/* ngRepeat: item in productItem.Authors */}
         {authors.map((item, index) => (
-          <Fragment key={item.id} ><a onClick={()=>{
+          <Fragment key={item.id} ><a onClick={() => {
             changeFilter(RESET_FILTERS);
-            changeFilter(FILTER_TYPE_AUTHOR,item.id);
+            changeFilter(FILTER_TYPE_AUTHOR, item.id);
             history.push('/books');
           }}>{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
         ))}
@@ -30,7 +31,7 @@ function ProductItem(props) {
       <div className="des-view ng-binding">
         <div className="product__info__main">
           <div className="product__overview">
-            <div className="product_overview_content" style={{height: 200}} dangerouslySetInnerHTML={{ __html: description }}></div>
+            <div className="product_overview_content" style={{ height: 200 }} dangerouslySetInnerHTML={{ __html: description }}></div>
             <div className="fade-footer"><NavLink to={`/book/${id}`} className="read-more text-primary font-weight-bold">Xem thêm</NavLink></div></div>
         </div>
       </div>
@@ -52,14 +53,10 @@ function ProductItem(props) {
       <div className="clearfix" />
     </div> */}
       <div className="vloader express-loading" style={{ display: 'none' }} />
-      <form className="ng-pristine ng-valid">
-        <input type="hidden" name="productid" className="productid" defaultValue={105165} />
-        <input type="hidden" name="Sizes" className="Sizes" defaultValue />
-        <input type="hidden" name="colorid" className="colorid" defaultValue />
-        <input type="hidden" name="fussedid" className="fussedid" defaultValue />
-        <input type="hidden" name="quantity" defaultValue={1} />
-        <input type="hidden" name="price" defaultValue={67000} />
-        <input type="hidden" name="actiontype" id="actiontype" defaultValue />
+      <form className="ng-pristine ng-valid" onSubmit={(e) => {
+        e.preventDefault();
+        addSingleItemToCart(props.book,1)
+      }} >
         <input type="submit" className="btn-buy btn btn-bb add-to-cart" value="THÊM VÀO GIỎ HÀNG" />
         {/* <div className="pre-box ng-hide" ng-show="productItem.IsNotPublished && productItem.QuantityRemain==null && !productItem.IsOutOff">
         <small className="ng-binding">Sách này sắp phát hành </small>
@@ -124,12 +121,21 @@ function ProductItem(props) {
     </div></Popover>)
 }
 
+const mapStateToProps = state => {
+  return {
+    cart: state.cart
+  }
+}
+
 const mapDispatchToProps = dispatch => {
   return {
     changeFilter: (type, value) => {
       dispatch(changeFilter(type, value));
+    },
+    addSingleItemToCart: (item, qty) => {
+      dispatch(addSingleItemToCart(item, qty));
     }
   }
 }
 
-export default connect(null,mapDispatchToProps)(ProductItem);
+export default connect(null, mapDispatchToProps)(ProductItem);
