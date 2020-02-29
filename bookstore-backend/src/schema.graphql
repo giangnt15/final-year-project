@@ -184,6 +184,7 @@ type Query{
     getBookReviewsByBook(bookId: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
     getUserAddresses: [UserAddress!]!
     getPublishers(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): [Publisher!]!
+    getItemStockQty(id: ID!): GetItemStockQtyPayload!
 }
 
 type Mutation{
@@ -229,6 +230,11 @@ type BooksPayload{
 type AuthPayload{
     user: User!
     token: String!
+}
+
+type GetItemStockQtyPayload{
+    qty: Int!
+    id: ID!
 }
 
 input AuthorCreateInput{

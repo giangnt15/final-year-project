@@ -2013,3 +2013,22 @@ span.error{
     padding: 0 1rem;
   }
 }
+
+
+.cart_page_checkout__btn {
+  background: #ff424e none repeat scroll 0 0;
+  color: #fff;
+  display: block;
+  width: 100%;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  margin-top: 12px;
+  font-weight: 600;
+  transition: 0.4s;
+}
+
+.cart_page_checkout__btn:hover {
+  background: #FF0F1E none repeat scroll 0 0;
+  color: #fff !important;
+}

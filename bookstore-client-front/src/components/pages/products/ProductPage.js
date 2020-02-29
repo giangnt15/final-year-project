@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BOOK } from '../../../api/bookApi';
 import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
@@ -9,13 +9,15 @@ import BookReviewSection from '../../reivews/BookReviewSection';
 import { connect } from 'react-redux';
 import isTokenValid from '../../../utils/tokenValidation';
 import { GET_REVIEWS_BY_BOOK } from '../../../api/reviewApi';
-import { message, Rate } from 'antd';
+import { message, Rate, Button } from 'antd';
 import { changeFilter } from '../../../redux/actions/filtersActions';
 import { RESET_FILTERS, FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER } from '../../../constants';
+import { addSingleItemToCartAysnc } from '../../../redux/actions/cartAction';
+import { withApollo } from '@apollo/react-hoc';
 
 function ProductPage(props) {
-  const { showReadMore, setShowReadMore } = useState(false);
-  const { auth, changeFilter } = props;
+  const { auth, changeFilter,cart,addSingleItemToCart } = props;
+  const qtyRef = useRef();
   const history = useHistory();
   const { id: bookId } = useParams()
   const isAuthenticated = isTokenValid(auth.token);
@@ -27,6 +29,7 @@ function ProductPage(props) {
       id: bookId
     }
   });
+
   const { loading: loadingBookReviews, data: dataBookReviews,
     error: errorBookReviews, refetch: refetchBookReviews } = useQuery(GET_REVIEWS_BY_BOOK, {
       variables: {
@@ -106,9 +109,21 @@ function ProductPage(props) {
                   </div>
                   <div className="box-tocart d-flex">
                     <span>Số lượng: </span>
-                    <input id="qty" className="input-text qty" name="qty" min={1} defaultValue={1} title="Qty" type="number" />
+                    <input id="qty" className="input-text qty" 
+                     ref={qtyRef} style={{width: 75}}
+                    onBlur={e=>{
+                      let value = parseInt(e.target.value)
+                      if (value<0){
+                        qtyRef.current.value = Math.abs(value);
+                      }
+                    }}
+                     name="qty" defaultValue={1} min={1} title="Qty" type="number" />
                     <div className="addtocart__actions">
-                      <button className="tocart" type="submit" title="Add to Cart">Add to Cart</button>
+                      <Button className="tocart" loading={cart.adding}
+                      onClick={()=>{
+                        addSingleItemToCart(data.getBook, Math.abs(parseInt(qtyRef.current.value)))
+                      }}
+                       htmlType="submit" title="Add to Cart">THÊM VÀO GIỎ</Button>
                     </div>
                     <div className="product-addto-links clearfix">
                       <a className="wishlist" href="#" />
@@ -686,16 +701,20 @@ function ProductPage(props) {
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    cart: state.cart
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch,ownProps) => {
   return {
     changeFilter: (type, value) => {
       dispatch(changeFilter(type, value));
+    },
+    addSingleItemToCart: (item,qty)=>{
+      dispatch(addSingleItemToCartAysnc(ownProps.client,item, qty))
     }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
+export default withApollo(connect(mapStateToProps, mapDispatchToProps)(ProductPage));

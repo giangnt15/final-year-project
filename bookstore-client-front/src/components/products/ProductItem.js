@@ -1,15 +1,17 @@
 import React, { Fragment } from 'react';
 import './products.css';
 import { NavLink, useHistory } from 'react-router-dom';
-import { Popover } from 'antd';
+import { Popover, Button } from 'antd';
 import { FILTER_TYPE_AUTHOR, RESET_FILTERS } from '../../constants';
 import { connect } from 'react-redux';
 import { changeFilter } from '../../redux/actions/filtersActions';
-import { addSingleItemToCart } from '../../redux/actions/cartAction';
+import { withApollo } from '@apollo/react-hoc';
+import { addSingleItemToCartAysnc } from '../../redux/actions/cartAction';
+
 
 function ProductItem(props) {
   const { id, thumbnail, basePrice, title, authors, description } = props.book;
-  const { width, thumbHeight, changeFilter,addSingleItemToCart } = props;
+  const { width, thumbHeight, changeFilter,addSingleItemToCart,cart } = props;
   const history = useHistory();
   const productDialog = (<div id="express-buy-dialog" className="express-buy-l" >
     <div className="loading" style={{}} />
@@ -57,7 +59,7 @@ function ProductItem(props) {
         e.preventDefault();
         addSingleItemToCart(props.book,1)
       }} >
-        <input type="submit" className="btn-buy btn btn-bb add-to-cart" value="THÊM VÀO GIỎ HÀNG" />
+        <Button loading={cart.adding} htmlType="submit" className="btn-buy btn btn-bb add-to-cart">THÊM VÀO GIỎ HÀNG</Button>
         {/* <div className="pre-box ng-hide" ng-show="productItem.IsNotPublished && productItem.QuantityRemain==null && !productItem.IsOutOff">
         <small className="ng-binding">Sách này sắp phát hành </small>
         <br />
@@ -127,15 +129,15 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch,ownProps) => {
   return {
     changeFilter: (type, value) => {
       dispatch(changeFilter(type, value));
     },
     addSingleItemToCart: (item, qty) => {
-      dispatch(addSingleItemToCart(item, qty));
+      dispatch(addSingleItemToCartAysnc(ownProps.client,item, qty));
     }
   }
 }
 
-export default connect(null, mapDispatchToProps)(ProductItem);
+export default withApollo(connect(mapStateToProps, mapDispatchToProps)(ProductItem));

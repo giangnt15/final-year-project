@@ -54,5 +54,17 @@ export const DATE_VN = "DD-MM-YYYY"
 //end datetime
 
 //cart
-export const ADD_SINGLE_ITEM_TO_CART = "ADD_SINGLE_ITEM_TO_CART"
+export const ADD_SINGLE_ITEM_TO_CART = "ADD_SINGLE_ITEM_TO_CART";
+export const ADDING_SINGLE_ITEMS_TO_CART ="ADDING_SINGLE_ITEM_TO_CART";
+export const ADD_SINGLE_ITEMS_TO_FAILED ="ADD_SINGLE_ITEM_TO_CART_FAILED";
+export const CHANGING_CART_ITEM_QTY ="CHANGING_CART_ITEM_QTY";
+export const CHANGE_CART_ITEM_QTY_SUCCESSFULLY ="CHANGE_CART_ITEM_QTY_SUCCESSFULLY";
+export const CHANGE_CART_ITEM_QTY_FAILED ="CHANGE_CART_ITEM_QTY_FAILED";
+
 //end cart
+
+//error
+export const ERROR_OCCURED = 'Có lỗi xảy ra, vui lòng thử lại sau.';
+export const NO_ITEM_IN_CART = 'Bạn không có sản phẩm nào trong giỏ.';
+export const ADD_ITEM_TO_CART_SUCCEEDED = 'Đã thêm vào giỏ hàng của bạn.';
+//end error

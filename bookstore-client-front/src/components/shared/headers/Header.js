@@ -11,18 +11,12 @@ import { logout } from '../../../redux/actions/authAction';
 
 function Header(props) {
 
-  const {user,token} = props.auth;
-  const {logout,cart} = props;
-
-  const [showCart, setShowCart] = useState(false);
+  const { user, token } = props.auth;
+  const { logout, cart } = props;
 
   const [showSearch, setShowSearch] = useState(false);
 
   const isSticky = useScroll(200);
-
-  const toggleCart = () => {
-    setShowCart(prevShowCart => !prevShowCart);//the call back must return a value
-  }
 
   const toggleSearch = () => {
     setShowSearch(prevShowSearch => !prevShowSearch);//the call back must return a value
@@ -32,7 +26,7 @@ function Header(props) {
     setShowSearch(false);
   }
 
-  const authDropDown = !isTokenValid(token)?(<Fragment>
+  const authDropDown = !isTokenValid(token) ? (<Fragment>
     <div className="p-b-8">
       <NavLink to="/auth/login">
         <Button variant="contained" color="primary">
@@ -41,15 +35,15 @@ function Header(props) {
       </NavLink>
     </div>
     <div >
-    <NavLink to="/auth/signup">
-      <Button variant="contained" className='w-100' color="primary">
-        Đăng ký
+      <NavLink to="/auth/signup">
+        <Button variant="contained" className='w-100' color="primary">
+          Đăng ký
       </Button>
       </NavLink>
     </div>
   </Fragment>
-  ): (<Fragment>
-    <ul style={{listStyleType: 'none', lineHeight: 2}}>
+  ) : (<Fragment>
+    <ul style={{ listStyleType: 'none', lineHeight: 2 }}>
       <li><NavLink to="/auth/order"><i className="fa fa-list-ol"></i>&nbsp;Đơn hàng</NavLink></li>
       <li><NavLink to="/auth/account"><i className="fa fa-user-circle"></i>&nbsp;Tài khoản</NavLink></li>
       <li><NavLink to="/auth/wish-list"><i className="fa fa-heart"></i>&nbsp;Sản phẩm yêu thích</NavLink></li>
@@ -185,12 +179,15 @@ function Header(props) {
             <ul className="header__sidebar__right d-flex justify-content-end align-items-center">
               <li className="shop_search" onClick={toggleSearch}><a className="search__active" href="#" /></li>
               <li className="wishlist"><a href="#" /></li>
-  <li className="shopcart" onClick={toggleCart}><a className="cartbox_active" href="#"><span className="product_qun">{cart.cartTotalQty}</span></a>
-                <Fade in={showCart}>
-                  {/* Start Shopping Cart */}
-                  <div><MiniCart cart={cart} onToggle={toggleCart} /></div>
-                  {/* End Shopping Cart */}
-                </Fade>
+              <li className="shopcart">
+                <Popover style={{overflow: 'auto'}} placement="bottom" content={
+                  <div><MiniCart cart={cart} /></div>
+                }>
+                  <a className="cartbox_active" href="#"><span className="product_qun">{cart.cartTotalQty}</span>
+                  </a>
+                </Popover>
+                {/* Start Shopping Cart */}
+                {/* End Shopping Cart */}
               </li>
               <li className="setting__bar__icon">
                 <Popover content={authDropDown} placement="bottom">
@@ -256,12 +253,12 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch=>{
+const mapDispatchToProps = dispatch => {
   return {
-    logout: ()=>{
+    logout: () => {
       dispatch(logout());
     }
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

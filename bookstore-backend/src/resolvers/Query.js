@@ -133,6 +133,17 @@ const Query = {
             first,
             skip
         },info);
+    },
+    async getItemStockQty(parent,{id}, {prisma}, info){
+        const book = await prisma.query.book({
+            where: {
+                id
+            }
+        },`{availableCopies}`);
+        return {
+            qty: book.availableCopies,
+            id
+        };
     }
 }
 

@@ -35,6 +35,15 @@ export const GET_BOOKS = gql`
   }
 `;
 
+export const GET_BOOK_QTY = gql`
+  query getItemStockQty($id: ID!){
+    getItemStockQty(id: $id){
+      id
+      qty
+    }
+  }
+`
+
 export const GET_BOOK = gql`
   query getBook($id: ID!){
     getBook(id: $id) {

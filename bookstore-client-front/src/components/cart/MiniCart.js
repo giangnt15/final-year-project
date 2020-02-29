@@ -2,17 +2,20 @@ import React from 'react';
 import './cart.css';
 import MiniCartItem from './MiniCartItem';
 import NumberFormat from 'react-number-format';
+import { Empty } from 'antd';
+import {NO_ITEM_IN_CART} from '../../constants';
+import { NavLink } from 'react-router-dom';
 
 function MiniCart(props){
 
     const {items,cartTotalQty,cartSubTotal} = props.cart;
 
     return (
-           <div className="block-minicart minicart__active is-visible">
+           <div className="block-minicart minicart__active is-visible" style={{position: "relative"}}>
         <div className="minicart-content-wrapper">
-          <div className="micart__close" onClick={props.toggleCart}>
+          {/* <div className="micart__close" onClick={props.toggleCart}>
             <span>Đóng</span>
-          </div>
+          </div> */}
           <div className="items-total d-flex justify-content-between">
             <span>{cartTotalQty} cuốn</span>
             <span>Tổng tiền</span>
@@ -22,17 +25,14 @@ function MiniCart(props){
                       suffix="đ" thousandSeparator={true} /></span>
           </div>
           <div className="mini_action checkout">
-            <a className="checkout__btn">Go to Checkout</a>
+            <NavLink to="/checkout/cart" className="checkout__btn">Đến giỏ hàng</NavLink>
           </div>
           <div className="single__items">
             <div className="miniproduct">
-              {items.map(item=>(
+              {items&&items.length?items.map(item=>(
                 <MiniCartItem cartItem={item} key={item.id}/>
-              ))}
+              )):<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={NO_ITEM_IN_CART}/>}
             </div>
-          </div>
-          <div className="mini_action cart">
-            <a className="cart__btn">View and edit cart</a>
           </div>
         </div>
       </div>
