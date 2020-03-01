@@ -20,7 +20,6 @@ export const LOGIN = gql`
     }
 
 `
-
 export const UPDATE_USER = gql`
     mutation updateUser($data: CustomUserUpdateInput!){
         updateUser(data: $data){

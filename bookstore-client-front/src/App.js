@@ -16,6 +16,7 @@ import './css/style.css';
 import './components/pages/auth/util.css'
 import AccountPage from './components/pages/auth/AccountPage';
 import CartPage from './components/pages/cart/CartPage';
+import CheckoutPage from './components/cart/CheckoutPage';
 
 function App(props) {
     let history = useHistory();
@@ -31,6 +32,7 @@ function App(props) {
           <Route path="/auth/signup" exact component={SignupPage}></Route>
           <Route path="/auth/account" exact component={AccountPage}></Route>
           <Route path="/checkout/cart" exact component={CartPage}></Route>
+          <Route path="/checkout" exact component={CheckoutPage}></Route>
           <Route path="/book/:id" component={ProductPage}></Route>
           <Route path="/books" exact render={(props) => <ShopGridContainer {...props} />}></Route>
           <Route component={NotFound404Page}></Route>

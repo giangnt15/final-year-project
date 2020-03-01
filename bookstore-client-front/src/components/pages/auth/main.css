@@ -198,7 +198,6 @@ iframe {
   font-family: Montserrat-SemiBold;
   font-size: 14.4px;
   line-height: 1.2;
-
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -296,12 +295,11 @@ iframe {
   font-family: Poppins-Regular;
   color: #333333;
   line-height: 1.2;
-  font-size: 16px;
-
+  font-size: 14px;
   display: block;
   width: 100%;
   background: transparent;
-  height: 46px;
+  height: 36px;
   padding: 0 20px;
 }
 /*------------------------------------------------------------------
@@ -378,12 +376,12 @@ iframe {
   align-items: center;
   padding: 0 20px;
   width: 100%;
-  height: 60px;
+  height: 42px;
   background-color: #333333;
   border-radius: 10px;
 
   font-family: Poppins-Medium;
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
   line-height: 1.2;
 

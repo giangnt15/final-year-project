@@ -88,6 +88,9 @@ type UserAddress{
     user: User! @relation(name: "AddressToUser", onDelete: SET_NULL)
     address: String!
     phone: String!
+    provice: Province! @relation(name: "AddressToProvince", onDelete: SET_NULL)
+    district: District! @relation(name: "AddressToDistrict", onDelete: SET_NULL)
+    ward: Ward! @relation(name: "AddressToWard", onDelete: SET_NULL)
     fullName: String!
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
@@ -173,6 +176,27 @@ type Author{
     books: [Book!]! @relation(name: "BookToAuthor")
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
+}
+
+type District{
+    id: ID! @id
+    name: String!
+    type: String!
+    province: Province! @relation(name: "DistrictToProvince")
+}
+
+type Province{
+    id: ID! @id
+    name: String!
+    type: String!
+}
+
+
+type Ward{
+    id: ID! @id
+    name: String!
+    type: String!
+    district: District @relation(name: "WardToDistrict")
 }
 
 enum BookFormat{

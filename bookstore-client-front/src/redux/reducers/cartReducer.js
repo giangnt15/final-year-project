@@ -1,11 +1,5 @@
 import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, ADD_SINGLE_ITEMS_TO_FAILED, CHANGE_CART_ITEM_QTY_FAILED, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGING_CART_ITEM_QTY } from "../../constants";
 
-const initialState = {
-    items: [],
-    adding: false,
-    cartTotalQty: 0,
-    cartSubTotal: 0
-}
 
 const calculateCartTotalQty = (items) => {
     if (items.length === 0) return 0;
@@ -27,6 +21,24 @@ const calculateCartSubTotal = (items) => {
     return subTotal;
 }
 
+const bsCartJSON = localStorage.getItem('bs_cart');
+let cartItems = [];
+try {
+    cartItems = JSON.parse(bsCartJSON);
+    if (!Array.isArray(cartItems)){
+        cartItems = [];
+    }
+}catch{
+    cartItems =[];
+}
+
+const initialState = {
+    items: cartItems,
+    adding: false,
+    cartTotalQty: calculateCartTotalQty(cartItems),
+    cartSubTotal: calculateCartSubTotal(cartItems)
+}
+
 export default function cartReducer(state = initialState, action) {
     const items = [...state.items];
     let itemExisted = null;
@@ -44,6 +56,7 @@ export default function cartReducer(state = initialState, action) {
             } else {
                 items.push({ ...action.item, qty: action.qty });
             }
+            localStorage.setItem('bs_cart',JSON.stringify(items));
             return {
                 ...state,
                 cartTotalQty: calculateCartTotalQty(items),
@@ -56,6 +69,7 @@ export default function cartReducer(state = initialState, action) {
             if (itemExisted) {
                 itemExisted.qty = parseInt(action.qty)
             } 
+            localStorage.setItem('bs_cart',JSON.stringify(items));
             return {
                 ...state,
                 adding: false,

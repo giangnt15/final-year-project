@@ -5,49 +5,17 @@ import './util.css';
 import { login as loginAction } from '../../../redux/actions/authAction';
 import { connect } from 'react-redux';
 import { withApollo } from '@apollo/react-hoc';
-import { Button } from 'antd';
 import isTokenValid from '../../../utils/tokenValidation';
+import LoginForm from '../../shared/forms/LoginForm';
 
 function LoginPage(props) {
 
   const { auth, login } = props;
-
-  const [inputs, setInputs] = useState({
-    username: '',
-    password: ''
-  });
-
-  const [inputChanged, setInputChanged] = useState({
-    username: false,
-    password: false
-  })
-
   const location = useLocation()
 
-  const handleInputsChange = (e) => {
-    const { target } = e;
-    const { name, value } = target;
-    setInputs(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    setInputChanged(prev => ({
-      ...prev,
-      [name]: true
-    }))
-    if (!value) {
-    }
-  }
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const { username, password } = inputs;
-    if (username && password) {
-      login(username, password);
-    }
-  }
-  if (isTokenValid(auth.token)){
-    return <Redirect to={location.state&&location.state.from?location.state.from:'/'} />
+  
+  if (isTokenValid(auth.token)) {
+    return <Redirect to={location.state && location.state.from ? location.state.from : '/'} />
   }
 
   return (<div className="auth-page">
@@ -57,53 +25,8 @@ function LoginPage(props) {
           <div className="d-flex justify-content-center p-b-20">
             <NavLink to="/"><img src="/images/logo/logo.png" height={50} /></NavLink>
           </div>
-          <form onSubmit={onSubmit} className="login100-form validate-form flex-sb flex-w">
-            <span className="login100-form-title p-b-20">
-              Đăng nhập
-                </span>
-            <a href="#" className="btn-face m-b-20">
-              <i className="fa fa-facebook-official" />
-              Facebook
-                </a>
-            <a href="#" className="btn-google m-b-20">
-              <img src="/images/icon-google.png" alt="GOOGLE" />
-              Google
-                </a>
-            <div className="p-t-20 p-b-9">
-              <span className="txt1">
-                Email/Tên người dùng
-                  </span>
-            </div>
-            <div className="w-100">
-              <div className={`wrap-input100 validate-input${inputs.username?'':' error'}`} data-validate="Username is required">
-                <input className={`input100`} type="text" name="username"
-                  onChange={handleInputsChange} value={inputs.username} />
-                  <span className={`focus-input100${inputChanged.username && inputs.username ? '' : ' error'}`} />
-              </div>
-              {inputChanged.username && !inputs.username && <span className="error-txt">Username không được để trống</span>}
-            </div>
-            <div className="p-t-13 p-b-9">
-              <span className="txt1">
-                Mật khẩu
-                  </span>
-              <a href="#" className="txt2 bo1 m-l-5">
-                Quên?
-                  </a>
-            </div>
-            <div className="w-100">
-              <div className={`wrap-input100 validate-input`} data-validate="Password is required">
-                <input className={`input100`} type="password" name="password"
-                  onChange={handleInputsChange} value={inputs.password} />
-                  <span className={`focus-input100${inputChanged.password && inputs.password ? '' : ' error'}`} />
-              </div>
-              {inputChanged.password && !inputs.password && <span className="error-txt">Password không được để trống</span>}
-            </div>
-            <div className="container-login100-form-btn m-t-17">
-              <Button htmlType="submit" type="primary" loading={auth.loading} className="login100-form-btn">
-                Đăng nhập
-            </Button>
-            </div>
-            <div className="w-full text-center p-t-55">
+          <LoginForm auth={auth} login={login}/>
+          <div className="w-full text-center p-t-55">
               <span className="txt2 p-r-4">
                 Chưa có tài khoản?
                   </span>
@@ -111,7 +34,6 @@ function LoginPage(props) {
                 Đăng ký ngay
                   </NavLink>
             </div>
-          </form>
         </div>
       </div>
     </div>

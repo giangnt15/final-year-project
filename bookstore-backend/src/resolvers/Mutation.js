@@ -19,7 +19,7 @@ const Mutation = {
             token: jwt.sign({
                 userId: user.id,
             }, env.JWT_SECRET, {
-                expiresIn: '1d'
+                expiresIn: '2 days'
             })
         }
     },
@@ -50,7 +50,7 @@ const Mutation = {
             token: jwt.sign({
                 userId: user.id,
             }, env.JWT_SECRET, {
-                expiresIn: '1d'
+                expiresIn: '2 days'
             })
         }
     },
