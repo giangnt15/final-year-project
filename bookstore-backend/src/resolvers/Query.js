@@ -144,6 +144,27 @@ const Query = {
             qty: book.availableCopies,
             id
         };
+    },
+    async getProvinces(parent,args,{prisma},info){
+        return prisma.query.provinces(undefined,info);
+    },
+    async getDistricts(parent,{provinceId},{prisma},info){
+        return prisma.query.districts({
+            where: {
+                province: {
+                    id: provinceId
+                }
+            }
+        },info);
+    },
+    async getWards(parent,{districtId},{prisma},info){
+        return prisma.query.wards({
+            where: {
+                district: {
+                    id: districtId
+                }
+            }
+        },info);
     }
 }
 

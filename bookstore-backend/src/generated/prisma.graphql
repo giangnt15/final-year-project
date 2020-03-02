@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Sun Feb 23 2020 11:37:16 GMT+0700 (Indochina Time)
+# timestamp: Mon Mar 02 2020 20:27:20 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -25,6 +25,10 @@ type AggregateDiscount {
   count: Int!
 }
 
+type AggregateDistrict {
+  count: Int!
+}
+
 type AggregateOrder {
   count: Int!
 }
@@ -34,6 +38,10 @@ type AggregateOrderItem {
 }
 
 type AggregatePaymentMethod {
+  count: Int!
+}
+
+type AggregateProvince {
   count: Int!
 }
 
@@ -50,6 +58,10 @@ type AggregateUserAddress {
 }
 
 type AggregateUserEvent {
+  count: Int!
+}
+
+type AggregateWard {
   count: Int!
 }
 
@@ -4674,6 +4686,270 @@ input DiscountWhereUniqueInput {
   id: ID
 }
 
+type District implements Node {
+  id: ID!
+  name: String!
+  type: String!
+  province: Province!
+}
+
+"""A connection to a list of items."""
+type DistrictConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DistrictEdge]!
+  aggregate: AggregateDistrict!
+}
+
+input DistrictCreateInput {
+  id: ID
+  name: String!
+  type: String!
+  province: ProvinceCreateOneInput!
+}
+
+input DistrictCreateOneInput {
+  create: DistrictCreateInput
+  connect: DistrictWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type DistrictEdge {
+  """The item at the end of the edge."""
+  node: District!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DistrictOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  type_ASC
+  type_DESC
+}
+
+type DistrictPreviousValues {
+  id: ID!
+  name: String!
+  type: String!
+}
+
+type DistrictSubscriptionPayload {
+  mutation: MutationType!
+  node: District
+  updatedFields: [String!]
+  previousValues: DistrictPreviousValues
+}
+
+input DistrictSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DistrictSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DistrictSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DistrictSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DistrictWhereInput
+}
+
+input DistrictUpdateDataInput {
+  name: String
+  type: String
+  province: ProvinceUpdateOneRequiredInput
+}
+
+input DistrictUpdateInput {
+  name: String
+  type: String
+  province: ProvinceUpdateOneRequiredInput
+}
+
+input DistrictUpdateManyMutationInput {
+  name: String
+  type: String
+}
+
+input DistrictUpdateOneInput {
+  create: DistrictCreateInput
+  connect: DistrictWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: DistrictUpdateDataInput
+  upsert: DistrictUpsertNestedInput
+}
+
+input DistrictUpdateOneRequiredInput {
+  create: DistrictCreateInput
+  connect: DistrictWhereUniqueInput
+  update: DistrictUpdateDataInput
+  upsert: DistrictUpsertNestedInput
+}
+
+input DistrictUpsertNestedInput {
+  update: DistrictUpdateDataInput!
+  create: DistrictCreateInput!
+}
+
+input DistrictWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DistrictWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DistrictWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DistrictWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  type: String
+
+  """All values that are not equal to given value."""
+  type_not: String
+
+  """All values that are contained in given list."""
+  type_in: [String!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [String!]
+
+  """All values less than the given value."""
+  type_lt: String
+
+  """All values less than or equal the given value."""
+  type_lte: String
+
+  """All values greater than the given value."""
+  type_gt: String
+
+  """All values greater than or equal the given value."""
+  type_gte: String
+
+  """All values containing the given string."""
+  type_contains: String
+
+  """All values not containing the given string."""
+  type_not_contains: String
+
+  """All values starting with the given string."""
+  type_starts_with: String
+
+  """All values not starting with the given string."""
+  type_not_starts_with: String
+
+  """All values ending with the given string."""
+  type_ends_with: String
+
+  """All values not ending with the given string."""
+  type_not_ends_with: String
+  province: ProvinceWhereInput
+}
+
+input DistrictWhereUniqueInput {
+  id: ID
+}
+
 """Raw JSON value"""
 scalar Json
 
@@ -4696,7 +4972,10 @@ type Mutation {
   createAuthor(data: AuthorCreateInput!): Author!
   createBook(data: BookCreateInput!): Book!
   createUserAddress(data: UserAddressCreateInput!): UserAddress!
+  createWard(data: WardCreateInput!): Ward!
+  createProvince(data: ProvinceCreateInput!): Province!
   createPaymentMethod(data: PaymentMethodCreateInput!): PaymentMethod!
+  createDistrict(data: DistrictCreateInput!): District!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCollection(data: CollectionUpdateInput!, where: CollectionWhereUniqueInput!): Collection
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
@@ -4709,7 +4988,10 @@ type Mutation {
   updateAuthor(data: AuthorUpdateInput!, where: AuthorWhereUniqueInput!): Author
   updateBook(data: BookUpdateInput!, where: BookWhereUniqueInput!): Book
   updateUserAddress(data: UserAddressUpdateInput!, where: UserAddressWhereUniqueInput!): UserAddress
+  updateWard(data: WardUpdateInput!, where: WardWhereUniqueInput!): Ward
+  updateProvince(data: ProvinceUpdateInput!, where: ProvinceWhereUniqueInput!): Province
   updatePaymentMethod(data: PaymentMethodUpdateInput!, where: PaymentMethodWhereUniqueInput!): PaymentMethod
+  updateDistrict(data: DistrictUpdateInput!, where: DistrictWhereUniqueInput!): District
   deleteUser(where: UserWhereUniqueInput!): User
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteOrder(where: OrderWhereUniqueInput!): Order
@@ -4722,7 +5004,10 @@ type Mutation {
   deleteAuthor(where: AuthorWhereUniqueInput!): Author
   deleteBook(where: BookWhereUniqueInput!): Book
   deleteUserAddress(where: UserAddressWhereUniqueInput!): UserAddress
+  deleteWard(where: WardWhereUniqueInput!): Ward
+  deleteProvince(where: ProvinceWhereUniqueInput!): Province
   deletePaymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
+  deleteDistrict(where: DistrictWhereUniqueInput!): District
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCollection(where: CollectionWhereUniqueInput!, create: CollectionCreateInput!, update: CollectionUpdateInput!): Collection!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
@@ -4735,7 +5020,10 @@ type Mutation {
   upsertAuthor(where: AuthorWhereUniqueInput!, create: AuthorCreateInput!, update: AuthorUpdateInput!): Author!
   upsertBook(where: BookWhereUniqueInput!, create: BookCreateInput!, update: BookUpdateInput!): Book!
   upsertUserAddress(where: UserAddressWhereUniqueInput!, create: UserAddressCreateInput!, update: UserAddressUpdateInput!): UserAddress!
+  upsertWard(where: WardWhereUniqueInput!, create: WardCreateInput!, update: WardUpdateInput!): Ward!
+  upsertProvince(where: ProvinceWhereUniqueInput!, create: ProvinceCreateInput!, update: ProvinceUpdateInput!): Province!
   upsertPaymentMethod(where: PaymentMethodWhereUniqueInput!, create: PaymentMethodCreateInput!, update: PaymentMethodUpdateInput!): PaymentMethod!
+  upsertDistrict(where: DistrictWhereUniqueInput!, create: DistrictCreateInput!, update: DistrictUpdateInput!): District!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyCollections(data: CollectionUpdateManyMutationInput!, where: CollectionWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
@@ -4748,7 +5036,10 @@ type Mutation {
   updateManyAuthors(data: AuthorUpdateManyMutationInput!, where: AuthorWhereInput): BatchPayload!
   updateManyBooks(data: BookUpdateManyMutationInput!, where: BookWhereInput): BatchPayload!
   updateManyUserAddresses(data: UserAddressUpdateManyMutationInput!, where: UserAddressWhereInput): BatchPayload!
+  updateManyWards(data: WardUpdateManyMutationInput!, where: WardWhereInput): BatchPayload!
+  updateManyProvinces(data: ProvinceUpdateManyMutationInput!, where: ProvinceWhereInput): BatchPayload!
   updateManyPaymentMethods(data: PaymentMethodUpdateManyMutationInput!, where: PaymentMethodWhereInput): BatchPayload!
+  updateManyDistricts(data: DistrictUpdateManyMutationInput!, where: DistrictWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCollections(where: CollectionWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
@@ -4761,7 +5052,10 @@ type Mutation {
   deleteManyAuthors(where: AuthorWhereInput): BatchPayload!
   deleteManyBooks(where: BookWhereInput): BatchPayload!
   deleteManyUserAddresses(where: UserAddressWhereInput): BatchPayload!
+  deleteManyWards(where: WardWhereInput): BatchPayload!
+  deleteManyProvinces(where: ProvinceWhereInput): BatchPayload!
   deleteManyPaymentMethods(where: PaymentMethodWhereInput): BatchPayload!
+  deleteManyDistricts(where: DistrictWhereInput): BatchPayload!
   executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
@@ -6022,6 +6316,256 @@ enum PrismaDatabase {
   default
 }
 
+type Province implements Node {
+  id: ID!
+  name: String!
+  type: String!
+}
+
+"""A connection to a list of items."""
+type ProvinceConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProvinceEdge]!
+  aggregate: AggregateProvince!
+}
+
+input ProvinceCreateInput {
+  id: ID
+  name: String!
+  type: String!
+}
+
+input ProvinceCreateOneInput {
+  create: ProvinceCreateInput
+  connect: ProvinceWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type ProvinceEdge {
+  """The item at the end of the edge."""
+  node: Province!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ProvinceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  type_ASC
+  type_DESC
+}
+
+type ProvincePreviousValues {
+  id: ID!
+  name: String!
+  type: String!
+}
+
+type ProvinceSubscriptionPayload {
+  mutation: MutationType!
+  node: Province
+  updatedFields: [String!]
+  previousValues: ProvincePreviousValues
+}
+
+input ProvinceSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProvinceSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProvinceSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProvinceSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProvinceWhereInput
+}
+
+input ProvinceUpdateDataInput {
+  name: String
+  type: String
+}
+
+input ProvinceUpdateInput {
+  name: String
+  type: String
+}
+
+input ProvinceUpdateManyMutationInput {
+  name: String
+  type: String
+}
+
+input ProvinceUpdateOneRequiredInput {
+  create: ProvinceCreateInput
+  connect: ProvinceWhereUniqueInput
+  update: ProvinceUpdateDataInput
+  upsert: ProvinceUpsertNestedInput
+}
+
+input ProvinceUpsertNestedInput {
+  update: ProvinceUpdateDataInput!
+  create: ProvinceCreateInput!
+}
+
+input ProvinceWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProvinceWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProvinceWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProvinceWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  type: String
+
+  """All values that are not equal to given value."""
+  type_not: String
+
+  """All values that are contained in given list."""
+  type_in: [String!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [String!]
+
+  """All values less than the given value."""
+  type_lt: String
+
+  """All values less than or equal the given value."""
+  type_lte: String
+
+  """All values greater than the given value."""
+  type_gt: String
+
+  """All values greater than or equal the given value."""
+  type_gte: String
+
+  """All values containing the given string."""
+  type_contains: String
+
+  """All values not containing the given string."""
+  type_not_contains: String
+
+  """All values starting with the given string."""
+  type_starts_with: String
+
+  """All values not starting with the given string."""
+  type_not_starts_with: String
+
+  """All values ending with the given string."""
+  type_ends_with: String
+
+  """All values not ending with the given string."""
+  type_not_ends_with: String
+}
+
+input ProvinceWhereUniqueInput {
+  id: ID
+}
+
 type Publisher implements Node {
   id: ID!
   name: String!
@@ -6398,7 +6942,10 @@ type Query {
   authors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Author]!
   books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book]!
   userAddresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress]!
+  wards(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ward]!
+  provinces(where: ProvinceWhereInput, orderBy: ProvinceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Province]!
   paymentMethods(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMethod]!
+  districts(where: DistrictWhereInput, orderBy: DistrictOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [District]!
   user(where: UserWhereUniqueInput!): User
   collection(where: CollectionWhereUniqueInput!): Collection
   order(where: OrderWhereUniqueInput!): Order
@@ -6411,7 +6958,10 @@ type Query {
   author(where: AuthorWhereUniqueInput!): Author
   book(where: BookWhereUniqueInput!): Book
   userAddress(where: UserAddressWhereUniqueInput!): UserAddress
+  ward(where: WardWhereUniqueInput!): Ward
+  province(where: ProvinceWhereUniqueInput!): Province
   paymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
+  district(where: DistrictWhereUniqueInput!): District
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   collectionsConnection(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CollectionConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
@@ -6424,7 +6974,10 @@ type Query {
   authorsConnection(where: AuthorWhereInput, orderBy: AuthorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthorConnection!
   booksConnection(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookConnection!
   userAddressesConnection(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserAddressConnection!
+  wardsConnection(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WardConnection!
+  provincesConnection(where: ProvinceWhereInput, orderBy: ProvinceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProvinceConnection!
   paymentMethodsConnection(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMethodConnection!
+  districtsConnection(where: DistrictWhereInput, orderBy: DistrictOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DistrictConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -6446,7 +6999,10 @@ type Subscription {
   author(where: AuthorSubscriptionWhereInput): AuthorSubscriptionPayload
   book(where: BookSubscriptionWhereInput): BookSubscriptionPayload
   userAddress(where: UserAddressSubscriptionWhereInput): UserAddressSubscriptionPayload
+  ward(where: WardSubscriptionWhereInput): WardSubscriptionPayload
+  province(where: ProvinceSubscriptionWhereInput): ProvinceSubscriptionPayload
   paymentMethod(where: PaymentMethodSubscriptionWhereInput): PaymentMethodSubscriptionPayload
+  district(where: DistrictSubscriptionWhereInput): DistrictSubscriptionPayload
 }
 
 type User implements Node {
@@ -6474,6 +7030,9 @@ type UserAddress implements Node {
   user: User!
   address: String!
   phone: String!
+  provice: Province!
+  district: District!
+  ward: Ward!
   fullName: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -6495,6 +7054,9 @@ input UserAddressCreateInput {
   phone: String!
   fullName: String!
   user: UserCreateOneWithoutAddressesInput!
+  provice: ProvinceCreateOneInput!
+  district: DistrictCreateOneInput!
+  ward: WardCreateOneInput!
 }
 
 input UserAddressCreateManyWithoutUserInput {
@@ -6512,6 +7074,9 @@ input UserAddressCreateWithoutUserInput {
   address: String!
   phone: String!
   fullName: String!
+  provice: ProvinceCreateOneInput!
+  district: DistrictCreateOneInput!
+  ward: WardCreateOneInput!
 }
 
 """An edge in a connection."""
@@ -6804,6 +7369,9 @@ input UserAddressUpdateDataInput {
   phone: String
   fullName: String
   user: UserUpdateOneRequiredWithoutAddressesInput
+  provice: ProvinceUpdateOneRequiredInput
+  district: DistrictUpdateOneRequiredInput
+  ward: WardUpdateOneRequiredInput
 }
 
 input UserAddressUpdateInput {
@@ -6811,6 +7379,9 @@ input UserAddressUpdateInput {
   phone: String
   fullName: String
   user: UserUpdateOneRequiredWithoutAddressesInput
+  provice: ProvinceUpdateOneRequiredInput
+  district: DistrictUpdateOneRequiredInput
+  ward: WardUpdateOneRequiredInput
 }
 
 input UserAddressUpdateManyDataInput {
@@ -6853,6 +7424,9 @@ input UserAddressUpdateWithoutUserDataInput {
   address: String
   phone: String
   fullName: String
+  provice: ProvinceUpdateOneRequiredInput
+  district: DistrictUpdateOneRequiredInput
+  ward: WardUpdateOneRequiredInput
 }
 
 input UserAddressUpdateWithWhereUniqueWithoutUserInput {
@@ -7085,6 +7659,9 @@ input UserAddressWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   user: UserWhereInput
+  provice: ProvinceWhereInput
+  district: DistrictWhereInput
+  ward: WardWhereInput
 }
 
 input UserAddressWhereUniqueInput {
@@ -8292,4 +8869,259 @@ input UserWhereUniqueInput {
   username: String
   email: String
   phone: String
+}
+
+type Ward implements Node {
+  id: ID!
+  name: String!
+  type: String!
+  district: District
+}
+
+"""A connection to a list of items."""
+type WardConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [WardEdge]!
+  aggregate: AggregateWard!
+}
+
+input WardCreateInput {
+  id: ID
+  name: String!
+  type: String!
+  district: DistrictCreateOneInput
+}
+
+input WardCreateOneInput {
+  create: WardCreateInput
+  connect: WardWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type WardEdge {
+  """The item at the end of the edge."""
+  node: Ward!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum WardOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  type_ASC
+  type_DESC
+}
+
+type WardPreviousValues {
+  id: ID!
+  name: String!
+  type: String!
+}
+
+type WardSubscriptionPayload {
+  mutation: MutationType!
+  node: Ward
+  updatedFields: [String!]
+  previousValues: WardPreviousValues
+}
+
+input WardSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WardSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WardSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WardSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: WardWhereInput
+}
+
+input WardUpdateDataInput {
+  name: String
+  type: String
+  district: DistrictUpdateOneInput
+}
+
+input WardUpdateInput {
+  name: String
+  type: String
+  district: DistrictUpdateOneInput
+}
+
+input WardUpdateManyMutationInput {
+  name: String
+  type: String
+}
+
+input WardUpdateOneRequiredInput {
+  create: WardCreateInput
+  connect: WardWhereUniqueInput
+  update: WardUpdateDataInput
+  upsert: WardUpsertNestedInput
+}
+
+input WardUpsertNestedInput {
+  update: WardUpdateDataInput!
+  create: WardCreateInput!
+}
+
+input WardWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WardWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WardWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WardWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  type: String
+
+  """All values that are not equal to given value."""
+  type_not: String
+
+  """All values that are contained in given list."""
+  type_in: [String!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [String!]
+
+  """All values less than the given value."""
+  type_lt: String
+
+  """All values less than or equal the given value."""
+  type_lte: String
+
+  """All values greater than the given value."""
+  type_gt: String
+
+  """All values greater than or equal the given value."""
+  type_gte: String
+
+  """All values containing the given string."""
+  type_contains: String
+
+  """All values not containing the given string."""
+  type_not_contains: String
+
+  """All values starting with the given string."""
+  type_starts_with: String
+
+  """All values not starting with the given string."""
+  type_not_starts_with: String
+
+  """All values ending with the given string."""
+  type_ends_with: String
+
+  """All values not ending with the given string."""
+  type_not_ends_with: String
+  district: DistrictWhereInput
+}
+
+input WardWhereUniqueInput {
+  id: ID
 }

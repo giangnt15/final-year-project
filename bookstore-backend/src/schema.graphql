@@ -1,6 +1,6 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
-#import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput from './generated/prisma.graphql';
+#import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -86,8 +86,32 @@ type UserAddress{
     id: ID!
     user: User!
     address: String!
+    provice: Province!
+    district: District!
+    ward: Ward!
     phone: String!
     fullName: String!
+}
+
+type District{
+    id: ID!
+    name: String!
+    type: String!
+    province: Province!
+}
+
+type Province{
+    id: ID!
+    name: String!
+    type: String!
+}
+
+
+type Ward{
+    id: ID!
+    name: String!
+    type: String!
+    district: District
 }
 
 type Book{
@@ -185,6 +209,10 @@ type Query{
     getUserAddresses: [UserAddress!]!
     getPublishers(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): [Publisher!]!
     getItemStockQty(id: ID!): GetItemStockQtyPayload!
+    getProvinces: [Province!]!
+    getDistricts(provinceId: ID!): [District!]!
+    getWards(districtId: ID!): [Ward!]!
+
 }
 
 type Mutation{

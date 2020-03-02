@@ -7,6 +7,7 @@ import { addSingleItemToCartAysnc } from '../../../redux/actions/cartAction';
 import CartPageItem from './CartPageItem';
 import NumberFormat from 'react-number-format';
 import { NO_ITEM_IN_CART } from '../../../constants';
+import { NavLink } from 'react-router-dom';
 
 function CartPage(props) {
     const { cart } = props;
@@ -17,12 +18,13 @@ function CartPage(props) {
                     <h6>Giỏ hàng</h6>
                 </div>
             </div>
+            {cart.items&&cart.items.length?
             <div className="row">
                 <div className="col-12 col-md-8">
                     <Card>
-                        {cart.items&&cart.items.length?cart.items.map(item => (
+                        {cart.items.map(item => (
                             <CartPageItem book={item} key={item.id} />
-                        )):<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={NO_ITEM_IN_CART}/>}
+                        ))}
                     </Card>
                 </div>
                 <div className="col-12 col-md-4">
@@ -35,9 +37,9 @@ function CartPage(props) {
                            <h5 style={{color: 'red'}}><NumberFormat value={cart.cartSubTotal} displayType={'text'}
                                 suffix="đ" thousandSeparator={true} /></h5></div>
                     </Card>
-                    <Button className="cart_page_checkout__btn">TIẾN HÀNH ĐẶT HÀNG</Button>
+                    <NavLink to={'/checkout'} className="cart_page_checkout__btn">TIẾN HÀNH ĐẶT HÀNG</NavLink>
                 </div>
-            </div>
+            </div>:<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={NO_ITEM_IN_CART}/>}
         </div >
     )
 }

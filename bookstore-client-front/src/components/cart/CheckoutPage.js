@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Steps, Button, message } from 'antd';
 import { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
 import CheckoutLoginStep from './CheckoutLogin';
+import { connect } from 'react-redux';
+import isTokenValid from '../../utils/tokenValidation';
+import CheckoutAddress from './CheckoutAddress';
 
 const { Step } = Steps;
 
@@ -12,7 +15,7 @@ const steps = [
     },
     {
         title: 'Địa chỉ giao hàng',
-        content: 'Địa chỉ giao hàng',
+        content: <CheckoutAddress />,
     },
     {
         title: 'Thanh toán',
@@ -22,7 +25,11 @@ const steps = [
 
 function CheckoutPage(props) {
 
-    const [current, setCurrent] = useState(0);
+    const {auth} = props;
+
+    const tokenValid = isTokenValid(auth.token);
+
+    const [current, setCurrent] = useState(tokenValid?1:0);
 
     const next = () => {
         setCurrent(prev => prev + 1)
@@ -33,7 +40,7 @@ function CheckoutPage(props) {
     }
 
     return (
-        <div className="container m-t-100">
+        <div className="container m-t-100" style={{padding: '20px 0'}}>
             <div className="row">
                 <div className="col-12">
                     <div style={{maxWidth: '75%', margin: 'auto'}}>
@@ -43,19 +50,10 @@ function CheckoutPage(props) {
                             ))}
                         </Steps>
                     </div>
+                    <br></br>
                     <div className="steps-content">{steps[current].content}</div>
                     <div className="steps-action">
-                        {current < steps.length - 1 && (
-                            <Button type="primary" onClick={() => next()}>
-                                Next
-                            </Button>
-                        )}
-                        {current === steps.length - 1 && (
-                            <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                                Done
-                            </Button>
-                        )}
-                        {current > 0 && (
+                        {current > 1 && (
                             <Button style={{ marginLeft: 8 }} onClick={() => prev()}>
                                 Previous
                             </Button>
@@ -67,4 +65,10 @@ function CheckoutPage(props) {
     )
 }
 
-export default CheckoutPage;
+const mapStateToProps = state => {
+    return {
+        auth: state.auth
+    }
+}
+
+export default connect(mapStateToProps, null)(CheckoutPage);

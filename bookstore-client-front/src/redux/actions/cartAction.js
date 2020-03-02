@@ -53,6 +53,10 @@ export const changeCartItemQtyAsync = (client, item,qty)=>{
                     id: item.id
                 }
             });
+            if (!qty||qty<=0){
+                message.error(`Số cuốn sách không hợp lệ`);
+                return;
+            }
             const {qty: availableCopies} = res.data.getItemStockQty;
             if (!availableCopies) throw new Error();
             if (qty>availableCopies){
@@ -79,6 +83,10 @@ export const addSingleItemToCartAysnc = (client, item,qty)=>{
                     id: item.id
                 }
             });
+            if (!qty||qty<=0){
+                message.error(`Số cuốn sách không hợp lệ`);
+                return;
+            }
             const {qty: availableCopies} = res.data.getItemStockQty;
             if (!availableCopies) throw new Error();
             if (qty>availableCopies){
