@@ -6,6 +6,7 @@ import checkAdmin from '../utils/adminAuth';
 const Mutation = {
     async signUp(parent, { data }, { prisma, env }, info) {
         const hashed = await bcrypt.hash(data.password, 10);
+        console.log(data);
         const user = await prisma.mutation.createUser({
             data: {
                 ...data,
@@ -34,8 +35,6 @@ const Mutation = {
                 }]
             }
         });
-        console.log(data)
-
         if (!users.length) {
             throw new Error("Wrong username or password!");
         }
@@ -44,7 +43,6 @@ const Mutation = {
         if (!matched) {
             throw new Error("Wrong username or password!");
         }
-        console.log(data)
         return {
             user,
             token: jwt.sign({
@@ -178,6 +176,21 @@ const Mutation = {
         return prisma.mutation.createUserAddress({
             data: {
                 ...data,
+                province: {
+                    connect: {
+                        id: data.province
+                    }
+                },
+                district: {
+                    connect: {
+                        id: data.district
+                    }
+                },
+                ward: {
+                    connect: {
+                        id: data.ward
+                    }
+                },
                 user: {
                     connect: {
                         id: userId

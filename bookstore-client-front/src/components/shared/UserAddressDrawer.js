@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Button, Input, Form, message, Select } from 'antd';
 import { useMutation, useQuery, useLazyQuery } from '@apollo/react-hooks';
-import { GET_PROVINCES, GET_DISTRICTS, GET_WARDS } from '../../api/userAddressApi';
+import { GET_PROVINCES, GET_DISTRICTS, GET_WARDS, CREATE_USER_ADDRESS } from '../../api/userAddressApi';
 import TextArea from 'antd/lib/input/TextArea';
+import { ERROR_OCCURED } from '../../constants';
 const { Option } = Select;
 
 function UserAddressDrawer(props) {
-
+    const {drawerVisible,setDrawerVisible, refetchUserAddresses} = props;
     const [inputs, setInputs] = useState({
         fullName: '',
         phone: '',
@@ -16,15 +17,16 @@ function UserAddressDrawer(props) {
         ward: ''
     })
 
-
-
-    const handleInputChanged = (e, e1, e2) => {
-        console.log(e)
-        // setInputs(prev=>({
-        //     ...prev,
-        //     []
-        // }))
-    }
+    const [createUserAddress, {loading: creatingUserAddress}] = useMutation(CREATE_USER_ADDRESS,{
+        onCompleted(data){
+            debugger
+            refetchUserAddresses();
+            setDrawerVisible(false)
+        },
+        onError(error){
+            message.error(ERROR_OCCURED);
+        }
+    })
 
     const { data: provinces = {}, loading: provinceLoading } = useQuery(GET_PROVINCES, {
         onError(error) {
@@ -85,43 +87,34 @@ function UserAddressDrawer(props) {
         <Drawer
             title="Thêm địa chỉ giao hàng mới"
             width={400}
-            onClose={onClose}
-            visible={true}
+            onClose={()=>setDrawerVisible(false)}
+            visible={drawerVisible}
             bodyStyle={{ paddingBottom: 80 }}
-            footer={
-                <div
-                    style={{
-                        textAlign: 'right',
-                    }}
-                >
-                    <Button
-                        onClick={onClose}
-                        style={{ marginRight: 8 }}
-                    >
-                        Cancel
-            </Button>
-                    <Button onClick={onClose} type="primary">
-                        Submit
-            </Button>
-                </div>
-            }
         >
-            <Form layout="vertical" hideRequiredMark>
-
+            <Form layout="vertical" onSubmit={(e)=>{
+                e.preventDefault();
+                createUserAddress({
+                    variables: {
+                        data: {
+                            ...inputs
+                        }
+                    }
+                })
+            }}>
                 <Form.Item
                     name="fullName"
                     label="Tên người nhận"
                     rules={[{ required: true, message: 'Tên người nhận không được để trống' }]}
                 >
-                    <Input placeholder="Nhập họ tên" />
+                    <Input placeholder="Nhập họ tên" name="fullname" onChange={(e)=>{e.persist();setInputs(prev=>({...prev, fullName: e.target.value}))}}/>
                 </Form.Item>
                 <Form.Item
                     name="phone"
                     label="Số điện thoại"
                     rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
                 >
-                    <Input placeholder="Nhập số điện thoại"
-                        style={{ width: '100%' }}
+                    <Input placeholder="Nhập số điện thoại" name="phone"
+                        style={{ width: '100%' }} onChange={(e)=>{e.persist();setInputs(prev=>({...prev, phone:e.target.value}))}}
                     />
                 </Form.Item>
                 <Form.Item
@@ -139,7 +132,7 @@ function UserAddressDrawer(props) {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    name="province"
+                    name="district"
                     label="Chọn quận/huyện"
                     rules={[{ required: true, message: 'Trường này không được để trống' }]}
                 >
@@ -153,7 +146,7 @@ function UserAddressDrawer(props) {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    name="province"
+                    name="ward"
                     label="Chọn phường/xã"
                     rules={[{ required: true, message: 'Trường này không được để trống' }]}
                 >
@@ -167,12 +160,14 @@ function UserAddressDrawer(props) {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    name="province"
+                    name="address"
                     label="Địa chỉ"
                     rules={[{ required: true, message: 'Trường này không được để trống' }]}
                 >
-                    <TextArea rows={3} placeholder="Ví dụ: Số 24, phố Bạch Mai" name="address" />
+                    <TextArea rows={3} placeholder="Ví dụ: Số 24, phố Bạch Mai" name="address"
+                     onChange={(e)=>{e.persist(); setInputs(prev=>({...prev, address: e.target.value}))}}/>
                 </Form.Item>
+                <Button htmlType="submit" loading={creatingUserAddress} type="primary">Thêm</Button>
             </Form>
         </Drawer>
     )

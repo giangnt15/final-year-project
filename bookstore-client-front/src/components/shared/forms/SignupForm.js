@@ -47,10 +47,10 @@ function SignupForm(props) {
       })
       return;
     }
-    signUp(email, username, password);
+    signUp(inputs);
   }
 
-  return (
+    return (
     <form className="login100-form validate-form flex-sb flex-w" onSubmit={onSubmit}>
       {isShowTitle && <span className="login100-form-title p-b-20">
         Đăng ký
@@ -60,15 +60,18 @@ function SignupForm(props) {
           appId="632856054194710"
           autoLoad
           textButton="Đăng ký với Facebook"
-          fields="name,email,picture,birthday"
+          fields="name,email,picture,birthday,gender"
           scope="user_birthday"
           callback={(res) => {
-            setInputs({
-              username: res.name,
+            console.log(res)
+            setInputs(prev=>({
+              ...prev,
+              username: res.email,
               email: res.email,
+              fullName: res.name,
               avatar: res.picture.data.url,
               birthdate: moment(res.birthday).format("YYYY-MM-DD")
-            })
+            }))
           }}
           cssClass="btn-face m-b-20"
           icon="fa-facebook"

@@ -88,7 +88,7 @@ type UserAddress{
     user: User! @relation(name: "AddressToUser", onDelete: SET_NULL)
     address: String!
     phone: String!
-    provice: Province! @relation(name: "AddressToProvince", onDelete: SET_NULL)
+    province: Province! @relation(name: "AddressToProvince", onDelete: SET_NULL)
     district: District! @relation(name: "AddressToDistrict", onDelete: SET_NULL)
     ward: Ward! @relation(name: "AddressToWard", onDelete: SET_NULL)
     fullName: String!

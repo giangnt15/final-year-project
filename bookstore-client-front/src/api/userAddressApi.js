@@ -28,3 +28,34 @@ export const GET_WARDS = gql`
         }
     }
 `
+
+export const CREATE_USER_ADDRESS = gql`
+    mutation createUserAddress($data: UserAddressCreateInput!){
+        createUserAddress(data: $data){
+            id
+        }
+    }
+`
+
+export const GET_USER_ADDRESSES = gql`
+    query getUserAddresses{
+        getUserAddresses{
+            id
+            fullName
+            phone
+            province{
+                id
+                name
+            }
+            district{
+                id
+                name
+            }
+            ward{
+                id
+                name
+            }
+            address
+        }
+    }
+`

@@ -48,8 +48,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    signUp: (email, username, password) => {
-      dispatch(signUpAction(ownProps.client, { email, username, password }));
+    signUp: (data) => {
+      dispatch(signUpAction(ownProps.client,  data ));
     }
   }
 }

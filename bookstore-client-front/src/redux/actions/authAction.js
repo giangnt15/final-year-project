@@ -98,7 +98,7 @@ export const updateUser = (client, data) => {
     }
 }
 
-export const signUp = (client, { email, username, password }) => {
+export const signUp = (client, { email, username, password, avatar, birthdate,fullName,gender,phone }) => {
     return async dispatch => {
         dispatch(signingUp());
         try {
@@ -108,7 +108,12 @@ export const signUp = (client, { email, username, password }) => {
                     data: {
                         email,
                         username,
-                        password
+                        password,
+                        avatar,
+                        birthdate,
+                        fullName,
+                        gender,
+                        phone
                     }
                 }
             });

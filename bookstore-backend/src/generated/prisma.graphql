@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Mon Mar 02 2020 20:27:20 GMT+0700 (Indochina Time)
+# timestamp: Tue Mar 03 2020 23:26:56 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -7030,7 +7030,7 @@ type UserAddress implements Node {
   user: User!
   address: String!
   phone: String!
-  provice: Province!
+  province: Province!
   district: District!
   ward: Ward!
   fullName: String!
@@ -7054,7 +7054,7 @@ input UserAddressCreateInput {
   phone: String!
   fullName: String!
   user: UserCreateOneWithoutAddressesInput!
-  provice: ProvinceCreateOneInput!
+  province: ProvinceCreateOneInput!
   district: DistrictCreateOneInput!
   ward: WardCreateOneInput!
 }
@@ -7074,7 +7074,7 @@ input UserAddressCreateWithoutUserInput {
   address: String!
   phone: String!
   fullName: String!
-  provice: ProvinceCreateOneInput!
+  province: ProvinceCreateOneInput!
   district: DistrictCreateOneInput!
   ward: WardCreateOneInput!
 }
@@ -7369,7 +7369,7 @@ input UserAddressUpdateDataInput {
   phone: String
   fullName: String
   user: UserUpdateOneRequiredWithoutAddressesInput
-  provice: ProvinceUpdateOneRequiredInput
+  province: ProvinceUpdateOneRequiredInput
   district: DistrictUpdateOneRequiredInput
   ward: WardUpdateOneRequiredInput
 }
@@ -7379,7 +7379,7 @@ input UserAddressUpdateInput {
   phone: String
   fullName: String
   user: UserUpdateOneRequiredWithoutAddressesInput
-  provice: ProvinceUpdateOneRequiredInput
+  province: ProvinceUpdateOneRequiredInput
   district: DistrictUpdateOneRequiredInput
   ward: WardUpdateOneRequiredInput
 }
@@ -7424,7 +7424,7 @@ input UserAddressUpdateWithoutUserDataInput {
   address: String
   phone: String
   fullName: String
-  provice: ProvinceUpdateOneRequiredInput
+  province: ProvinceUpdateOneRequiredInput
   district: DistrictUpdateOneRequiredInput
   ward: WardUpdateOneRequiredInput
 }
@@ -7659,7 +7659,7 @@ input UserAddressWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   user: UserWhereInput
-  provice: ProvinceWhereInput
+  province: ProvinceWhereInput
   district: DistrictWhereInput
   ward: WardWhereInput
 }

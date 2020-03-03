@@ -1,36 +1,50 @@
-import React from 'react';
-import { Button } from 'antd';
+import React, { useState, Fragment } from 'react';
+import { Skeleton, Empty } from 'antd';
 import UserAddressDrawer from '../shared/UserAddressDrawer';
+import { useQuery } from '@apollo/react-hooks';
+import { GET_USER_ADDRESSES } from '../../api/userAddressApi';
+import UserAddressItem from '../userAddress/userAddressItem';
 
 function CheckoutAddress(props) {
+
+    const [drawerVisible, setDrawerVisible] = useState(false);
+
+    const { error: errorGettingUserAddresses, refetch: refetchUserAddresses,
+        loading: loadingUserAddresses, data: dataUserAddresses = {} } = useQuery(GET_USER_ADDRESSES)
+
     return (
         <div>
             <h5>Địa chỉ giao hàng</h5>
-            <p className="m-t-8 font-weight-bold" style={{ color: '#000' }}>Chọn một địa chỉ giao hàng có sẵn bên dưới: </p>
+            {dataUserAddresses.getUserAddresses&&dataUserAddresses.getUserAddresses.length>0&&
+            <p className="m-t-8 font-weight-bold" style={{ color: '#000' }}>Chọn một địa chỉ giao hàng có sẵn bên dưới: </p>}
             <br />
             <div className="row">
-                <div className="col-12 col-sm-6 m-b-16">
-                    <div className="card">
-                        <div className="card-body">
-                            <h6 className="name  m-b-6">Nguyen Truong Giang </h6>
-                            <p className="address fs-13" title="Liên Ninh, Thanh Trì, Xã Liên Ninh, Huyện Thanh Trì, Hà Nội">
-                                Địa chỉ: Liên Ninh, Thanh Trì, Xã Liên Ninh, Huyện Thanh Trì, Hà Nội          </p>
-                            <p className="address fs-13">Việt Nam</p>
-                            <p className="phone fs-13">Điện thoại: 0369735088</p>
-                            <p className="action">
-                                <Button className="m-r-8" type="primary">
-                                    Giao đến địa chỉ này
-                                </Button>
-                                <Button className="m-r-8" type="default">Sửa</Button>
-                                <Button type="default">Xóa</Button>
-                            </p>
+                {loadingUserAddresses ? <Fragment>
+                    <div className="col-12 col-sm-6 m-b-16">
+                        <div className="card">
+                            <div className="card-body">
+                                <Skeleton active />
+                            </div>
                         </div>
                     </div>
-                </div>
-               
+                    <div className="col-12 col-sm-6 m-b-16">
+                        <div className="card">
+                            <div className="card-body">
+                                <Skeleton active />
+                            </div>
+                        </div>
+                    </div>
+                </Fragment> : dataUserAddresses.getUserAddresses && dataUserAddresses.getUserAddresses.length ?
+                        dataUserAddresses.getUserAddresses.map(item => (
+                            <UserAddressItem userAddress={item} key={item} />
+                        )) : <div className="d-flex justify-content-center w-100">
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Bạn chưa có địa chỉ giao hàng nào" />
+                        </div>}
             </div>
-            <p className="m-t-8 fs-12" style={{ color: '#000' }}>Bạn muốn giao hàng tới một địa chỉ khác? <a className="text-primary">Thêm địa chỉ giao hàng mới</a></p>
-            <UserAddressDrawer />
+            <p className="m-t-8 fs-12" style={{ color: '#000' }}>Bạn muốn giao hàng tới một địa chỉ khác?
+                <a className="text-primary" onClick={() => setDrawerVisible(true)}>Thêm địa chỉ giao hàng mới</a>
+            </p>
+            <UserAddressDrawer drawerVisible={drawerVisible} setDrawerVisible={setDrawerVisible} refetchUserAddresses={refetchUserAddresses} />
         </div>
     )
 }

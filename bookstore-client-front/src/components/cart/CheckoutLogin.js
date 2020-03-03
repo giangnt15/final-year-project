@@ -45,8 +45,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         login: (email, password) => {
             dispatch(loginAction(ownProps.client, { email, password }))
         },
-        signUp: (email, username, password) => {
-            dispatch(signUpAction(ownProps.client, { email, username, password }));
+        signUp: (data) => {
+            dispatch(signUpAction(ownProps.client, data));
         }
     }
 }

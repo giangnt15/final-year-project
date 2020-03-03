@@ -86,7 +86,7 @@ type UserAddress{
     id: ID!
     user: User!
     address: String!
-    provice: Province!
+    province: Province!
     district: District!
     ward: Ward!
     phone: String!
@@ -310,6 +310,9 @@ input UserAddressCreateInput{
     address: String!
     phone: String!
     fullName: String!
+    province: ID!
+    district: ID!
+    ward: ID!
 }
 
 input UserAddressUpdateInput{
@@ -390,6 +393,7 @@ input UserSignupInput{
     email: String!
     phone: String
     gender: Boolean
+    avatar: String
     birthdate: String
     receiveEmailNotification: Boolean
 }
