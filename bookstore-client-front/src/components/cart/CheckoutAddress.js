@@ -8,7 +8,7 @@ import UserAddressItem from '../userAddress/userAddressItem';
 function CheckoutAddress(props) {
 
     const [drawerVisible, setDrawerVisible] = useState(false);
-
+    const {next,setOrderInfo} = props;
     const { error: errorGettingUserAddresses, refetch: refetchUserAddresses,
         loading: loadingUserAddresses, data: dataUserAddresses = {} } = useQuery(GET_USER_ADDRESSES)
 
@@ -36,7 +36,7 @@ function CheckoutAddress(props) {
                     </div>
                 </Fragment> : dataUserAddresses.getUserAddresses && dataUserAddresses.getUserAddresses.length ?
                         dataUserAddresses.getUserAddresses.map(item => (
-                            <UserAddressItem userAddress={item} key={item} />
+                            <UserAddressItem next={next} userAddress={item} key={item} setOrderInfo={setOrderInfo} />
                         )) : <div className="d-flex justify-content-center w-100">
                             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Bạn chưa có địa chỉ giao hàng nào" />
                         </div>}

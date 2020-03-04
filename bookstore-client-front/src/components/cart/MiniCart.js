@@ -5,10 +5,12 @@ import NumberFormat from 'react-number-format';
 import { Empty } from 'antd';
 import {NO_ITEM_IN_CART} from '../../constants';
 import { NavLink } from 'react-router-dom';
+import { removeItemFromCartSuccessfully } from '../../redux/actions/cartAction';
+import {connect} from 'react-redux';
 
 function MiniCart(props){
-
-    const {items,cartTotalQty,cartSubTotal} = props.cart;
+    const {cart,removeItemFromCart} = props;
+    const {items,cartTotalQty,cartSubTotal} = cart;
 
     return (
            <div className="block-minicart minicart__active is-visible" style={{position: "relative"}}>
@@ -30,7 +32,7 @@ function MiniCart(props){
           <div className="single__items">
             <div className="miniproduct">
               {items&&items.length?items.map(item=>(
-                <MiniCartItem cartItem={item} key={item.id}/>
+                <MiniCartItem cartItem={item} removeItemFromCart={()=>removeItemFromCart(item.id)} key={item.id}/>
               )):<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={NO_ITEM_IN_CART}/>}
             </div>
           </div>
@@ -38,5 +40,12 @@ function MiniCart(props){
       </div>
     )
 }
+const mapDispatchToProps = dispatch => {
+  return {
+    removeItemFromCart: (itemId) => {
+      dispatch(removeItemFromCartSuccessfully(itemId));
+    },
+  }
+}
 
-export {MiniCart as default };
+export default connect(null, mapDispatchToProps)(MiniCart);

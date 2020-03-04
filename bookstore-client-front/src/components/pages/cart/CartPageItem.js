@@ -8,7 +8,7 @@ import { withApollo } from '@apollo/react-hoc';
 
 function CartPageItem(props) {
 
-    const { book, changeCartItemQty } = props;
+    const { book, changeCartItemQty, removeItemFromCart} = props;
 
     return (
         <div className="row shopping-cart-item p-b-8 m-b-8" style={{ flexWrap: 'nowrap', borderBottom: '1px solid #ccc' }}>
@@ -32,7 +32,7 @@ function CartPageItem(props) {
                             </span>
                         </p>
                         <p className="fs-12">
-                            <a className="text-primary">
+                            <a onClick={removeItemFromCart} className="text-primary">
                                 Xóa
                             </a>
                         </p>

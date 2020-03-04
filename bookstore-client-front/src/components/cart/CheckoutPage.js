@@ -1,35 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Steps, Button, message } from 'antd';
 import { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
 import CheckoutLoginStep from './CheckoutLogin';
 import { connect } from 'react-redux';
 import isTokenValid from '../../utils/tokenValidation';
 import CheckoutAddress from './CheckoutAddress';
+import CheckoutPayment from './CheckoutPayment';
+import { Redirect } from 'react-router-dom';
 
 const { Step } = Steps;
 
 const steps = [
     {
         title: 'Đăng nhập',
-        content: <CheckoutLoginStep />,
+        content: (props)=> <CheckoutLoginStep {...props} />,
     },
     {
         title: 'Địa chỉ giao hàng',
-        content: <CheckoutAddress />,
+        content: (props)=> <CheckoutAddress {...props}/>,
     },
     {
         title: 'Thanh toán',
-        content: 'Thanh toán',
+        content: (props)=> <CheckoutPayment {...props} />,
     },
 ];
 
 function CheckoutPage(props) {
 
-    const {auth} = props;
+    const {auth,cart} = props;
 
     const tokenValid = isTokenValid(auth.token);
 
     const [current, setCurrent] = useState(tokenValid?1:0);
+    
+    const [orderInfo,setOrderInfo] = useState({
+        orderAddress: {
+
+        },
+        orderItems: cart.items,
+        cartSubTotal: cart.cartSubTotal
+    })
+
+    useEffect(()=>{
+        if (tokenValid){
+            setCurrent(1);
+        }
+    },[tokenValid])
 
     const next = () => {
         setCurrent(prev => prev + 1)
@@ -37,6 +53,11 @@ function CheckoutPage(props) {
 
     const prev = () => {
         setCurrent(prev => prev - 1)
+    }
+
+    if (cart.items.length===0){
+        window.alert("Bạn không có sản phẩm nào trong giỏ hàng.");
+        return (<Redirect to="/books" />)
     }
 
     return (
@@ -51,7 +72,7 @@ function CheckoutPage(props) {
                         </Steps>
                     </div>
                     <br></br>
-                    <div className="steps-content">{steps[current].content}</div>
+                    <div className="steps-content">{steps[current].content({next,prev,setOrderInfo,orderInfo})}</div>
                     <div className="steps-action">
                         {current > 1 && (
                             <Button style={{ marginLeft: 8 }} onClick={() => prev()}>
@@ -67,7 +88,8 @@ function CheckoutPage(props) {
 
 const mapStateToProps = state => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        cart: state.cart
     }
 }
 

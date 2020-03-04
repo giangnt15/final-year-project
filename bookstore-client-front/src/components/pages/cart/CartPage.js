@@ -3,14 +3,14 @@ import { Card, Button, Empty } from 'antd';
 
 import { connect } from 'react-redux';
 import { withApollo } from '@apollo/react-hoc';
-import { addSingleItemToCartAysnc } from '../../../redux/actions/cartAction';
+import { addSingleItemToCartAysnc, removeItemFromCartSuccessfully } from '../../../redux/actions/cartAction';
 import CartPageItem from './CartPageItem';
 import NumberFormat from 'react-number-format';
 import { NO_ITEM_IN_CART } from '../../../constants';
 import { NavLink } from 'react-router-dom';
 
 function CartPage(props) {
-    const { cart } = props;
+    const { cart,removeItemFromCart } = props;
     return (
         <div className="container m-t-80 p-b-20 p-t-20" >
             <div className="row m-b-20">
@@ -23,7 +23,7 @@ function CartPage(props) {
                 <div className="col-12 col-md-8">
                     <Card>
                         {cart.items.map(item => (
-                            <CartPageItem book={item} key={item.id} />
+                            <CartPageItem book={item} removeItemFromCart={()=>removeItemFromCart(item.id)} key={item.id} />
                         ))}
                     </Card>
                 </div>
@@ -54,6 +54,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         addSingleItemToCart: (item, qty) => {
             dispatch(addSingleItemToCartAysnc(ownProps.client, item, qty));
+        },
+        removeItemFromCart: (itemId)=>{
+            dispatch(removeItemFromCartSuccessfully(itemId));
         }
     }
 }

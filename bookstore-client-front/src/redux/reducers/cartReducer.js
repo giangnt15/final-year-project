@@ -1,4 +1,4 @@
-import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, ADD_SINGLE_ITEMS_TO_FAILED, CHANGE_CART_ITEM_QTY_FAILED, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGING_CART_ITEM_QTY } from "../../constants";
+import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, ADD_SINGLE_ITEMS_TO_FAILED, CHANGE_CART_ITEM_QTY_FAILED, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGING_CART_ITEM_QTY, REMOVE_ITEM_FROM_CART_SUCCESSFULLY } from "../../constants";
 
 
 const calculateCartTotalQty = (items) => {
@@ -40,7 +40,7 @@ const initialState = {
 }
 
 export default function cartReducer(state = initialState, action) {
-    const items = [...state.items];
+    let items = [...state.items];
     let itemExisted = null;
     switch (action.type) {
         case ADDING_SINGLE_ITEMS_TO_CART:
@@ -82,6 +82,15 @@ export default function cartReducer(state = initialState, action) {
             return {
                 ...state,
                 adding: false
+            }
+        case REMOVE_ITEM_FROM_CART_SUCCESSFULLY:
+            items = items.filter(item=>item.id!==action.itemId);
+            localStorage.setItem('bs_cart',JSON.stringify(items));
+            return {
+                ...state,
+                items,
+                cartTotalQty: calculateCartTotalQty(items),
+                cartSubTotal: calculateCartSubTotal(items)
             }
         default: return state;
     }

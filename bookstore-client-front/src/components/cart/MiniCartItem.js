@@ -3,7 +3,8 @@ import { NavLink } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
 
 export default function MiniCartItem(props) {
-    const { title, id, basePrice, qty, thumbnail } = props.cartItem;
+    const {cartItem, removeItemFromCart} = props;
+    const { title, id, basePrice, qty, thumbnail } = cartItem;
     return (
         <div className="item01 d-flex mt--20">
             <div className="thumb">
@@ -17,8 +18,8 @@ export default function MiniCartItem(props) {
                     <span className="qun"><NumberFormat value={qty} displayType={'text'}
                       prefix="SL: " thousandSeparator={true} /></span>
                     <ul className="d-flex justify-content-end">
-                        <li><a href="#"><i className="zmdi zmdi-settings" /></a></li>
-                        <li><a href="#"><i className="zmdi zmdi-delete" /></a></li>
+                        {/* <li><a href="#"><i className="zmdi zmdi-settings" /></a></li> */}
+                        <li onClick={removeItemFromCart}><a href="#"><i className="zmdi zmdi-delete" /></a></li>
                     </ul>
                 </div>
             </div>

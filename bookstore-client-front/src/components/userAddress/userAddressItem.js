@@ -2,7 +2,8 @@ import React from 'react';
 import { Button } from 'antd';
 
 function UserAddressItem(props) {
-    const { fullName, phone, province, district, ward, address } = props.userAddress;
+    const { next,userAddress,setOrderInfo } = props;
+    const { fullName, phone, province, district, ward, address } = userAddress;
 
     const fullAddress = `${address}, ${ward.name}, ${district.name}, ${province.name}`;
     return (
@@ -15,7 +16,10 @@ function UserAddressItem(props) {
                     <p className="address fs-13">Việt Nam</p>
                     <p className="phone fs-13">Điện thoại: {phone}</p>
                     <p className="action">
-                        <Button className="m-r-8" type="primary">
+                        <Button className="m-r-8" type="primary" onClick={()=>{
+                            setOrderInfo(prev=>({...prev, orderAddress: userAddress}));
+                            next();
+                        }}>
                             Giao đến địa chỉ này
                         </Button>
                         <Button className="m-r-8" type="default">Sửa</Button>
