@@ -44,8 +44,8 @@ function Header(props) {
   </Fragment>
   ) : (<Fragment>
     <ul style={{ listStyleType: 'none', lineHeight: 2 }}>
-      <li><NavLink to="/auth/order"><i className="fa fa-list-ol"></i>&nbsp;Đơn hàng</NavLink></li>
-      <li><NavLink to="/auth/account"><i className="fa fa-user-circle"></i>&nbsp;Tài khoản</NavLink></li>
+      <li><NavLink to="/auth/account/orders/history"><i className="fa fa-list-ol"></i>&nbsp;Đơn hàng</NavLink></li>
+      <li><NavLink to="/auth/account/edit"><i className="fa fa-user-circle"></i>&nbsp;Tài khoản</NavLink></li>
       <li><NavLink to="/auth/wish-list"><i className="fa fa-heart"></i>&nbsp;Sản phẩm yêu thích</NavLink></li>
       <li><a onClick={logout} ><i className="fa fa-sign-out"></i>&nbsp;Đăng xuất</a></li>
     </ul>

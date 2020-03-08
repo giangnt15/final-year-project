@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import getUserId from '../utils/getUserId';
-import checkAdmin from '../utils/adminAuth';
+import checkAdmin, { getUserRole } from '../utils/adminAuth';
 
 const Mutation = {
     async signUp(parent, { data }, { prisma, env }, info) {
@@ -70,9 +70,9 @@ const Mutation = {
             phone: data.phone,
             birthdate: data.birthdate
         }
-        if (data.changePassword){
-            if (!data.password||data.password.length<8) throw new Error('Password length is invalid');
-            dataToChange.password = await bcrypt.hash(data.password,10);
+        if (data.changePassword) {
+            if (!data.password || data.password.length < 8) throw new Error('Password length is invalid');
+            dataToChange.password = await bcrypt.hash(data.password, 10);
         }
         return prisma.mutation.updateUser({
             where: {
@@ -286,6 +286,130 @@ const Mutation = {
                 }
             }
         }, info);
+    },
+    async createOrder(parent, { data }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        if (data.items.length === 0) throw new Error("Đơn hàng không có sản phẩm.")
+        const orderItems = await prisma.query.books({
+            where: {
+                id_in: data.items.map(item => item.book)
+            }
+        }, `{id basePrice discounts{id discountRate from to}}`);
+        let subTotal = 0;
+        let orderItemsInOrder = []
+        for (let i = 0; i < orderItems.length; i++) {
+            if (orderItems[i].availableCopies < data.items[i].quantity) {
+                throw new Error("Không đủ hàng trong kho, vui lòng liên hệ người quản trị để biết thêm chi tiết");
+            } else {
+                let orderItemPrice = orderItems[i].basePrice;
+                for (let discount of orderItems[i].discounts) {
+                    if (moment(discount.from).isBefore(moment()) && moment().isAfter(moment(discount.to))) {
+                        orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate) * data.items[i].quantity)
+                    }
+                }
+                subTotal += orderItemPrice;
+                orderItemsInOrder.push({
+                    item: {
+                        connect: {
+                            id: data.items[i].book
+                        }
+                    },
+                    price: orderItemPrice,
+                    quantity: data.items[i].quantity
+                })
+            }
+        }
+        let grandTotal = subTotal;
+        return prisma.mutation.createOrder({
+            data: {
+                items: {
+                    create: orderItemsInOrder
+                },
+                orderStatus: "Ordered",
+                paymentStatus: false,
+                shippingMethod: {
+                    connect: {
+                        id: data.shippingMethod
+                    }
+                },
+                paymentMethod: {
+                    connect: {
+                        id: data.paymentMethod
+                    }
+                },
+                shippingAddress: {
+                    connect: {
+                        id: data.shippingAddress
+                    }
+                },
+                customer: {
+                    connect: {
+                        id: userId
+                    }
+                },
+                grandTotal,
+                subTotal
+            }
+        });
+    },
+    async updateOrderStatus(parent,{orderId, orderStatus},{prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const role = await getUserRole(userId,prisma);
+        if (role==="User"){
+            const orders = await prisma.query.orders({
+                where: {
+                    customer: {
+                        id: userId
+                    },
+                    id: orderId
+                }
+            });
+            if (orders.length===0){
+                throw new Error("Không tìm thấy đơn hàng.");
+            }
+            return prisma.mutation.updateOrder({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    orderStatus
+                }
+            },info);
+        }else if (role==="Admin"){
+            return prisma.mutation.updateOrder({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    orderStatus
+                }
+            },info);
+        }
+        throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");
+    },
+    async createReviewReply(parent,{data},{prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const {text, book, bookReview } = data;
+        return prisma.mutation.createBookReviewReply({
+            data: {
+                text,
+                author: {
+                    connect: {
+                        id: userId
+                    }
+                },
+                book: {
+                    connect: {
+                        id: book
+                    }
+                },
+                bookReview: {
+                    connect: {
+                        id: bookReview
+                    }
+                }
+            }
+        },info);
     }
 }
 

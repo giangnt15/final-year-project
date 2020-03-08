@@ -12,3 +12,12 @@ export default async function checkAdmin(userId, prisma){
     }
     return true;
 }
+
+export async function getUserRole(userId, prisma){
+    const user = await prisma.query.user({
+        where: {
+            id: userId
+        }
+    });
+    return user.role;
+}

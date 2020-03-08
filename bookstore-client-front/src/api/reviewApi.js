@@ -15,6 +15,16 @@ export const GET_REVIEWS_BY_BOOK = gql`
                     username
                     avatar
                 }
+                replies{
+                    id
+                    text
+                    author{
+                        id
+                        username
+                        avatar
+                    }
+                    updatedAt
+                }
             }
             totalCount
             fiveStar
@@ -32,4 +42,30 @@ export const CREATE_BOOK_REVIEW = gql`
             id
         }
     }
+`
+export const CREATE_REVIEW_REPLY = gql`
+    mutation createReviewReply($data: ReviewReplyCreateInput!){
+        createReviewReply(data: $data){
+            id
+        }
+}
+`
+
+export const GET_REVIEW_REPLIES = gql`
+    query getReviewRepliesByReview($reivewId: ID!){
+        getReviewRepliesByReview(reivewId: $reivewId){
+            id
+            text
+            author{
+                id
+                username
+                fullName
+                avatar
+            }
+            bookReview{
+                id
+            }
+            updatedAt
+        }
+}
 `

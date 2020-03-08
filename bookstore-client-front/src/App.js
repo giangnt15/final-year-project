@@ -17,6 +17,7 @@ import './components/pages/auth/util.css'
 import AccountPage from './components/pages/auth/AccountPage';
 import CartPage from './components/pages/cart/CartPage';
 import CheckoutPage from './components/cart/CheckoutPage';
+import PrivateRoute from './components/shared/PrivateRoute';
 
 function App(props) {
     let history = useHistory();
@@ -30,9 +31,9 @@ function App(props) {
           <Route path="/home" exact component={HomePage}></Route>
           <Route path="/auth/login" exact component={LoginPage}></Route>
           <Route path="/auth/signup" exact component={SignupPage}></Route>
-          <Route path="/auth/account" exact component={AccountPage}></Route>
-          <Route path="/checkout/cart" exact component={CartPage}></Route>
-          <Route path="/checkout" exact component={CheckoutPage}></Route>
+          <Route path="/auth/account" render={()=><PrivateRoute render={() => <AccountPage />} />}></Route>
+          <Route path="/checkout/cart" exact render={()=><PrivateRoute render={() => <CartPage />} />}></Route>
+          <Route path="/checkout" exact render={()=><PrivateRoute render={() => <CheckoutPage />} />}></Route>
           <Route path="/book/:id" component={ProductPage}></Route>
           <Route path="/books" exact render={(props) => <ShopGridContainer {...props} />}></Route>
           <Route component={NotFound404Page}></Route>

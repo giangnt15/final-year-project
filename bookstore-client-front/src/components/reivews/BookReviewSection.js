@@ -149,7 +149,7 @@ function BookReviewSection(props) {
                 </div>
             </form> : <Fragment>
                     {data.getBookReviewsByBook.bookReviews.map(review => (
-                        <BookReviewItem key={review.id} review={review} />
+                        <BookReviewItem refetchBookReviews={refetchBookReviews} bookId={bookId} key={review.id} review={review} />
                     ))}
                 </Fragment>}
         </div>

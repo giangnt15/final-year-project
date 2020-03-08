@@ -1,4 +1,4 @@
-import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART,
+import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, RESET_CART,
      ADD_SINGLE_ITEMS_TO_FAILED, ERROR_OCCURED,ADD_ITEM_TO_CART_SUCCEEDED, CHANGING_CART_ITEM_QTY, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGE_CART_ITEM_QTY_FAILED, REMOVE_ITEM_FROM_CART_SUCCESSFULLY } from "../../constants"
 import { GET_BOOK_QTY } from "../../api/bookApi"
 import { message } from "antd"
@@ -47,6 +47,13 @@ export const removeItemFromCartSuccessfully = (itemId)=>{
     return{
         type: REMOVE_ITEM_FROM_CART_SUCCESSFULLY,
         itemId
+    }
+}
+
+export const resetCart = ()=>{
+    localStorage.removeItem('bs_cart');
+    return {
+        type: RESET_CART
     }
 }
 

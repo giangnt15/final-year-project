@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import ProductItem from '../../products/ProductItem';
 import ListProductItem from '../../products/ListProductItem';
 import Pagination from '../pagination/Pagination';
@@ -8,6 +8,7 @@ import { GET_CATEGORIES } from '../../../api/categoryApi';
 import { GET_AUTHORS } from '../../../api/authorApi';
 import { GET_PUBLISHERS } from '../../../api/publisherApi';
 import PriceFilter from '../filters/PriceFilter';
+import { NavLink } from 'react-router-dom';
 
 const sortDirections = [
   {
@@ -152,7 +153,7 @@ function ShopGrid(props) {
               id: filters.publisher
             },
             basePrice_gt: filters.price.range[0]
-          },{
+          }, {
             authors_some: {
               id: filters.author
             },
@@ -246,7 +247,7 @@ function ShopGrid(props) {
       setPublishers(resPub.data.getPublishers);
     })()
 
-  }, [filters.category, filters.author, filters.publisher, filters.price?filters.price.id: undefined])
+  }, [filters.category, filters.author, filters.publisher, filters.price ? filters.price.id : undefined])
 
   useEffect(() => {
     let where = {};
@@ -374,70 +375,87 @@ function ShopGrid(props) {
   }
 
   return (
-
-    <div className="page-shop-sidebar left--sidebar bg--white section-padding--lg">
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-3 col-12 order-2 order-lg-1 md-mt-40 sm-mt-40">
-            <div className="shop__sidebar">
-              <CommonFilter filterType={FILTER_TYPE_CAT} filterName="Thể loại" filterItems={categories} />
-              <CommonFilter filterType={FILTER_TYPE_AUTHOR} filterName="Tác giả" filterItems={authors} />
-              <PriceFilter />
-              <CommonFilter filterType={FILTER_TYPE_PUBLISHER} filterName="Nhà xuất bản" filterItems={publishers} />
-
-              <aside className="wedget__categories sidebar--banner">
-                <img src="images/others/banner_left.jpg" alt="banner images" />
-                <div className="text">
-                  <h2>new products</h2>
-                  <h6>save up to <br /> <strong>40%</strong>off</h6>
-                </div>
-              </aside>
-            </div>
-          </div>
-          <div className="col-lg-9 col-12 order-1 order-lg-2">
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="shop__list__wrapper d-flex flex-wrap flex-md-nowrap justify-content-between">
-                  <div className="shop__list nav justify-content-center" role="tablist">
-                    <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_GRID ? " active" : ""}`}
-                      onClick={() => changeViewMode(VIEW_MODE_GRID)} data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
-                    <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_LIST ? " active" : ""}`}
-                      data-toggle="tab" onClick={() => changeViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
-                  </div>
-                  <p>Hiển thị {(userSettings.shopPage - 1) * 9 + 1 > books.totalCount ? books.totalCount : (userSettings.shopPage - 1) * 9 + 1} – {(userSettings.shopPage - 1) * 9 + 9 >
-                    books.totalCount ? books.totalCount : (userSettings.shopPage - 1) * 9 + 9} trên {books.totalCount} kết quả</p>
-                  <div className="orderby__wrapper">
-                    <span>Sắp xếp theo: </span>
-                    <select className="shot__byselect" value={userSettings.sortDirection} onChange={(e) => { changeSortDirection(e.target.value) }}>
-                      {sortDirections.map(item => {
-                        return (<option key={item.value} value={item.value}>{item.label}</option>)
-                      })}
-                    </select>
-                  </div>
-                </div>
+    <Fragment>
+      <div className="ht__bradcaump__area bg-image--6">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="bradcaump__inner text-center">
+                <h2 className="bradcaump-title">Cửa hàng sách</h2>
+                <nav className="bradcaump-content">
+                  <NavLink className="breadcrumb_item" to="/">Trang chủ</NavLink>
+                  <span className="brd-separetor">/</span>
+                  <span className="breadcrumb_item active">Shop</span>
+                </nav>
               </div>
             </div>
-            <div className="tab__container">
-              <div className={`shop-grid tab-pane fade${userSettings.viewMode === VIEW_MODE_GRID ? " show active" : ""}`} id="nav-grid" role="tabpanel">
-                <div className="row">
-                  {userSettings.viewMode === VIEW_MODE_GRID && renderProducts()}
-                </div>
-
-              </div>
-              <div className={`shop-grid tab-pane fade${userSettings.viewMode === VIEW_MODE_LIST ? " show active" : ""}`} id="nav-list" role="tabpanel">
-                <div className="list__view__wrapper">
-                  {userSettings.viewMode === VIEW_MODE_LIST && renderProductsList()}
-                </div>
-              </div>
-            </div>
-            <br />
-            <br />
-            <Pagination page={userSettings.shopPage} goToPage={changeShopPage}
-              totalCount={books.totalCount} itemsPerPage={9} />
           </div>
         </div>
       </div>
-    </div>
+      <div className="page-shop-sidebar left--sidebar bg--white section-padding--lg">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-3 col-12 order-2 order-lg-1 md-mt-40 sm-mt-40">
+              <div className="shop__sidebar">
+                <CommonFilter filterType={FILTER_TYPE_CAT} filterName="Thể loại" filterItems={categories} />
+                <CommonFilter filterType={FILTER_TYPE_AUTHOR} filterName="Tác giả" filterItems={authors} />
+                <PriceFilter />
+                <CommonFilter filterType={FILTER_TYPE_PUBLISHER} filterName="Nhà xuất bản" filterItems={publishers} />
+
+                <aside className="wedget__categories sidebar--banner">
+                  <img src="images/others/banner_left.jpg" alt="banner images" />
+                  <div className="text">
+                    <h2>new products</h2>
+                    <h6>save up to <br /> <strong>40%</strong>off</h6>
+                  </div>
+                </aside>
+              </div>
+            </div>
+            <div className="col-lg-9 col-12 order-1 order-lg-2">
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="shop__list__wrapper d-flex flex-wrap flex-md-nowrap justify-content-between">
+                    <div className="shop__list nav justify-content-center" role="tablist">
+                      <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_GRID ? " active" : ""}`}
+                        onClick={() => changeViewMode(VIEW_MODE_GRID)} data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
+                      <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_LIST ? " active" : ""}`}
+                        data-toggle="tab" onClick={() => changeViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
+                    </div>
+                    <p>Hiển thị {(userSettings.shopPage - 1) * 9 + 1 > books.totalCount ? books.totalCount : (userSettings.shopPage - 1) * 9 + 1} – {(userSettings.shopPage - 1) * 9 + 9 >
+                      books.totalCount ? books.totalCount : (userSettings.shopPage - 1) * 9 + 9} trên {books.totalCount} kết quả</p>
+                    <div className="orderby__wrapper">
+                      <span>Sắp xếp theo: </span>
+                      <select className="shot__byselect" value={userSettings.sortDirection} onChange={(e) => { changeSortDirection(e.target.value) }}>
+                        {sortDirections.map(item => {
+                          return (<option key={item.value} value={item.value}>{item.label}</option>)
+                        })}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="tab__container">
+                <div className={`shop-grid tab-pane fade${userSettings.viewMode === VIEW_MODE_GRID ? " show active" : ""}`} id="nav-grid" role="tabpanel">
+                  <div className="row">
+                    {userSettings.viewMode === VIEW_MODE_GRID && renderProducts()}
+                  </div>
+
+                </div>
+                <div className={`shop-grid tab-pane fade${userSettings.viewMode === VIEW_MODE_LIST ? " show active" : ""}`} id="nav-list" role="tabpanel">
+                  <div className="list__view__wrapper">
+                    {userSettings.viewMode === VIEW_MODE_LIST && renderProductsList()}
+                  </div>
+                </div>
+              </div>
+              <br />
+              <br />
+              <Pagination page={userSettings.shopPage} goToPage={changeShopPage}
+                totalCount={books.totalCount} itemsPerPage={9} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Fragment>
   )
 }
 

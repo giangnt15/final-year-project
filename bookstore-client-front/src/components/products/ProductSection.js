@@ -7,32 +7,23 @@ import "slick-carousel/slick/slick-theme.css";
 import '../shared/slider/sliders.css';
 import { GET_BOOKS } from '../../api/bookApi';
 import { useQuery } from '@apollo/react-hooks';
+import { Skeleton, Empty } from 'antd';
 
 function ProductSection(props) {
 
 
-  const { sectionName, variables,isFullWidth,slickSettings } = props;
+  const { sectionName, variables, isFullWidth, slickSettings } = props;
 
-  const { loading, error, data } = useQuery(GET_BOOKS, {
+  const { loading, error, data={} } = useQuery(GET_BOOKS, {
     variables,
   })
 
-  if (loading) return 'Loading...';
-
-  const renderProducts = () => {
-    return data.getBooks.books.map((book, index) => {
-      return (
-        <div key={index}><ProductItem width={250} thumbHeight={280} book={book} /></div>
-      )
-    })
-  }
-
-  return (<section className="wn__product__area brown--color pt--80  pb--30">
+  if (loading) return (<section className="wn__product__area brown--color pt--80  pb--30">
     <div className="container" style={{ maxWidth: isFullWidth ? '100%' : undefined }}>
       <div className="row">
         <div className="col-lg-12">
           <div className="section__title text-center">
-            <h2 className="title__be--2" style={{color: '#CE7852'}}>{sectionName}</h2>
+            <h2 className="title__be--2" style={{ color: '#CE7852' }}>{sectionName}</h2>
             <hr />
             <br />
           </div>
@@ -40,8 +31,55 @@ function ProductSection(props) {
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
         <SlickSlider settings={slickSettings}>
-          {renderProducts()}
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
+          <div style={{ padding: 8 }}>
+            <Skeleton active />
+          </div>
         </SlickSlider>
+      </div>
+    </div>
+  </section>)
+
+  const renderProducts = () => {
+    return data.getBooks.books.map((book, index) => {
+      return (
+        <div key={index}><ProductItem width={250} thumbHeight={280} book={book} /></div>
+      )
+    });
+  }
+
+  return (<section className="wn__product__area brown--color pt--80  pb--30">
+    <div className="container" style={{ maxWidth: isFullWidth ? '100%' : undefined }}>
+      <div className="row">
+        <div className="col-lg-12">
+          <div className="section__title text-center">
+            <h2 className="title__be--2" style={{ color: '#CE7852' }}>{sectionName}</h2>
+            <hr />
+            <br />
+          </div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+        {data.getBooks&&data.getBooks.books&&data.getBooks.books.length>0?<SlickSlider settings={slickSettings}>
+          {renderProducts()}
+        </SlickSlider>:<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Không có dữ liệu"}/>}
       </div>
     </div>
   </section>)

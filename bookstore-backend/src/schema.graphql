@@ -1,6 +1,7 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
+#import OrderWhereInput, OrderOrderbyInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -51,11 +52,14 @@ type Order{
     customer: User!
     shippingAddress: UserAddress!
     paymentMethod: PaymentMethod!
-    deliveryStatus: Boolean!
+    shippingMethod: ShippingMethod!
+    orderStatus: OrderStatus!
+    subTotal: Float! #Gia truoc khi tinh discount
+    grandTotal: Float! #Gia sau khi tinh discount
     paymentStatus: Boolean!
     items: [OrderItem!]!
-    receivedDate: String!
-    beginDeliveryDate: String!
+    receivedDate: String
+    beginDeliveryDate: String
     createdAt: String!
     updatedAt: String!
 }
@@ -63,6 +67,13 @@ type Order{
 type PaymentMethod{
     id: ID!
     name: String!
+}
+
+type ShippingMethod{
+    id: ID!
+    name: String!
+    createdAt: DateTime! 
+    updatedAt: DateTime!
 }
 
 type OrderItem{
@@ -143,6 +154,17 @@ type BookReview{
     rating: Int!
     author: User!
     book: Book!
+    replies: [BookReviewReply!]!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type BookReviewReply{
+    id: ID!
+    text: String
+    author: User!
+    book: Book!
+    bookReview: BookReview! 
     createdAt: String!
     updatedAt: String!
 }
@@ -196,6 +218,13 @@ enum UserRole{
     Admin
 }
 
+enum OrderStatus{
+    Ordered
+    Processing
+    Completed
+    Canceled
+}
+
 type Query{
     getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String): BooksPayload!
     getBook(id: ID!): Book!
@@ -212,7 +241,9 @@ type Query{
     getProvinces: [Province!]!
     getDistricts(provinceId: ID!): [District!]!
     getWards(districtId: ID!): [Ward!]!
-
+    getOrders(where: OrderWhereInput, orderBy: OrderOrderByInput,first: Int,skip: Int,selection: String): OrderPayload!
+    getOrderById(id: ID!): Order!
+    getReviewRepliesByReview(reviewId: ID!): [BookReviewReply!]!
 }
 
 type Mutation{
@@ -233,7 +264,34 @@ type Mutation{
     updatePublisher(id: ID!,data: PublisherUpdateInput!): Publisher!
     createAuthor(data: AuthorCreateInput!): Author!
     updateAuthor(id: ID!,data: AuthorCreateInput!): Author!
+    createOrder(data: OrderCreateInput!): Order!
+    updateOrderStatus(orderId: ID!,orderStatus: OrderStatus!): Order!
+    createReviewReply(data: ReviewReplyCreateInput!): BookReviewReply!
 }
+
+input ReviewReplyCreateInput{
+    text: String
+    book: ID!
+    bookReview: ID!
+}
+
+type OrderPayload{
+    orders: [Order!]!
+    totalCount: Int
+}
+
+input OrderCreateInput{
+    shippingAddress: ID!
+    shippingMethod: ID!
+    paymentMethod: ID!
+    items: [OrderItemCreateInput!]!
+}
+
+input OrderItemCreateInput{
+    book: ID!
+    quantity: Int!
+}
+
 
 type Subscription{
     user: User!

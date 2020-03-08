@@ -1,26 +1,59 @@
 import React, { Fragment } from 'react';
-import { Button, Radio } from 'antd';
+import { Button, Radio, message } from 'antd';
 import { NavLink, useHistory } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
+import { useMutation } from '@apollo/react-hooks';
+import { CREATE_ORDER } from '../../api/orderApi';
+import { resetCart } from '../../redux/actions/cartAction';
+import { connect } from 'react-redux';
 
 const { Group: RadioGroup } = Radio;
 
 function CheckoutPayment(props) {
-    const { orderInfo, setOrderInfo,prev } = props;
-    const { orderAddress, orderItems, cartSubTotal } = orderInfo;
+    const { orderInfo, setOrderInfo,prev,resetCart } = props;
+    const { orderAddress, orderItems, cartSubTotal,paymentMethod,shippingMethod } = orderInfo;
     const { address, ward, district, province, fullName, phone } = orderAddress;
     const fullAddress = `${address}, ${ward.name}, ${district.name}, ${province.name}`;
+    const history = useHistory();
+    const [createOrder, {loading, data}] = useMutation(CREATE_ORDER, {
+        onError(error){
+            console.log(error.toString());
+            message.error(error.toString())
+        },
+        onCompleted(data){
+            message.success("Đặt hàng thành công");
+            history.push(`/auth/account/order/${data.createOrder.id}`);
+            resetCart();
+        }
+    });
+
+    const onSubmit = e=>{
+        e.preventDefault();
+        createOrder({
+            variables: {
+                data: {
+                    shippingMethod,
+                    paymentMethod,
+                    shippingAddress: orderAddress.id,
+                    items: orderItems.map(item=>({
+                        book: item.id,
+                        quantity: item.qty
+                    }))
+                }
+            }
+        });
+    }
 
     return (
         <div className="container m-t-20 p-b-20 p-t-20" >
             <div className="row m-b-20">
-                <form className="col-12 col-md-8 m-b-20">
+                <form className="col-12 col-md-8 m-b-20" onSubmit={onSubmit}>
                     <div>
                         <h5 className="m-b-12">1. Chọn hình thức giao hàng</h5>
                         <div className="card">
                             <div className="card-body">
-                                <RadioGroup >
-                                    <Radio checked value="STD_DELIVERY">Giao hàng tiêu chuẩn</Radio>
+                                <RadioGroup value={shippingMethod}>
+                                    <Radio value="STD_DELIVERY">Giao hàng tiêu chuẩn</Radio>
                                 </RadioGroup>
                             </div>
                         </div>
@@ -30,14 +63,14 @@ function CheckoutPayment(props) {
                         <h5 className="m-b-12">2. Chọn hình thức thanh toán</h5>
                         <div className="card">
                             <div className="card-body">
-                                <RadioGroup >
-                                    <Radio checked value="COD">Thanh toán tiền mặt khi nhận hàng </Radio>
+                                <RadioGroup value={paymentMethod}>
+                                    <Radio value="COD">Thanh toán tiền mặt khi nhận hàng </Radio>
                                 </RadioGroup>
                             </div>
                         </div>
                     </div>
                     <br />
-                    <Button htmlType="submit" style={{ width: '50%' }} size="large" type="danger">ĐẶT MUA</Button>
+                    <Button loading={loading} htmlType="submit" style={{ width: '50%' }} size="large" type="danger">ĐẶT MUA</Button>
                     <div className="fs-12 m-t-6">(Xin vui lòng kiểm tra kĩ lại thông tin đơn hàng trước khi Đặt Mua)</div>
                 </form>
                 <div className="col-12 col-md-4">
@@ -116,4 +149,12 @@ function CheckoutPayment(props) {
     )
 }
 
-export default CheckoutPayment;
+const mapDispatchToProps = dispatch=>{
+    return{
+        resetCart: ()=>{
+            dispatch(resetCart());
+        }
+    }
+}
+
+export default connect(null,mapDispatchToProps)(CheckoutPayment);

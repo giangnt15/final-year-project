@@ -1,4 +1,4 @@
-import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, ADD_SINGLE_ITEMS_TO_FAILED, CHANGE_CART_ITEM_QTY_FAILED, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGING_CART_ITEM_QTY, REMOVE_ITEM_FROM_CART_SUCCESSFULLY } from "../../constants";
+import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, ADD_SINGLE_ITEMS_TO_FAILED, CHANGE_CART_ITEM_QTY_FAILED, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGING_CART_ITEM_QTY, REMOVE_ITEM_FROM_CART_SUCCESSFULLY, RESET_CART } from "../../constants";
 
 
 const calculateCartTotalQty = (items) => {
@@ -91,6 +91,13 @@ export default function cartReducer(state = initialState, action) {
                 items,
                 cartTotalQty: calculateCartTotalQty(items),
                 cartSubTotal: calculateCartSubTotal(items)
+            }
+        case RESET_CART: 
+            return {
+                items: [],
+                adding: false,
+                cartTotalQty: 0,
+                cartSubTotal: 0
             }
         default: return state;
     }

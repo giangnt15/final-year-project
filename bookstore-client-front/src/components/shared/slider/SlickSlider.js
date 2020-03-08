@@ -9,6 +9,7 @@ var settings = {
   infinite: true,
   speed: 500,
   slidesToShow: 1,
+  draggble: true,
   arrows: true,
   accessibility: true,
   slidesToScroll: 2,

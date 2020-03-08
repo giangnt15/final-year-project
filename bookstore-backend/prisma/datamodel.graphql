@@ -48,9 +48,13 @@ type Order{
     customer: User! @relation(name: "OrderToUser", onDelete: SET_NULL)
     shippingAddress: UserAddress! @relation(name: "AddressToOrder", onDelete: SET_NULL)
     paymentMethod: PaymentMethod! @relation(name: "PaymentMethodToOrder", onDelete: SET_NULL)
-    deliveryStatus: Boolean!
+    shippingMethod: ShippingMethod! @relation(name: "ShippingMethodToOrder", onDelete: SET_NULL)
+    orderStatus: OrderStatus!
     paymentStatus: Boolean!
     items: [OrderItem!]! @relation(name: "OrderItemToOrder", onDelete: CASCADE)
+    discount: Float! @default(value: 0)
+    subTotal: Float! #Gia truoc khi tinh discount
+    grandTotal: Float! #Gia sau khi tinh discount
     receivedDate: DateTime
     beginDeliveryDate: DateTime
     createdAt: DateTime! @createdAt
@@ -58,6 +62,13 @@ type Order{
 }
 
 type PaymentMethod{
+    id: ID! @id
+    name: String!
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}
+
+type ShippingMethod{
     id: ID! @id
     name: String!
     createdAt: DateTime! @createdAt
@@ -134,6 +145,17 @@ type BookReview{
     rating: Int!
     author: User! @relation(name: "ReviewToUser")
     book: Book! @relation(name: "ReviewToBook")
+    replies: [BookReviewReply!]! @relation(name: "ReplyToReview")
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}
+
+type BookReviewReply{
+    id: ID! @id
+    text: String
+    author: User!
+    book: Book!
+    bookReview: BookReview! @relation(name: "ReplyToReview")
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
 }
@@ -214,4 +236,11 @@ enum UserEventType{
 enum UserRole{
     User
     Admin
+}
+
+enum OrderStatus{
+    Ordered
+    Processing
+    Completed
+    Canceled
 }
