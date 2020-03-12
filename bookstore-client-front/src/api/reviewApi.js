@@ -36,6 +36,31 @@ export const GET_REVIEWS_BY_BOOK = gql`
     }
 `
 
+export const GET_REVIEWS = gql`
+    query getBookReviews($where: BookReviewWhereInput!, $orderBy: BookReviewOrderByInput, $first: Int,$skip: Int){
+        getBookReviews(where: $where, orderBy: $orderBy, first: $first, skip: $skip){
+            bookReviews{
+                id
+                reviewHeader
+                reviewText
+                rating
+                updatedAt
+                author{
+                    id
+                    username
+                    avatar
+                }
+                book{
+                    id 
+                    title
+                    thumbnail
+                }
+            }
+            totalCount
+        }
+    }
+`
+
 export const CREATE_BOOK_REVIEW = gql`
     mutation createBookReview($data: BookReviewCreateInput!){
         createBookReview(data: $data){

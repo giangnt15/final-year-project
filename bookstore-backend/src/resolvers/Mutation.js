@@ -201,19 +201,57 @@ const Mutation = {
     },
     async updateUserAddress(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const addressExisted = await prisma.exists.UserAddress({
-            user: {
-                id: userId
-            },
-            id
-        })
-        if (!addressExisted) throw new Error('Address not existed!');
-        return prisma.mutation.updateUserAddress({
-            where: {
+        const userRole = await getUserRole(userId, prisma);
+        if (userRole === "User") {
+            const addressExisted = await prisma.exists.UserAddress({
+                user: {
+                    id: userId
+                },
                 id
-            },
-            data
-        }, info)
+            })
+            if (!addressExisted) throw new Error('Address not existed!');
+            return prisma.mutation.updateUserAddress({
+                where: {
+                    id
+                },
+                data: {
+                    ...data,
+                    ward: {
+                        connect: {
+                            id: data.ward
+                        }
+                    },
+                    district: {
+                        connect: {
+                            id: data.district
+                        }
+                    },
+                    province: {
+                        connect: {
+                            id: data.province
+                        }
+                    }
+                }
+            }, info);
+        }
+    },
+    async deleteUserAddress(parent, { id }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+        if (userRole === "User") {
+            const addressExisted = await prisma.exists.UserAddress({
+                user: {
+                    id: userId
+                },
+                id
+            });
+            if (!addressExisted) throw new Error('Address not existed!');
+            return prisma.mutation.deleteUserAddress({
+                where: {
+                    id
+                }
+            }, info);
+        }
     },
     async createBookCategory(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
@@ -352,10 +390,10 @@ const Mutation = {
             }
         });
     },
-    async updateOrderStatus(parent,{orderId, orderStatus},{prisma,httpContext},info){
+    async updateOrderStatus(parent, { orderId, orderStatus }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const role = await getUserRole(userId,prisma);
-        if (role==="User"){
+        const role = await getUserRole(userId, prisma);
+        if (role === "User") {
             const orders = await prisma.query.orders({
                 where: {
                     customer: {
@@ -364,7 +402,7 @@ const Mutation = {
                     id: orderId
                 }
             });
-            if (orders.length===0){
+            if (orders.length === 0) {
                 throw new Error("Không tìm thấy đơn hàng.");
             }
             return prisma.mutation.updateOrder({
@@ -374,8 +412,8 @@ const Mutation = {
                 data: {
                     orderStatus
                 }
-            },info);
-        }else if (role==="Admin"){
+            }, info);
+        } else if (role === "Admin") {
             return prisma.mutation.updateOrder({
                 where: {
                     id: orderId,
@@ -383,13 +421,13 @@ const Mutation = {
                 data: {
                     orderStatus
                 }
-            },info);
+            }, info);
         }
         throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");
     },
-    async createReviewReply(parent,{data},{prisma,httpContext},info){
+    async createReviewReply(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const {text, book, bookReview } = data;
+        const { text, book, bookReview } = data;
         return prisma.mutation.createBookReviewReply({
             data: {
                 text,
@@ -409,7 +447,7 @@ const Mutation = {
                     }
                 }
             }
-        },info);
+        }, info);
     }
 }
 

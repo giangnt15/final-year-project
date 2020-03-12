@@ -119,6 +119,21 @@ const Query = {
             oneStar: oneStar.aggregate.count
         }
     },
+    async getBookReviews(parent, { where, orderBy, first, skip }, { prisma }, info) {
+        const bookReviews = await prisma.query.bookReviews({
+            where,
+            orderBy,
+            first,
+            skip
+        }, `{id reviewHeader reviewText rating createdAt updatedAt book{id title thumbnail} author{id username avatar} replies(orderBy: updatedAt_ASC){id text author{id fullName username avatar} updatedAt}}`);
+        const totalCount = await prisma.query.bookReviewsConnection({
+            where
+        }, `{aggregate {count}}`);
+        return {
+            bookReviews,
+            totalCount: totalCount.aggregate.count,
+        }
+    },
     async getUserAddresses(parent, args, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         return prisma.query.userAddresses({
@@ -171,7 +186,7 @@ const Query = {
     },
     async getOrders(parent, { where, orderBy, first, skip, selection }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const userRole = getUserRole(userId, prisma);
+        const userRole = await getUserRole(userId, prisma);
         if (userRole === "User") {
             const orders = await prisma.query.orders({
                 where: where ? {

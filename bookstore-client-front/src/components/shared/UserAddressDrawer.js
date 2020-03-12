@@ -1,29 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Button, Input, Form, message, Select } from 'antd';
 import { useMutation, useQuery, useLazyQuery } from '@apollo/react-hooks';
-import { GET_PROVINCES, GET_DISTRICTS, GET_WARDS, CREATE_USER_ADDRESS } from '../../api/userAddressApi';
+import { GET_PROVINCES, GET_DISTRICTS, GET_WARDS, CREATE_USER_ADDRESS, UPDATE_USER_ADDRESS } from '../../api/userAddressApi';
 import TextArea from 'antd/lib/input/TextArea';
 import { ERROR_OCCURED } from '../../constants';
 const { Option } = Select;
 
 function UserAddressDrawer(props) {
-    const {drawerVisible,setDrawerVisible, refetchUserAddresses} = props;
-    const [inputs, setInputs] = useState({
+    const { drawerVisible, setDrawerVisible, refetchUserAddresses, isCreating=true, edittingAddress={
         fullName: '',
         phone: '',
         address: '',
         province: '',
         district: '',
-        ward: ''
-    })
+        ward: '',
+        id: ''
+    }} = props;
+    const [inputs, setInputs] = useState({...edittingAddress});
 
-    const [createUserAddress, {loading: creatingUserAddress}] = useMutation(CREATE_USER_ADDRESS,{
-        onCompleted(data){
-            debugger
+    useEffect(()=>{
+        setInputs({
+            ...edittingAddress
+        })
+    },[edittingAddress.id]);
+
+    const [createUserAddress, { loading: creatingUserAddress }] = useMutation(CREATE_USER_ADDRESS, {
+        onCompleted(data) {
             refetchUserAddresses();
             setDrawerVisible(false)
         },
-        onError(error){
+        onError(error) {
+            message.error(ERROR_OCCURED);
+        }
+    });
+
+    const [updateUserAddress, { loading: updatingUserAddress }] = useMutation(UPDATE_USER_ADDRESS, {
+        onCompleted(data) {
+            refetchUserAddresses();
+            setDrawerVisible(false)
+        },
+        onError(error) {
             message.error(ERROR_OCCURED);
         }
     })
@@ -85,36 +101,52 @@ function UserAddressDrawer(props) {
 
     return (
         <Drawer
-            title="Thêm địa chỉ giao hàng mới"
+            title={isCreating?"Thêm địa giao hàng mới":"Cập nhật địa chỉ giao hàng"}
             width={400}
-            onClose={()=>setDrawerVisible(false)}
+            onClose={() => setDrawerVisible(false)}
             visible={drawerVisible}
             bodyStyle={{ paddingBottom: 80 }}
         >
-            <Form layout="vertical" onSubmit={(e)=>{
+            <Form layout="vertical" onSubmit={(e) => {
                 e.preventDefault();
-                createUserAddress({
-                    variables: {
-                        data: {
-                            ...inputs
+                if (isCreating) {
+                    createUserAddress({
+                        variables: {
+                            data: {
+                                ...inputs
+                            }
                         }
-                    }
-                })
+                    })
+                }else{
+                    updateUserAddress({
+                        variables: {
+                            id: inputs.id,
+                            data: {
+                                fullName: inputs.fullName,
+                                phone: inputs.phone,
+                                address: inputs.address,
+                                province: inputs.province,
+                                district: inputs.district,
+                                ward: inputs.ward
+                            }
+                        }
+                    })
+                }
             }}>
                 <Form.Item
                     name="fullName"
                     label="Tên người nhận"
                     rules={[{ required: true, message: 'Tên người nhận không được để trống' }]}
                 >
-                    <Input placeholder="Nhập họ tên" name="fullname" onChange={(e)=>{e.persist();setInputs(prev=>({...prev, fullName: e.target.value}))}}/>
+                    <Input placeholder="Nhập họ tên" name="fullname" value={inputs.fullName} onChange={(e) => { e.persist(); setInputs(prev => ({ ...prev, fullName: e.target.value })) }} />
                 </Form.Item>
                 <Form.Item
                     name="phone"
                     label="Số điện thoại"
                     rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
                 >
-                    <Input placeholder="Nhập số điện thoại" name="phone"
-                        style={{ width: '100%' }} onChange={(e)=>{e.persist();setInputs(prev=>({...prev, phone:e.target.value}))}}
+                    <Input placeholder="Nhập số điện thoại" name="phone" value={inputs.phone}
+                        style={{ width: '100%' }} onChange={(e) => { e.persist(); setInputs(prev => ({ ...prev, phone: e.target.value })) }}
                     />
                 </Form.Item>
                 <Form.Item
@@ -164,10 +196,11 @@ function UserAddressDrawer(props) {
                     label="Địa chỉ"
                     rules={[{ required: true, message: 'Trường này không được để trống' }]}
                 >
-                    <TextArea rows={3} placeholder="Ví dụ: Số 24, phố Bạch Mai" name="address"
-                     onChange={(e)=>{e.persist(); setInputs(prev=>({...prev, address: e.target.value}))}}/>
+                    <TextArea rows={3} placeholder="Ví dụ: Số 24, phố Bạch Mai" name="address" value={inputs.address}
+                        onChange={(e) => { e.persist(); setInputs(prev => ({ ...prev, address: e.target.value })) }} />
                 </Form.Item>
-                <Button htmlType="submit" loading={creatingUserAddress} type="primary">Thêm</Button>
+                {isCreating&&<Button htmlType="submit" loading={creatingUserAddress} type="primary">Thêm</Button>}
+                {!isCreating&&<Button htmlType="submit" loading={updatingUserAddress} type="primary">Cập nhật</Button>}
             </Form>
         </Drawer>
     )

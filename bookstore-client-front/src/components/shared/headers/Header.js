@@ -1,22 +1,47 @@
 import React, { useState, Fragment } from 'react';
 import MiniCart from '../../cart/MiniCart'
-import { Fade, Collapse, Zoom, Button } from '@material-ui/core';
+import { Fade, Button } from '@material-ui/core';
 import useScroll from '../../../custom-hooks/useScroll';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import SearchBoxContainer from '../../../containers/shared/search/SearchBoxContainer';
 import { Popover } from 'antd';
 import { connect } from 'react-redux';
 import isTokenValid from '../../../utils/tokenValidation';
 import { logout } from '../../../redux/actions/authAction';
+import { changeFilter } from '../../../redux/actions/filtersActions';
+import { useQuery } from '@apollo/react-hooks';
+import { GET_CATEGORIES } from '../../../api/categoryApi';
+import { GET_AUTHORS } from '../../../api/authorApi';
+import { FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT,RESET_FILTERS } from '../../../constants';
 
 function Header(props) {
 
   const { user, token } = props.auth;
-  const { logout, cart } = props;
+  const { logout, cart, changeFilter } = props;
 
   const [showSearch, setShowSearch] = useState(false);
 
+  const history = useHistory();
+
   const isSticky = useScroll(200);
+
+  const { loading: loadingCateories, data: dataCategories = {} } = useQuery(GET_CATEGORIES, {
+    variables: {
+      first: 8
+    },
+    onError(err) {
+      console.log(err.toString());
+    }
+  });
+
+  const { loading: loadingAuthors, data: dataAuthors = {} } = useQuery(GET_AUTHORS, {
+    variables: {
+      first: 8
+    },
+    onError(err) {
+      console.log(err.toString());
+    }
+  });
 
   const toggleSearch = () => {
     setShowSearch(prevShowSearch => !prevShowSearch);//the call back must return a value
@@ -69,49 +94,35 @@ function Header(props) {
             <nav className="mainmenu__nav">
               <ul className="meninmenu d-flex justify-content-start">
                 <li className="drop with--one--item"><NavLink to="/">Trang chủ</NavLink></li>
-                <li className="drop"><a href="#">Shop</a>
-                  <div className="megamenu mega03">
-                    <ul className="item item03">
-                      <li className="title">Shop Layout</li>
-                      <li><a href="shop-grid.html">Shop Grid</a></li>
-                      <li><a href="single-product.html">Single Product</a></li>
-                    </ul>
-                    <ul className="item item03">
-                      <li className="title">Shop Page</li>
-                      <li><a href="my-account.html">My Account</a></li>
-                      <li><a href="cart.html">Cart Page</a></li>
-                      <li><a href="checkout.html">Checkout Page</a></li>
-                      <li><a href="wishlist.html">Wishlist Page</a></li>
-                      <li><a href="error404.html">404 Page</a></li>
-                      <li><a href="faq.html">Faq Page</a></li>
-                    </ul>
-                    <ul className="item item03">
-                      <li className="title">Bargain Books</li>
-                      <li><a href="shop-grid.html">Bargain Bestsellers</a></li>
-                      <li><a href="shop-grid.html">Activity Kits</a></li>
-                      <li><a href="shop-grid.html">B&amp;N Classics</a></li>
-                      <li><a href="shop-grid.html">Books Under $5</a></li>
-                      <li><a href="shop-grid.html">Bargain Books</a></li>
-                    </ul>
-                  </div>
-                </li>
                 <li className="drop"><NavLink to="/books">Sách</NavLink>
                   <div className="megamenu mega03">
                     <ul className="item item03">
-                      <li className="title">Categories</li>
-                      <li><a href="shop-grid.html">Biography </a></li>
-                      <li><a href="shop-grid.html">Business </a></li>
+                      <li className="title">Thể loại</li>
+                      {
+                        dataCategories.getCategories && dataCategories.getCategories.map(item => (
+                          <li key={item.id} onClick={() => {
+                            changeFilter(RESET_FILTERS);
+                            changeFilter(FILTER_TYPE_CAT, item.id);
+                            history.push("/books");
+                          }}><a>{item.name} </a></li>
+                        ))
+                      }
+                      <li ><NavLink to="/books" style={{ fontWeight: 600 }}>Tất cả thể loại <i className="fs-13 fa fa-angle-right"></i></NavLink></li>
+                      {/* <li><a href="shop-grid.html">Business </a></li>
                       <li><a href="shop-grid.html">Cookbooks </a></li>
                       <li><a href="shop-grid.html">Health &amp; Fitness </a></li>
-                      <li><a href="shop-grid.html">History </a></li>
+                      <li><a href="shop-grid.html">History </a></li> */}
                     </ul>
                     <ul className="item item03">
-                      <li className="title">Customer Favourite</li>
-                      <li><a href="shop-grid.html">Mystery</a></li>
-                      <li><a href="shop-grid.html">Religion &amp; Inspiration</a></li>
-                      <li><a href="shop-grid.html">Romance</a></li>
-                      <li><a href="shop-grid.html">Fiction/Fantasy</a></li>
-                      <li><a href="shop-grid.html">Sleeveless</a></li>
+                      <li className="title">Tác giả</li>
+                      {dataAuthors.getAuthors && dataAuthors.getAuthors.map(item => (
+                        <li key={item.id} onClick={() => {
+                          changeFilter(RESET_FILTERS);
+                          changeFilter(FILTER_TYPE_AUTHOR, item.id);
+                          history.push("/books");
+                        }}><a>{item.pseudonym} </a></li>
+                      ))}
+                      <li><NavLink to="/books" style={{ fontWeight: 600 }}>Tất cả tác giả <i className="fs-13 fa fa-angle-right"></i></NavLink></li>
                     </ul>
                     <ul className="item item03">
                       <li className="title">Collections</li>
@@ -123,55 +134,6 @@ function Header(props) {
                     </ul>
                   </div>
                 </li>
-                <li className="drop"><a href="shop-grid.html">Kids</a>
-                  <div className="megamenu mega02">
-                    <ul className="item item02">
-                      <li className="title">Top Collections</li>
-                      <li><a href="shop-grid.html">American Girl</a></li>
-                      <li><a href="shop-grid.html">Diary Wimpy Kid</a></li>
-                      <li><a href="shop-grid.html">Finding Dory</a></li>
-                      <li><a href="shop-grid.html">Harry Potter</a></li>
-                      <li><a href="shop-grid.html">Land of Stories</a></li>
-                    </ul>
-                    <ul className="item item02">
-                      <li className="title">More For Kids</li>
-                      <li><a href="shop-grid.html">B&amp;N Educators</a></li>
-                      <li><a href="shop-grid.html">B&amp;N Kids' Club</a></li>
-                      <li><a href="shop-grid.html">Kids' Music</a></li>
-                      <li><a href="shop-grid.html">Toys &amp; Games</a></li>
-                      <li><a href="shop-grid.html">Hoodies</a></li>
-                    </ul>
-                  </div>
-                </li>
-                <li className="drop"><a href="#">Pages</a>
-                  <div className="megamenu dropdown">
-                    <ul className="item item01">
-                      <li><a href="about.html">About Page</a></li>
-                      <li className="label2"><a href="portfolio.html">Portfolio</a>
-                        <ul>
-                          <li><a href="portfolio.html">Portfolio</a></li>
-                          <li><a href="portfolio-details.html">Portfolio Details</a></li>
-                        </ul>
-                      </li>
-                      <li><a href="my-account.html">My Account</a></li>
-                      <li><a href="cart.html">Cart Page</a></li>
-                      <li><a href="checkout.html">Checkout Page</a></li>
-                      <li><a href="wishlist.html">Wishlist Page</a></li>
-                      <li><a href="error404.html">404 Page</a></li>
-                      <li><a href="faq.html">Faq Page</a></li>
-                      <li><a href="team.html">Team Page</a></li>
-                    </ul>
-                  </div>
-                </li>
-                <li className="drop"><a href="blog.html">Blog</a>
-                  <div className="megamenu dropdown">
-                    <ul className="item item01">
-                      <li><a href="blog.html">Blog Page</a></li>
-                      <li><a href="blog-details.html">Blog Details</a></li>
-                    </ul>
-                  </div>
-                </li>
-                <li><a href="contact.html">Contact</a></li>
               </ul>
             </nav>
           </div>
@@ -180,7 +142,7 @@ function Header(props) {
               <li className="shop_search" onClick={toggleSearch}><a className="search__active" href="#" /></li>
               <li className="wishlist"><a href="#" /></li>
               <li className="shopcart">
-                <Popover style={{overflow: 'auto'}} placement="bottom" content={
+                <Popover style={{ overflow: 'auto' }} placement="bottom" content={
                   <div><MiniCart cart={cart} /></div>
                 }>
                   <a className="cartbox_active" href="#"><span className="product_qun">{cart.cartTotalQty}</span>
@@ -255,10 +217,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    changeFilter: (type, value) => {
+      dispatch(changeFilter(type, value));
+    },
     logout: () => {
       dispatch(logout());
     },
   }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

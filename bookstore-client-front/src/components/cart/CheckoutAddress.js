@@ -10,7 +10,7 @@ function CheckoutAddress(props) {
     const [drawerVisible, setDrawerVisible] = useState(false);
     const {next,setOrderInfo} = props;
     const { error: errorGettingUserAddresses, refetch: refetchUserAddresses,
-        loading: loadingUserAddresses, data: dataUserAddresses = {} } = useQuery(GET_USER_ADDRESSES)
+        loading: loadingUserAddresses, data: dataUserAddresses = {} } = useQuery(GET_USER_ADDRESSES);
 
     return (
         <div>

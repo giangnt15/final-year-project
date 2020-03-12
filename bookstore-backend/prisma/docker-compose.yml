@@ -29,5 +29,10 @@ services:
       MYSQL_ROOT_PASSWORD: prisma
     volumes:
       - mysql:/var/lib/mysql
+  redis: 
+    image: redis
+    restart: always
+    volumes:
+      - redis:/data
 volumes:
   mysql:

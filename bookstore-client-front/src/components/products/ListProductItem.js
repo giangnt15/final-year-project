@@ -7,7 +7,7 @@ function ListProductItem(props){
     const { width, thumbHeight } = props;
     return ( 
         <div className="list__view">
-          <div className="thumb">
+          <div className="thumb" style={{height: thumbHeight}}>
             <NavLink className="first__img" to={`/book/${id}`}><img src={thumbnail} alt="product images" /></NavLink>
             {/*<NavLink className="second__img animation1" to={`/book/${id}`}><img src="images/product/2.jpg" alt="product images" /></NavLink>*/}
           </div>

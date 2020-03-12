@@ -1,7 +1,7 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
-#import OrderWhereInput, OrderOrderbyInput from './generated/prisma.graphql';
+#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -235,6 +235,7 @@ type Query{
     getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): [Collection!]!
     getCollection(id: ID!): Collection!
     getBookReviewsByBook(bookId: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
+    getBookReviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
     getUserAddresses: [UserAddress!]!
     getPublishers(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): [Publisher!]!
     getItemStockQty(id: ID!): GetItemStockQtyPayload!
@@ -267,6 +268,7 @@ type Mutation{
     createOrder(data: OrderCreateInput!): Order!
     updateOrderStatus(orderId: ID!,orderStatus: OrderStatus!): Order!
     createReviewReply(data: ReviewReplyCreateInput!): BookReviewReply!
+    deleteUserAddress(id: ID!): UserAddress!
 }
 
 input ReviewReplyCreateInput{
@@ -375,6 +377,9 @@ input UserAddressCreateInput{
 
 input UserAddressUpdateInput{
     address: String
+    ward: ID
+    district: ID
+    province: ID
     phone: String
     fullName: String
 }

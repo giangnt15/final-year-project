@@ -11,6 +11,8 @@ import AccountSideBar from '../../account/AccountSideBar';
 import { Switch, Route } from 'react-router-dom';
 import PrivateRoute from '../../shared/PrivateRoute';
 import OrderDetail from '../orders/OrderDetail';
+import UserAddressList from '../../userAddress/UserAddressList';
+import UserBookReviewList from '../../reivews/UserBookReviewList';
 
 const { TabPane } = Tabs;
 
@@ -88,7 +90,9 @@ function AccountPage(props) {
                     <div className="p-l-40 p-t-20 p-r-40 p-b-20 d-flex w-100 col-12 col-md-9" style={{backgroundColor: "#FFFFFF", borderRadius: 3}}>
                         <Switch>
                             <Route path="/auth/account/orders/history" exact render={() => <PrivateRoute render={() => <OrderList />} />}></Route>
-                            <Route path="/auth/account/order/:orderId" exact component={OrderDetail}></Route>
+                            <Route path="/auth/account/order/:orderId" exact render={() => <PrivateRoute render={() => <OrderDetail />} />}></Route>
+                            <Route path="/auth/account/address" exact render={() => <PrivateRoute render={() => <UserAddressList />} />}></Route>
+                            <Route path="/auth/account/review" exact render={() => <PrivateRoute render={() => <UserBookReviewList />} />}></Route>
                             <Route path="/auth/account/edit" exact render={() => <PrivateRoute render={() => 
                             (<div style={{ flex: 2, padding: '0 20px 0 0' }}>
                                 <h4>Thông tin tài khoản</h4>
