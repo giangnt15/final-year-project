@@ -13,6 +13,7 @@ type User{
     addresses: [UserAddress!]! @relation(name: "AddressToUser", onDelete: CASCADE)
     orders: [Order!]! @relation(name: "OrderToUser", onDelete: CASCADE)
     userEvents: [UserEvent!]! @relation(name: "EventToUser", onDelete: CASCADE)
+    wishList: [Book!]!
 #    cart: Cart! @relation(name: "CartToUser", onDelete: CASCADE)
     reviews: [BookReview!]! @relation(name: "ReviewToUser", onDelete: CASCADE)
     createdAt: DateTime! @createdAt
@@ -46,7 +47,12 @@ type Collection{
 type Order{
     id: ID! @id
     customer: User! @relation(name: "OrderToUser", onDelete: SET_NULL)
-    shippingAddress: UserAddress! @relation(name: "AddressToOrder", onDelete: SET_NULL)
+    recipientAddress: String!
+    recipientProvince: Province! @relation(name: "ProvinceToOrder", onDelete: SET_NULL)
+    recipientDistrict: District! @relation(name: "DistrictToOrder", onDelete: SET_NULL)
+    recipientWard: Ward! @relation(name: "WardToOrder", onDelete: SET_NULL)
+    recipientPhone: String!
+    recipientFullName: String!
     paymentMethod: PaymentMethod! @relation(name: "PaymentMethodToOrder", onDelete: SET_NULL)
     shippingMethod: ShippingMethod! @relation(name: "ShippingMethodToOrder", onDelete: SET_NULL)
     orderStatus: OrderStatus!

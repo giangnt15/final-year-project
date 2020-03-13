@@ -13,6 +13,7 @@ import PrivateRoute from '../../shared/PrivateRoute';
 import OrderDetail from '../orders/OrderDetail';
 import UserAddressList from '../../userAddress/UserAddressList';
 import UserBookReviewList from '../../reivews/UserBookReviewList';
+import UserWishList from '../../products/UserWishList';
 
 const { TabPane } = Tabs;
 
@@ -93,6 +94,7 @@ function AccountPage(props) {
                             <Route path="/auth/account/order/:orderId" exact render={() => <PrivateRoute render={() => <OrderDetail />} />}></Route>
                             <Route path="/auth/account/address" exact render={() => <PrivateRoute render={() => <UserAddressList />} />}></Route>
                             <Route path="/auth/account/review" exact render={() => <PrivateRoute render={() => <UserBookReviewList />} />}></Route>
+                            <Route path="/auth/account/wish-list" exact render={() => <PrivateRoute render={() => <UserWishList />} />}></Route>
                             <Route path="/auth/account/edit" exact render={() => <PrivateRoute render={() => 
                             (<div style={{ flex: 2, padding: '0 20px 0 0' }}>
                                 <h4>Thông tin tài khoản</h4>

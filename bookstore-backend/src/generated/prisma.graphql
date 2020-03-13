@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Sun Mar 08 2020 20:15:22 GMT+0700 (Indochina Time)
+# timestamp: Fri Mar 13 2020 22:43:48 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -1242,6 +1242,11 @@ input BookCreateInput {
   collections: CollectionCreateManyWithoutBooksInput
   publisher: PublisherCreateOneWithoutBooksInput!
   discounts: DiscountCreateManyWithoutAppliedToInput
+}
+
+input BookCreateManyInput {
+  create: [BookCreateInput!]
+  connect: [BookWhereUniqueInput!]
 }
 
 input BookCreateManyWithoutAuthorsInput {
@@ -3122,6 +3127,18 @@ input BookUpdateManyDataInput {
   images: String
 }
 
+input BookUpdateManyInput {
+  create: [BookCreateInput!]
+  connect: [BookWhereUniqueInput!]
+  set: [BookWhereUniqueInput!]
+  disconnect: [BookWhereUniqueInput!]
+  delete: [BookWhereUniqueInput!]
+  update: [BookUpdateWithWhereUniqueNestedInput!]
+  updateMany: [BookUpdateManyWithWhereNestedInput!]
+  deleteMany: [BookScalarWhereInput!]
+  upsert: [BookUpsertWithWhereUniqueNestedInput!]
+}
+
 input BookUpdateManyMutationInput {
   title: String
   description: String
@@ -3336,6 +3353,11 @@ input BookUpdateWithoutReviewsDataInput {
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
+input BookUpdateWithWhereUniqueNestedInput {
+  where: BookWhereUniqueInput!
+  data: BookUpdateDataInput!
+}
+
 input BookUpdateWithWhereUniqueWithoutAuthorsInput {
   where: BookWhereUniqueInput!
   data: BookUpdateWithoutAuthorsDataInput!
@@ -3369,6 +3391,12 @@ input BookUpsertNestedInput {
 input BookUpsertWithoutReviewsInput {
   update: BookUpdateWithoutReviewsDataInput!
   create: BookCreateWithoutReviewsInput!
+}
+
+input BookUpsertWithWhereUniqueNestedInput {
+  where: BookWhereUniqueInput!
+  update: BookUpdateDataInput!
+  create: BookCreateInput!
 }
 
 input BookUpsertWithWhereUniqueWithoutAuthorsInput {
@@ -5446,6 +5474,7 @@ type Mutation {
   createOrder(data: OrderCreateInput!): Order!
   createOrderItem(data: OrderItemCreateInput!): OrderItem!
   createUserEvent(data: UserEventCreateInput!): UserEvent!
+  createUserAddress(data: UserAddressCreateInput!): UserAddress!
   createBookReview(data: BookReviewCreateInput!): BookReview!
   createBookReviewReply(data: BookReviewReplyCreateInput!): BookReviewReply!
   createBookCategory(data: BookCategoryCreateInput!): BookCategory!
@@ -5454,16 +5483,16 @@ type Mutation {
   createAuthor(data: AuthorCreateInput!): Author!
   createShippingMethod(data: ShippingMethodCreateInput!): ShippingMethod!
   createUser(data: UserCreateInput!): User!
-  createUserAddress(data: UserAddressCreateInput!): UserAddress!
-  createWard(data: WardCreateInput!): Ward!
-  createProvince(data: ProvinceCreateInput!): Province!
   createPaymentMethod(data: PaymentMethodCreateInput!): PaymentMethod!
+  createProvince(data: ProvinceCreateInput!): Province!
   createDistrict(data: DistrictCreateInput!): District!
   createBook(data: BookCreateInput!): Book!
+  createWard(data: WardCreateInput!): Ward!
   updateCollection(data: CollectionUpdateInput!, where: CollectionWhereUniqueInput!): Collection
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrderItem(data: OrderItemUpdateInput!, where: OrderItemWhereUniqueInput!): OrderItem
   updateUserEvent(data: UserEventUpdateInput!, where: UserEventWhereUniqueInput!): UserEvent
+  updateUserAddress(data: UserAddressUpdateInput!, where: UserAddressWhereUniqueInput!): UserAddress
   updateBookReview(data: BookReviewUpdateInput!, where: BookReviewWhereUniqueInput!): BookReview
   updateBookReviewReply(data: BookReviewReplyUpdateInput!, where: BookReviewReplyWhereUniqueInput!): BookReviewReply
   updateBookCategory(data: BookCategoryUpdateInput!, where: BookCategoryWhereUniqueInput!): BookCategory
@@ -5472,16 +5501,16 @@ type Mutation {
   updateAuthor(data: AuthorUpdateInput!, where: AuthorWhereUniqueInput!): Author
   updateShippingMethod(data: ShippingMethodUpdateInput!, where: ShippingMethodWhereUniqueInput!): ShippingMethod
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateUserAddress(data: UserAddressUpdateInput!, where: UserAddressWhereUniqueInput!): UserAddress
-  updateWard(data: WardUpdateInput!, where: WardWhereUniqueInput!): Ward
-  updateProvince(data: ProvinceUpdateInput!, where: ProvinceWhereUniqueInput!): Province
   updatePaymentMethod(data: PaymentMethodUpdateInput!, where: PaymentMethodWhereUniqueInput!): PaymentMethod
+  updateProvince(data: ProvinceUpdateInput!, where: ProvinceWhereUniqueInput!): Province
   updateDistrict(data: DistrictUpdateInput!, where: DistrictWhereUniqueInput!): District
   updateBook(data: BookUpdateInput!, where: BookWhereUniqueInput!): Book
+  updateWard(data: WardUpdateInput!, where: WardWhereUniqueInput!): Ward
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrderItem(where: OrderItemWhereUniqueInput!): OrderItem
   deleteUserEvent(where: UserEventWhereUniqueInput!): UserEvent
+  deleteUserAddress(where: UserAddressWhereUniqueInput!): UserAddress
   deleteBookReview(where: BookReviewWhereUniqueInput!): BookReview
   deleteBookReviewReply(where: BookReviewReplyWhereUniqueInput!): BookReviewReply
   deleteBookCategory(where: BookCategoryWhereUniqueInput!): BookCategory
@@ -5490,16 +5519,16 @@ type Mutation {
   deleteAuthor(where: AuthorWhereUniqueInput!): Author
   deleteShippingMethod(where: ShippingMethodWhereUniqueInput!): ShippingMethod
   deleteUser(where: UserWhereUniqueInput!): User
-  deleteUserAddress(where: UserAddressWhereUniqueInput!): UserAddress
-  deleteWard(where: WardWhereUniqueInput!): Ward
-  deleteProvince(where: ProvinceWhereUniqueInput!): Province
   deletePaymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
+  deleteProvince(where: ProvinceWhereUniqueInput!): Province
   deleteDistrict(where: DistrictWhereUniqueInput!): District
   deleteBook(where: BookWhereUniqueInput!): Book
+  deleteWard(where: WardWhereUniqueInput!): Ward
   upsertCollection(where: CollectionWhereUniqueInput!, create: CollectionCreateInput!, update: CollectionUpdateInput!): Collection!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrderItem(where: OrderItemWhereUniqueInput!, create: OrderItemCreateInput!, update: OrderItemUpdateInput!): OrderItem!
   upsertUserEvent(where: UserEventWhereUniqueInput!, create: UserEventCreateInput!, update: UserEventUpdateInput!): UserEvent!
+  upsertUserAddress(where: UserAddressWhereUniqueInput!, create: UserAddressCreateInput!, update: UserAddressUpdateInput!): UserAddress!
   upsertBookReview(where: BookReviewWhereUniqueInput!, create: BookReviewCreateInput!, update: BookReviewUpdateInput!): BookReview!
   upsertBookReviewReply(where: BookReviewReplyWhereUniqueInput!, create: BookReviewReplyCreateInput!, update: BookReviewReplyUpdateInput!): BookReviewReply!
   upsertBookCategory(where: BookCategoryWhereUniqueInput!, create: BookCategoryCreateInput!, update: BookCategoryUpdateInput!): BookCategory!
@@ -5508,16 +5537,16 @@ type Mutation {
   upsertAuthor(where: AuthorWhereUniqueInput!, create: AuthorCreateInput!, update: AuthorUpdateInput!): Author!
   upsertShippingMethod(where: ShippingMethodWhereUniqueInput!, create: ShippingMethodCreateInput!, update: ShippingMethodUpdateInput!): ShippingMethod!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertUserAddress(where: UserAddressWhereUniqueInput!, create: UserAddressCreateInput!, update: UserAddressUpdateInput!): UserAddress!
-  upsertWard(where: WardWhereUniqueInput!, create: WardCreateInput!, update: WardUpdateInput!): Ward!
-  upsertProvince(where: ProvinceWhereUniqueInput!, create: ProvinceCreateInput!, update: ProvinceUpdateInput!): Province!
   upsertPaymentMethod(where: PaymentMethodWhereUniqueInput!, create: PaymentMethodCreateInput!, update: PaymentMethodUpdateInput!): PaymentMethod!
+  upsertProvince(where: ProvinceWhereUniqueInput!, create: ProvinceCreateInput!, update: ProvinceUpdateInput!): Province!
   upsertDistrict(where: DistrictWhereUniqueInput!, create: DistrictCreateInput!, update: DistrictUpdateInput!): District!
   upsertBook(where: BookWhereUniqueInput!, create: BookCreateInput!, update: BookUpdateInput!): Book!
+  upsertWard(where: WardWhereUniqueInput!, create: WardCreateInput!, update: WardUpdateInput!): Ward!
   updateManyCollections(data: CollectionUpdateManyMutationInput!, where: CollectionWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrderItems(data: OrderItemUpdateManyMutationInput!, where: OrderItemWhereInput): BatchPayload!
   updateManyUserEvents(data: UserEventUpdateManyMutationInput!, where: UserEventWhereInput): BatchPayload!
+  updateManyUserAddresses(data: UserAddressUpdateManyMutationInput!, where: UserAddressWhereInput): BatchPayload!
   updateManyBookReviews(data: BookReviewUpdateManyMutationInput!, where: BookReviewWhereInput): BatchPayload!
   updateManyBookReviewReplies(data: BookReviewReplyUpdateManyMutationInput!, where: BookReviewReplyWhereInput): BatchPayload!
   updateManyBookCategories(data: BookCategoryUpdateManyMutationInput!, where: BookCategoryWhereInput): BatchPayload!
@@ -5526,16 +5555,16 @@ type Mutation {
   updateManyAuthors(data: AuthorUpdateManyMutationInput!, where: AuthorWhereInput): BatchPayload!
   updateManyShippingMethods(data: ShippingMethodUpdateManyMutationInput!, where: ShippingMethodWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  updateManyUserAddresses(data: UserAddressUpdateManyMutationInput!, where: UserAddressWhereInput): BatchPayload!
-  updateManyWards(data: WardUpdateManyMutationInput!, where: WardWhereInput): BatchPayload!
-  updateManyProvinces(data: ProvinceUpdateManyMutationInput!, where: ProvinceWhereInput): BatchPayload!
   updateManyPaymentMethods(data: PaymentMethodUpdateManyMutationInput!, where: PaymentMethodWhereInput): BatchPayload!
+  updateManyProvinces(data: ProvinceUpdateManyMutationInput!, where: ProvinceWhereInput): BatchPayload!
   updateManyDistricts(data: DistrictUpdateManyMutationInput!, where: DistrictWhereInput): BatchPayload!
   updateManyBooks(data: BookUpdateManyMutationInput!, where: BookWhereInput): BatchPayload!
+  updateManyWards(data: WardUpdateManyMutationInput!, where: WardWhereInput): BatchPayload!
   deleteManyCollections(where: CollectionWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrderItems(where: OrderItemWhereInput): BatchPayload!
   deleteManyUserEvents(where: UserEventWhereInput): BatchPayload!
+  deleteManyUserAddresses(where: UserAddressWhereInput): BatchPayload!
   deleteManyBookReviews(where: BookReviewWhereInput): BatchPayload!
   deleteManyBookReviewReplies(where: BookReviewReplyWhereInput): BatchPayload!
   deleteManyBookCategories(where: BookCategoryWhereInput): BatchPayload!
@@ -5544,12 +5573,11 @@ type Mutation {
   deleteManyAuthors(where: AuthorWhereInput): BatchPayload!
   deleteManyShippingMethods(where: ShippingMethodWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManyUserAddresses(where: UserAddressWhereInput): BatchPayload!
-  deleteManyWards(where: WardWhereInput): BatchPayload!
-  deleteManyProvinces(where: ProvinceWhereInput): BatchPayload!
   deleteManyPaymentMethods(where: PaymentMethodWhereInput): BatchPayload!
+  deleteManyProvinces(where: ProvinceWhereInput): BatchPayload!
   deleteManyDistricts(where: DistrictWhereInput): BatchPayload!
   deleteManyBooks(where: BookWhereInput): BatchPayload!
+  deleteManyWards(where: WardWhereInput): BatchPayload!
   executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
@@ -5568,7 +5596,12 @@ interface Node {
 type Order implements Node {
   id: ID!
   customer: User!
-  shippingAddress: UserAddress!
+  recipientAddress: String!
+  recipientProvince: Province!
+  recipientDistrict: District!
+  recipientWard: Ward!
+  recipientPhone: String!
+  recipientFullName: String!
   paymentMethod: PaymentMethod!
   shippingMethod: ShippingMethod!
   orderStatus: OrderStatus!
@@ -5595,6 +5628,9 @@ type OrderConnection {
 
 input OrderCreateInput {
   id: ID
+  recipientAddress: String!
+  recipientPhone: String!
+  recipientFullName: String!
   orderStatus: OrderStatus!
   paymentStatus: Boolean!
   discount: Float
@@ -5603,7 +5639,9 @@ input OrderCreateInput {
   receivedDate: DateTime
   beginDeliveryDate: DateTime
   customer: UserCreateOneWithoutOrdersInput!
-  shippingAddress: UserAddressCreateOneInput!
+  recipientProvince: ProvinceCreateOneInput!
+  recipientDistrict: DistrictCreateOneInput!
+  recipientWard: WardCreateOneInput!
   paymentMethod: PaymentMethodCreateOneInput!
   shippingMethod: ShippingMethodCreateOneInput!
   items: OrderItemCreateManyWithoutOrderInput
@@ -5621,6 +5659,9 @@ input OrderCreateOneWithoutItemsInput {
 
 input OrderCreateWithoutCustomerInput {
   id: ID
+  recipientAddress: String!
+  recipientPhone: String!
+  recipientFullName: String!
   orderStatus: OrderStatus!
   paymentStatus: Boolean!
   discount: Float
@@ -5628,7 +5669,9 @@ input OrderCreateWithoutCustomerInput {
   grandTotal: Float!
   receivedDate: DateTime
   beginDeliveryDate: DateTime
-  shippingAddress: UserAddressCreateOneInput!
+  recipientProvince: ProvinceCreateOneInput!
+  recipientDistrict: DistrictCreateOneInput!
+  recipientWard: WardCreateOneInput!
   paymentMethod: PaymentMethodCreateOneInput!
   shippingMethod: ShippingMethodCreateOneInput!
   items: OrderItemCreateManyWithoutOrderInput
@@ -5636,6 +5679,9 @@ input OrderCreateWithoutCustomerInput {
 
 input OrderCreateWithoutItemsInput {
   id: ID
+  recipientAddress: String!
+  recipientPhone: String!
+  recipientFullName: String!
   orderStatus: OrderStatus!
   paymentStatus: Boolean!
   discount: Float
@@ -5644,7 +5690,9 @@ input OrderCreateWithoutItemsInput {
   receivedDate: DateTime
   beginDeliveryDate: DateTime
   customer: UserCreateOneWithoutOrdersInput!
-  shippingAddress: UserAddressCreateOneInput!
+  recipientProvince: ProvinceCreateOneInput!
+  recipientDistrict: DistrictCreateOneInput!
+  recipientWard: WardCreateOneInput!
   paymentMethod: PaymentMethodCreateOneInput!
   shippingMethod: ShippingMethodCreateOneInput!
 }
@@ -6103,6 +6151,12 @@ input OrderItemWhereUniqueInput {
 enum OrderOrderByInput {
   id_ASC
   id_DESC
+  recipientAddress_ASC
+  recipientAddress_DESC
+  recipientPhone_ASC
+  recipientPhone_DESC
+  recipientFullName_ASC
+  recipientFullName_DESC
   orderStatus_ASC
   orderStatus_DESC
   paymentStatus_ASC
@@ -6125,6 +6179,9 @@ enum OrderOrderByInput {
 
 type OrderPreviousValues {
   id: ID!
+  recipientAddress: String!
+  recipientPhone: String!
+  recipientFullName: String!
   orderStatus: OrderStatus!
   paymentStatus: Boolean!
   discount: Float!
@@ -6185,6 +6242,126 @@ input OrderScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  recipientAddress: String
+
+  """All values that are not equal to given value."""
+  recipientAddress_not: String
+
+  """All values that are contained in given list."""
+  recipientAddress_in: [String!]
+
+  """All values that are not contained in given list."""
+  recipientAddress_not_in: [String!]
+
+  """All values less than the given value."""
+  recipientAddress_lt: String
+
+  """All values less than or equal the given value."""
+  recipientAddress_lte: String
+
+  """All values greater than the given value."""
+  recipientAddress_gt: String
+
+  """All values greater than or equal the given value."""
+  recipientAddress_gte: String
+
+  """All values containing the given string."""
+  recipientAddress_contains: String
+
+  """All values not containing the given string."""
+  recipientAddress_not_contains: String
+
+  """All values starting with the given string."""
+  recipientAddress_starts_with: String
+
+  """All values not starting with the given string."""
+  recipientAddress_not_starts_with: String
+
+  """All values ending with the given string."""
+  recipientAddress_ends_with: String
+
+  """All values not ending with the given string."""
+  recipientAddress_not_ends_with: String
+  recipientPhone: String
+
+  """All values that are not equal to given value."""
+  recipientPhone_not: String
+
+  """All values that are contained in given list."""
+  recipientPhone_in: [String!]
+
+  """All values that are not contained in given list."""
+  recipientPhone_not_in: [String!]
+
+  """All values less than the given value."""
+  recipientPhone_lt: String
+
+  """All values less than or equal the given value."""
+  recipientPhone_lte: String
+
+  """All values greater than the given value."""
+  recipientPhone_gt: String
+
+  """All values greater than or equal the given value."""
+  recipientPhone_gte: String
+
+  """All values containing the given string."""
+  recipientPhone_contains: String
+
+  """All values not containing the given string."""
+  recipientPhone_not_contains: String
+
+  """All values starting with the given string."""
+  recipientPhone_starts_with: String
+
+  """All values not starting with the given string."""
+  recipientPhone_not_starts_with: String
+
+  """All values ending with the given string."""
+  recipientPhone_ends_with: String
+
+  """All values not ending with the given string."""
+  recipientPhone_not_ends_with: String
+  recipientFullName: String
+
+  """All values that are not equal to given value."""
+  recipientFullName_not: String
+
+  """All values that are contained in given list."""
+  recipientFullName_in: [String!]
+
+  """All values that are not contained in given list."""
+  recipientFullName_not_in: [String!]
+
+  """All values less than the given value."""
+  recipientFullName_lt: String
+
+  """All values less than or equal the given value."""
+  recipientFullName_lte: String
+
+  """All values greater than the given value."""
+  recipientFullName_gt: String
+
+  """All values greater than or equal the given value."""
+  recipientFullName_gte: String
+
+  """All values containing the given string."""
+  recipientFullName_contains: String
+
+  """All values not containing the given string."""
+  recipientFullName_not_contains: String
+
+  """All values starting with the given string."""
+  recipientFullName_starts_with: String
+
+  """All values not starting with the given string."""
+  recipientFullName_not_starts_with: String
+
+  """All values ending with the given string."""
+  recipientFullName_ends_with: String
+
+  """All values not ending with the given string."""
+  recipientFullName_not_ends_with: String
   orderStatus: OrderStatus
 
   """All values that are not equal to given value."""
@@ -6400,6 +6577,9 @@ input OrderSubscriptionWhereInput {
 }
 
 input OrderUpdateInput {
+  recipientAddress: String
+  recipientPhone: String
+  recipientFullName: String
   orderStatus: OrderStatus
   paymentStatus: Boolean
   discount: Float
@@ -6408,13 +6588,18 @@ input OrderUpdateInput {
   receivedDate: DateTime
   beginDeliveryDate: DateTime
   customer: UserUpdateOneRequiredWithoutOrdersInput
-  shippingAddress: UserAddressUpdateOneRequiredInput
+  recipientProvince: ProvinceUpdateOneRequiredInput
+  recipientDistrict: DistrictUpdateOneRequiredInput
+  recipientWard: WardUpdateOneRequiredInput
   paymentMethod: PaymentMethodUpdateOneRequiredInput
   shippingMethod: ShippingMethodUpdateOneRequiredInput
   items: OrderItemUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateManyDataInput {
+  recipientAddress: String
+  recipientPhone: String
+  recipientFullName: String
   orderStatus: OrderStatus
   paymentStatus: Boolean
   discount: Float
@@ -6425,6 +6610,9 @@ input OrderUpdateManyDataInput {
 }
 
 input OrderUpdateManyMutationInput {
+  recipientAddress: String
+  recipientPhone: String
+  recipientFullName: String
   orderStatus: OrderStatus
   paymentStatus: Boolean
   discount: Float
@@ -6459,6 +6647,9 @@ input OrderUpdateOneRequiredWithoutItemsInput {
 }
 
 input OrderUpdateWithoutCustomerDataInput {
+  recipientAddress: String
+  recipientPhone: String
+  recipientFullName: String
   orderStatus: OrderStatus
   paymentStatus: Boolean
   discount: Float
@@ -6466,13 +6657,18 @@ input OrderUpdateWithoutCustomerDataInput {
   grandTotal: Float
   receivedDate: DateTime
   beginDeliveryDate: DateTime
-  shippingAddress: UserAddressUpdateOneRequiredInput
+  recipientProvince: ProvinceUpdateOneRequiredInput
+  recipientDistrict: DistrictUpdateOneRequiredInput
+  recipientWard: WardUpdateOneRequiredInput
   paymentMethod: PaymentMethodUpdateOneRequiredInput
   shippingMethod: ShippingMethodUpdateOneRequiredInput
   items: OrderItemUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithoutItemsDataInput {
+  recipientAddress: String
+  recipientPhone: String
+  recipientFullName: String
   orderStatus: OrderStatus
   paymentStatus: Boolean
   discount: Float
@@ -6481,7 +6677,9 @@ input OrderUpdateWithoutItemsDataInput {
   receivedDate: DateTime
   beginDeliveryDate: DateTime
   customer: UserUpdateOneRequiredWithoutOrdersInput
-  shippingAddress: UserAddressUpdateOneRequiredInput
+  recipientProvince: ProvinceUpdateOneRequiredInput
+  recipientDistrict: DistrictUpdateOneRequiredInput
+  recipientWard: WardUpdateOneRequiredInput
   paymentMethod: PaymentMethodUpdateOneRequiredInput
   shippingMethod: ShippingMethodUpdateOneRequiredInput
 }
@@ -6551,6 +6749,126 @@ input OrderWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  recipientAddress: String
+
+  """All values that are not equal to given value."""
+  recipientAddress_not: String
+
+  """All values that are contained in given list."""
+  recipientAddress_in: [String!]
+
+  """All values that are not contained in given list."""
+  recipientAddress_not_in: [String!]
+
+  """All values less than the given value."""
+  recipientAddress_lt: String
+
+  """All values less than or equal the given value."""
+  recipientAddress_lte: String
+
+  """All values greater than the given value."""
+  recipientAddress_gt: String
+
+  """All values greater than or equal the given value."""
+  recipientAddress_gte: String
+
+  """All values containing the given string."""
+  recipientAddress_contains: String
+
+  """All values not containing the given string."""
+  recipientAddress_not_contains: String
+
+  """All values starting with the given string."""
+  recipientAddress_starts_with: String
+
+  """All values not starting with the given string."""
+  recipientAddress_not_starts_with: String
+
+  """All values ending with the given string."""
+  recipientAddress_ends_with: String
+
+  """All values not ending with the given string."""
+  recipientAddress_not_ends_with: String
+  recipientPhone: String
+
+  """All values that are not equal to given value."""
+  recipientPhone_not: String
+
+  """All values that are contained in given list."""
+  recipientPhone_in: [String!]
+
+  """All values that are not contained in given list."""
+  recipientPhone_not_in: [String!]
+
+  """All values less than the given value."""
+  recipientPhone_lt: String
+
+  """All values less than or equal the given value."""
+  recipientPhone_lte: String
+
+  """All values greater than the given value."""
+  recipientPhone_gt: String
+
+  """All values greater than or equal the given value."""
+  recipientPhone_gte: String
+
+  """All values containing the given string."""
+  recipientPhone_contains: String
+
+  """All values not containing the given string."""
+  recipientPhone_not_contains: String
+
+  """All values starting with the given string."""
+  recipientPhone_starts_with: String
+
+  """All values not starting with the given string."""
+  recipientPhone_not_starts_with: String
+
+  """All values ending with the given string."""
+  recipientPhone_ends_with: String
+
+  """All values not ending with the given string."""
+  recipientPhone_not_ends_with: String
+  recipientFullName: String
+
+  """All values that are not equal to given value."""
+  recipientFullName_not: String
+
+  """All values that are contained in given list."""
+  recipientFullName_in: [String!]
+
+  """All values that are not contained in given list."""
+  recipientFullName_not_in: [String!]
+
+  """All values less than the given value."""
+  recipientFullName_lt: String
+
+  """All values less than or equal the given value."""
+  recipientFullName_lte: String
+
+  """All values greater than the given value."""
+  recipientFullName_gt: String
+
+  """All values greater than or equal the given value."""
+  recipientFullName_gte: String
+
+  """All values containing the given string."""
+  recipientFullName_contains: String
+
+  """All values not containing the given string."""
+  recipientFullName_not_contains: String
+
+  """All values starting with the given string."""
+  recipientFullName_starts_with: String
+
+  """All values not starting with the given string."""
+  recipientFullName_not_starts_with: String
+
+  """All values ending with the given string."""
+  recipientFullName_ends_with: String
+
+  """All values not ending with the given string."""
+  recipientFullName_not_ends_with: String
   orderStatus: OrderStatus
 
   """All values that are not equal to given value."""
@@ -6720,7 +7038,9 @@ input OrderWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   customer: UserWhereInput
-  shippingAddress: UserAddressWhereInput
+  recipientProvince: ProvinceWhereInput
+  recipientDistrict: DistrictWhereInput
+  recipientWard: WardWhereInput
   paymentMethod: PaymentMethodWhereInput
   shippingMethod: ShippingMethodWhereInput
   items_every: OrderItemWhereInput
@@ -7623,6 +7943,7 @@ type Query {
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orderItems(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderItem]!
   userEvents(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserEvent]!
+  userAddresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress]!
   bookReviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookReview]!
   bookReviewReplies(where: BookReviewReplyWhereInput, orderBy: BookReviewReplyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookReviewReply]!
   bookCategories(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookCategory]!
@@ -7631,16 +7952,16 @@ type Query {
   authors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Author]!
   shippingMethods(where: ShippingMethodWhereInput, orderBy: ShippingMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ShippingMethod]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  userAddresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress]!
-  wards(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ward]!
-  provinces(where: ProvinceWhereInput, orderBy: ProvinceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Province]!
   paymentMethods(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMethod]!
+  provinces(where: ProvinceWhereInput, orderBy: ProvinceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Province]!
   districts(where: DistrictWhereInput, orderBy: DistrictOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [District]!
   books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book]!
+  wards(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ward]!
   collection(where: CollectionWhereUniqueInput!): Collection
   order(where: OrderWhereUniqueInput!): Order
   orderItem(where: OrderItemWhereUniqueInput!): OrderItem
   userEvent(where: UserEventWhereUniqueInput!): UserEvent
+  userAddress(where: UserAddressWhereUniqueInput!): UserAddress
   bookReview(where: BookReviewWhereUniqueInput!): BookReview
   bookReviewReply(where: BookReviewReplyWhereUniqueInput!): BookReviewReply
   bookCategory(where: BookCategoryWhereUniqueInput!): BookCategory
@@ -7649,16 +7970,16 @@ type Query {
   author(where: AuthorWhereUniqueInput!): Author
   shippingMethod(where: ShippingMethodWhereUniqueInput!): ShippingMethod
   user(where: UserWhereUniqueInput!): User
-  userAddress(where: UserAddressWhereUniqueInput!): UserAddress
-  ward(where: WardWhereUniqueInput!): Ward
-  province(where: ProvinceWhereUniqueInput!): Province
   paymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
+  province(where: ProvinceWhereUniqueInput!): Province
   district(where: DistrictWhereUniqueInput!): District
   book(where: BookWhereUniqueInput!): Book
+  ward(where: WardWhereUniqueInput!): Ward
   collectionsConnection(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CollectionConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orderItemsConnection(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderItemConnection!
   userEventsConnection(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserEventConnection!
+  userAddressesConnection(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserAddressConnection!
   bookReviewsConnection(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookReviewConnection!
   bookReviewRepliesConnection(where: BookReviewReplyWhereInput, orderBy: BookReviewReplyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookReviewReplyConnection!
   bookCategoriesConnection(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookCategoryConnection!
@@ -7667,12 +7988,11 @@ type Query {
   authorsConnection(where: AuthorWhereInput, orderBy: AuthorOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthorConnection!
   shippingMethodsConnection(where: ShippingMethodWhereInput, orderBy: ShippingMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ShippingMethodConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  userAddressesConnection(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserAddressConnection!
-  wardsConnection(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WardConnection!
-  provincesConnection(where: ProvinceWhereInput, orderBy: ProvinceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProvinceConnection!
   paymentMethodsConnection(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMethodConnection!
+  provincesConnection(where: ProvinceWhereInput, orderBy: ProvinceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProvinceConnection!
   districtsConnection(where: DistrictWhereInput, orderBy: DistrictOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DistrictConnection!
   booksConnection(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookConnection!
+  wardsConnection(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WardConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -7940,6 +8260,7 @@ type Subscription {
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   orderItem(where: OrderItemSubscriptionWhereInput): OrderItemSubscriptionPayload
   userEvent(where: UserEventSubscriptionWhereInput): UserEventSubscriptionPayload
+  userAddress(where: UserAddressSubscriptionWhereInput): UserAddressSubscriptionPayload
   bookReview(where: BookReviewSubscriptionWhereInput): BookReviewSubscriptionPayload
   bookReviewReply(where: BookReviewReplySubscriptionWhereInput): BookReviewReplySubscriptionPayload
   bookCategory(where: BookCategorySubscriptionWhereInput): BookCategorySubscriptionPayload
@@ -7948,12 +8269,11 @@ type Subscription {
   author(where: AuthorSubscriptionWhereInput): AuthorSubscriptionPayload
   shippingMethod(where: ShippingMethodSubscriptionWhereInput): ShippingMethodSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  userAddress(where: UserAddressSubscriptionWhereInput): UserAddressSubscriptionPayload
-  ward(where: WardSubscriptionWhereInput): WardSubscriptionPayload
-  province(where: ProvinceSubscriptionWhereInput): ProvinceSubscriptionPayload
   paymentMethod(where: PaymentMethodSubscriptionWhereInput): PaymentMethodSubscriptionPayload
+  province(where: ProvinceSubscriptionWhereInput): ProvinceSubscriptionPayload
   district(where: DistrictSubscriptionWhereInput): DistrictSubscriptionPayload
   book(where: BookSubscriptionWhereInput): BookSubscriptionPayload
+  ward(where: WardSubscriptionWhereInput): WardSubscriptionPayload
 }
 
 type User implements Node {
@@ -7971,6 +8291,7 @@ type User implements Node {
   addresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   userEvents(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserEvent!]
+  wishList(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
   reviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookReview!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -8013,11 +8334,6 @@ input UserAddressCreateInput {
 input UserAddressCreateManyWithoutUserInput {
   create: [UserAddressCreateWithoutUserInput!]
   connect: [UserAddressWhereUniqueInput!]
-}
-
-input UserAddressCreateOneInput {
-  create: UserAddressCreateInput
-  connect: UserAddressWhereUniqueInput
 }
 
 input UserAddressCreateWithoutUserInput {
@@ -8315,16 +8631,6 @@ input UserAddressSubscriptionWhereInput {
   node: UserAddressWhereInput
 }
 
-input UserAddressUpdateDataInput {
-  address: String
-  phone: String
-  fullName: String
-  user: UserUpdateOneRequiredWithoutAddressesInput
-  province: ProvinceUpdateOneRequiredInput
-  district: DistrictUpdateOneRequiredInput
-  ward: WardUpdateOneRequiredInput
-}
-
 input UserAddressUpdateInput {
   address: String
   phone: String
@@ -8364,13 +8670,6 @@ input UserAddressUpdateManyWithWhereNestedInput {
   data: UserAddressUpdateManyDataInput!
 }
 
-input UserAddressUpdateOneRequiredInput {
-  create: UserAddressCreateInput
-  connect: UserAddressWhereUniqueInput
-  update: UserAddressUpdateDataInput
-  upsert: UserAddressUpsertNestedInput
-}
-
 input UserAddressUpdateWithoutUserDataInput {
   address: String
   phone: String
@@ -8383,11 +8682,6 @@ input UserAddressUpdateWithoutUserDataInput {
 input UserAddressUpdateWithWhereUniqueWithoutUserInput {
   where: UserAddressWhereUniqueInput!
   data: UserAddressUpdateWithoutUserDataInput!
-}
-
-input UserAddressUpsertNestedInput {
-  update: UserAddressUpdateDataInput!
-  create: UserAddressCreateInput!
 }
 
 input UserAddressUpsertWithWhereUniqueWithoutUserInput {
@@ -8644,6 +8938,7 @@ input UserCreateInput {
   addresses: UserAddressCreateManyWithoutUserInput
   orders: OrderCreateManyWithoutCustomerInput
   userEvents: UserEventCreateManyWithoutUserInput
+  wishList: BookCreateManyInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -8686,6 +8981,7 @@ input UserCreateWithoutAddressesInput {
   receiveEmailNotification: Boolean!
   orders: OrderCreateManyWithoutCustomerInput
   userEvents: UserEventCreateManyWithoutUserInput
+  wishList: BookCreateManyInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -8703,6 +8999,7 @@ input UserCreateWithoutOrdersInput {
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
   userEvents: UserEventCreateManyWithoutUserInput
+  wishList: BookCreateManyInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -8721,6 +9018,7 @@ input UserCreateWithoutReviewsInput {
   addresses: UserAddressCreateManyWithoutUserInput
   orders: OrderCreateManyWithoutCustomerInput
   userEvents: UserEventCreateManyWithoutUserInput
+  wishList: BookCreateManyInput
 }
 
 input UserCreateWithoutUserEventsInput {
@@ -8737,6 +9035,7 @@ input UserCreateWithoutUserEventsInput {
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
   orders: OrderCreateManyWithoutCustomerInput
+  wishList: BookCreateManyInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -9305,6 +9604,7 @@ input UserUpdateDataInput {
   addresses: UserAddressUpdateManyWithoutUserInput
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
+  wishList: BookUpdateManyInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9322,6 +9622,7 @@ input UserUpdateInput {
   addresses: UserAddressUpdateManyWithoutUserInput
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
+  wishList: BookUpdateManyInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9386,6 +9687,7 @@ input UserUpdateWithoutAddressesDataInput {
   receiveEmailNotification: Boolean
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
+  wishList: BookUpdateManyInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9402,6 +9704,7 @@ input UserUpdateWithoutOrdersDataInput {
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
   userEvents: UserEventUpdateManyWithoutUserInput
+  wishList: BookUpdateManyInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9419,6 +9722,7 @@ input UserUpdateWithoutReviewsDataInput {
   addresses: UserAddressUpdateManyWithoutUserInput
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
+  wishList: BookUpdateManyInput
 }
 
 input UserUpdateWithoutUserEventsDataInput {
@@ -9434,6 +9738,7 @@ input UserUpdateWithoutUserEventsDataInput {
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
   orders: OrderUpdateManyWithoutCustomerInput
+  wishList: BookUpdateManyInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9844,6 +10149,9 @@ input UserWhereInput {
   userEvents_every: UserEventWhereInput
   userEvents_some: UserEventWhereInput
   userEvents_none: UserEventWhereInput
+  wishList_every: BookWhereInput
+  wishList_some: BookWhereInput
+  wishList_none: BookWhereInput
   reviews_every: BookReviewWhereInput
   reviews_some: BookReviewWhereInput
   reviews_none: BookReviewWhereInput

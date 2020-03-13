@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useRef, useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_BOOK } from '../../../api/bookApi';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { GET_BOOK, ADD_BOOK_TO_WISH_LIST } from '../../../api/bookApi';
 import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
@@ -30,7 +30,18 @@ function ProductPage(props) {
       id: bookId
     }
   });
-
+  const [addBookToWishList, {loading: addingToWishList}] = useMutation(ADD_BOOK_TO_WISH_LIST,{
+    onError(){
+      message.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
+    onCompleted(data){
+      if (data.addBookToWishList.statusCode===200){
+        message.success("Đã thêm vào danh sách ưa thích")
+      }else {
+        message.error(data.addBookToWishList.message);
+      }
+    }
+  });
   const { loading: loadingBookReviews, data: dataBookReviews,
     error: errorBookReviews, refetch: refetchBookReviews } = useQuery(GET_REVIEWS_BY_BOOK, {
       onCompleted() {
@@ -164,8 +175,11 @@ function ProductPage(props) {
                             htmlType="submit" title="Add to Cart">THÊM VÀO GIỎ</Button>
                         </div>
                         <div className="product-addto-links clearfix">
-                          <a className="wishlist" href="#" />
-                          <a className="compare" href="#" />
+                          <a className="wishlist" onClick={()=>addBookToWishList({
+                            variables: {
+                              bookId
+                            }
+                          })}/>
                         </div>
                       </div>
                       <div className="product_meta">

@@ -24,24 +24,21 @@ export const GET_ORDERS = gql`
                    }
                }
                grandTotal
-               shippingAddress{
-                   id
-                   fullName
-                   phone
-                   ward{
-                       id
-                       name
-                   }
-                   district{
-                       id
-                       name
-                   }
-                   province{
-                       id
-                       name
-                   }
-                   address
+               recipientFullName
+               recipientPhone
+               recipientWard{
+                    id
+                    name
                }
+                recipientDistrict{
+                    id
+                    name
+                }
+                recipientProvince{
+                    id
+                    name
+                }
+                recipientAddress
                paymentMethod{
                    id
                    name
@@ -75,24 +72,21 @@ export const GET_ORDER_BY_ID = gql`
             }
             grandTotal
             subTotal
-            shippingAddress{
+            recipientFullName
+            recipientPhone
+            recipientWard{
                 id
-                fullName
-                phone
-                ward{
-                    id
-                    name
-                }
-                district{
-                    id
-                    name
-                }
-                province{
-                    id
-                    name
-                }
-                address
+                name
             }
+            recipientDistrict{
+                id
+                name
+            }
+            recipientProvince{
+                id
+                name
+            }
+            recipientAddress
             paymentMethod{
                 id
                 name

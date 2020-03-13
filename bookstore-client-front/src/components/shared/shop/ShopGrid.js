@@ -261,7 +261,9 @@ function ShopGrid(props) {
             id: filters.author
           },
           basePrice_gt: filters.price.range[0],
-          publisher: filters.publisher
+          publisher: {
+            id: filters.publisher
+          }
         }
       } else if (filters.price.operator === 'lt') {
         where = {
@@ -272,7 +274,9 @@ function ShopGrid(props) {
             id: filters.author
           },
           basePrice_lt: filters.price.range[0],
-          publisher: filters.publisher
+          publisher: {
+            id: filters.publisher
+          }
         }
       } else if (filters.price.operator === 'between') {
         where = {
@@ -284,7 +288,9 @@ function ShopGrid(props) {
               id: filters.author
             },
             basePrice_gt: filters.price.range[0],
-            publisher: filters.publisher
+            publisher: {
+              id: filters.publisher
+            }
           }, {
             categories_some: {
               id: filters.category
@@ -293,7 +299,9 @@ function ShopGrid(props) {
               id: filters.author
             },
             basePrice_lt: filters.price.range[1],
-            publisher: filters.publisher
+            publisher: {
+              id: filters.publisher
+            }
           }]
         }
       }
@@ -306,7 +314,9 @@ function ShopGrid(props) {
           id: filters.author
         },
         basePrice: filters.price,
-        publisher: filters.publisher
+        publisher: {
+          id: filters.publisher
+        }
       }
     }
     props.getBooks({

@@ -68,24 +68,21 @@ function OrderList(props) {
                         }
                     }
                     grandTotal
-                    shippingAddress{
-                        id
-                        fullName
-                        phone
-                        ward{
-                            id
-                            name
-                        }
-                        district{
-                            id
-                            name
-                        }
-                        province{
-                            id
-                            name
-                        }
-                        address
+                    recipientFullName
+                    recipientPhone
+                    recipientWard{
+                         id
+                         name
                     }
+                     recipientDistrict{
+                         id
+                         name
+                     }
+                     recipientProvince{
+                         id
+                         name
+                     }
+                     recipientAddress
                     paymentMethod{
                         id
                         name

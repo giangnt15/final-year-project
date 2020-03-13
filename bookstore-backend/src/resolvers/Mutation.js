@@ -358,6 +358,12 @@ const Mutation = {
             }
         }
         let grandTotal = subTotal;
+        const shippingAddress = await prisma.query.userAddress({
+            where: {
+                id: data.shippingAddress
+            }
+        }, `{id fullName phone address ward{id} district{id} province{id}}`);
+        console.log(shippingAddress)
         return prisma.mutation.createOrder({
             data: {
                 items: {
@@ -375,11 +381,24 @@ const Mutation = {
                         id: data.paymentMethod
                     }
                 },
-                shippingAddress: {
+                recipientWard: {
                     connect: {
-                        id: data.shippingAddress
+                        id: shippingAddress.ward.id
                     }
                 },
+                recipientDistrict: {
+                    connect: {
+                        id: shippingAddress.district.id
+                    }
+                },
+                recipientProvince: {
+                    connect: {
+                        id: shippingAddress.province.id
+                    }
+                },
+                recipientFullName: shippingAddress.fullName,
+                recipientPhone: shippingAddress.phone,
+                recipientAddress: shippingAddress.address,
                 customer: {
                     connect: {
                         id: userId
@@ -448,6 +467,66 @@ const Mutation = {
                 }
             }
         }, info);
+    },
+    async addBookToWishList(parent, {bookId}, {prisma,httpContext,info}){
+        const userId = getUserId(httpContext);
+        const bookExists = prisma.exists.Book({
+            id: bookId
+        });
+        if (!bookExists){
+            return {
+                statusCode: 400,
+                message: "Sách không tồn tại",
+            }
+        }
+        await prisma.mutation.updateUser({
+            where: {
+                id: userId
+            },
+            data: {
+                wishList: {
+                    connect: [
+                        {
+                            id: bookId
+                        }
+                    ]
+                }
+            }
+        });
+        return {
+            statusCode: 200,
+            message: "Đã thêm vào danh sách ưa thích"
+        }
+    },
+    async removeBookFromWishList(parent, {bookId}, {prisma,httpContext,info}){
+        const userId = getUserId(httpContext);
+        const bookExists = prisma.exists.Book({
+            id: bookId
+        });
+        if (!bookExists){
+            return {
+                statusCode: 400,
+                message: "Sách không tồn tại",
+            }
+        }
+        await prisma.mutation.updateUser({
+            where: {
+                id: userId
+            },
+            data: {
+                wishList: {
+                    disconnect: [
+                        {
+                            id: bookId
+                        }
+                    ]
+                }
+            }
+        });
+        return {
+            statusCode: 200,
+            message: "Đã bỏ khỏi danh sách ưa thích"
+        }
     }
 }
 

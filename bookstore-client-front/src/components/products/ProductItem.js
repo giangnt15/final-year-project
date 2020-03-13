@@ -1,17 +1,31 @@
 import React, { Fragment } from 'react';
 import './products.css';
 import { NavLink, useHistory } from 'react-router-dom';
-import { Popover, Button } from 'antd';
+import { Popover, Button, message } from 'antd';
 import { FILTER_TYPE_AUTHOR, RESET_FILTERS } from '../../constants';
 import { connect } from 'react-redux';
 import { changeFilter } from '../../redux/actions/filtersActions';
 import { withApollo } from '@apollo/react-hoc';
 import { addSingleItemToCartAysnc } from '../../redux/actions/cartAction';
+import { useMutation } from '@apollo/react-hooks';
+import { ADD_BOOK_TO_WISH_LIST } from '../../api/bookApi';
 
 
 function ProductItem(props) {
   const { id, thumbnail, basePrice, title, authors, description } = props.book;
-  const { width, thumbHeight, changeFilter,addSingleItemToCart,cart } = props;
+  const { width, thumbHeight, changeFilter, addSingleItemToCart, cart } = props;
+  const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
+    onError() {
+      message.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
+    onCompleted(data) {
+      if (data.addBookToWishList.statusCode === 200) {
+        message.success("Đã thêm vào danh sách ưa thích")
+      } else {
+        message.error(data.addBookToWishList.message);
+      }
+    }
+  });
   const history = useHistory();
   const productDialog = (<div id="express-buy-dialog" className="express-buy-l" >
     <div className="loading" style={{}} />
@@ -57,7 +71,7 @@ function ProductItem(props) {
       <div className="vloader express-loading" style={{ display: 'none' }} />
       <form className="ng-pristine ng-valid" onSubmit={(e) => {
         e.preventDefault();
-        addSingleItemToCart(props.book,1)
+        addSingleItemToCart(props.book, 1)
       }} >
         <Button loading={cart.adding} htmlType="submit" className="btn-buy btn btn-bb add-to-cart">THÊM VÀO GIỎ HÀNG</Button>
         {/* <div className="pre-box ng-hide" ng-show="productItem.IsNotPublished && productItem.QuantityRemain==null && !productItem.IsOutOff">
@@ -75,7 +89,12 @@ function ProductItem(props) {
       </form>
       <form action="/BookBuy/AddToFavorite" data-ajax-begin="AddToFavBegin" data-ajax-success="AddToFavSuccess" data-ajax="true" method="post" className="ng-pristine ng-valid">
         <input type="hidden" name="productid" className="productid" defaultValue={105165} />
-        <a className="btn btn-default btn-fav">
+        <a className="btn btn-default btn-fav"
+          onClick={() => addBookToWishList({
+            variables: {
+              bookId: id
+            }
+          })}>
           <i className="fa fa-heart" />
           Thêm vào yêu thích
       </a>
@@ -129,13 +148,13 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = (dispatch,ownProps) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     changeFilter: (type, value) => {
       dispatch(changeFilter(type, value));
     },
     addSingleItemToCart: (item, qty) => {
-      dispatch(addSingleItemToCartAysnc(ownProps.client,item, qty));
+      dispatch(addSingleItemToCartAysnc(ownProps.client, item, qty));
     }
   }
 }

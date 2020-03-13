@@ -62,10 +62,10 @@ function OrderDetail(props) {
     }
     console.log(data)
     const order = data.getOrderById ? data.getOrderById : {};
-    const { shippingAddress = { district: {}, ward: {}, province: {} },
+    const {  recipientDistrict: district= {}, recipientWard: ward = {}, recipientProvince: province = {} ,
+        recipientAddress: address, recipientPhone: phone, recipientFullName: fullName,
         shippingMethod = {}, paymentMethod = {}, orderStatus, id, createdAt,
         items = [{ item: {} }], grandTotal, subTotal } = order;
-    const { address, phone, district, ward, province, fullName } = shippingAddress;
     const fullAddress = `${address}, ${ward.name}, ${district.name}, ${province.name}`;
     const mapDataToTable = (orderItems) => {
         return orderItems.map(orderItem => {

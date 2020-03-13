@@ -270,6 +270,21 @@ const Query = {
                 }
             }
         },info);
+    },
+    async getWishList(parent, args, {prisma,httpContext,info}){
+        const userId = getUserId(httpContext);
+        const user = await prisma.query.user({
+            where: {
+                id: userId
+            }
+        },`{id wishList{id title thumbnail reviews{id rating}}}`);
+        return {
+            statusCode: 200,
+            message: "Đã bỏ khỏi danh sách ưa thích",
+            data: {
+                books: user.wishList
+            }
+        }
     }
 }
 
