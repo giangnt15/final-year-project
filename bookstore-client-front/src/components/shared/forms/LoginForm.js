@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'antd';
+import { NavLink } from 'react-router-dom';
 
 function LoginForm(props) {
 
@@ -66,9 +67,9 @@ function LoginForm(props) {
                 <span className="txt1">
                     Mật khẩu
               </span>
-                <a href="#" className="txt2 bo1 m-l-5">
+                <NavLink to="/reset-password" className="txt2 bo1 m-l-5">
                     Quên?
-              </a>
+              </NavLink>
             </div>
             <div className="w-100">
                 <div className={`wrap-input100 validate-input`} data-validate="Password is required">

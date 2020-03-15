@@ -20,10 +20,13 @@ import CheckoutPage from './components/cart/CheckoutPage';
 import PrivateRoute from './components/shared/PrivateRoute';
 import CollectionsPage from './components/collection/CollectionsPage';
 import CollectionPage from './components/collection/CollectionPage';
+import ForgotPassword from './components/pages/auth/ForgotPassword';
+import ResetPassword from './components/pages/auth/ResetPassword';
 
 function App(props) {
     let history = useHistory();
-    const isLoginPage = history.location.pathname.endsWith("/auth/login") || history.location.pathname.endsWith("/auth/signup") 
+    const isLoginPage = history.location.pathname.endsWith("/auth/login") 
+    || history.location.pathname.endsWith("/auth/signup") || history.location.pathname.indexOf("/reset-password")>=0
     return (
       <Fragment>
         <div id="back-to-top-anchor"></div>
@@ -34,6 +37,8 @@ function App(props) {
           <Route path="/collections" exact component={CollectionsPage}></Route>
           <Route path="/collection/:id" exact component={CollectionPage}></Route>
           <Route path="/auth/login" exact component={LoginPage}></Route>
+          <Route path="/reset-password" exact component={ForgotPassword}></Route>
+          <Route path="/reset-password/:token" exact component={ResetPassword}></Route>
           <Route path="/auth/signup" exact component={SignupPage}></Route>
           <Route path="/auth/account" render={()=><PrivateRoute render={() => <AccountPage />} />}></Route>
           <Route path="/checkout/cart" exact render={()=><CartPage />}></Route>

@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import getUserId from '../utils/getUserId';
 import checkAdmin, { getUserRole } from '../utils/adminAuth';
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import emailTemplate from '../sendgrid/emailTemplate';
 
 const Mutation = {
     async signUp(parent, { data }, { prisma, env }, info) {
@@ -469,12 +471,12 @@ const Mutation = {
             }
         }, info);
     },
-    async addBookToWishList(parent, {bookId}, {prisma,httpContext,info}){
+    async addBookToWishList(parent, { bookId }, { prisma, httpContext, info }) {
         const userId = getUserId(httpContext);
         const bookExists = prisma.exists.Book({
             id: bookId
         });
-        if (!bookExists){
+        if (!bookExists) {
             return {
                 statusCode: 400,
                 message: "Sách không tồn tại",
@@ -499,12 +501,12 @@ const Mutation = {
             message: "Đã thêm vào danh sách ưa thích"
         }
     },
-    async removeBookFromWishList(parent, {bookId}, {prisma,httpContext,info}){
+    async removeBookFromWishList(parent, { bookId }, { prisma, httpContext, info }) {
         const userId = getUserId(httpContext);
         const bookExists = prisma.exists.Book({
             id: bookId
         });
-        if (!bookExists){
+        if (!bookExists) {
             return {
                 statusCode: 400,
                 message: "Sách không tồn tại",
@@ -527,6 +529,76 @@ const Mutation = {
         return {
             statusCode: 200,
             message: "Đã bỏ khỏi danh sách ưa thích"
+        }
+    },
+    async createPasswordToken(parent, { email }, { prisma, sgMailer,env }, info) {
+        const user = await prisma.query.user({
+            where: {
+                email
+            }
+        });
+        if (!user) {
+            return {
+                statusCode: 400,
+                message: "Tài khoản không tồn tại"
+            }
+        }
+        const token = uuidv4();
+        const authToken = await prisma.mutation.createAuthToken({
+            data: {
+                token,
+                expiredAfter: 10800000,
+                type: "PasswordToken",
+                user: {
+                    connect: {
+                        id: user.id
+                    }
+                }
+            }
+        });
+        await sgMailer.send({
+            from: {
+                email: "noreply@bookstore.vn",
+                name: "Bookstore"
+            },
+            to: email,
+            html: emailTemplate.resetPassword(`${env.CLIENT_HOST}/reset-password/${token}`),
+            subject: "[Bookstore] Lấy lại mật khẩu",
+        });
+        return {
+            statusCode: 200,
+            message: "OK"
+        }
+    },
+    async resetPassword(parent, { passwordToken ,password }, { prisma }, info) {
+        const authToken = await prisma.query.authToken({
+            where: {
+                token: passwordToken
+            }
+        }, `{id token expiredAfter type createdAt user{id}}`);
+        if (!authToken){
+            return {
+                statusCode: 400,
+                message: "Token không hợp lệ"
+            }
+        }
+        if (moment(authToken.createdAt).add(authToken.expiredAfter, 'milliseconds').isBefore(moment())){
+            return {
+                statusCode: 400,
+                message: "Token đã hết hạn"
+            }
+        }
+        await prisma.mutation.updateUser({
+            where: {
+                id: authToken.user.id
+            },
+            data: {
+                password: await bcrypt.hash(password, 10)
+            }
+        });
+        return {
+            statusCode: 200,
+            message: "Đổi mật khẩu thành công"
         }
     }
 }

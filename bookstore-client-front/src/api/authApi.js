@@ -37,6 +37,25 @@ export const UPDATE_USER = gql`
     }
 `
 
+export const CREATE_PASSWORD_TOKEN = gql`
+    mutation createPasswordToken($email: String!){
+        createPasswordToken(email: $email){
+            statusCode
+            message
+        }
+    }
+`
+
+
+export const RESET_PASSWORD = gql`
+    mutation resetPassword($passwordToken: String!,$password: String!){
+        resetPassword(passwordToken: $passwordToken, password: $password){
+            statusCode
+            message
+        }
+    }
+`
+
 export const SIGNUP = gql`
     mutation signUp($data: UserSignupInput!){
         signUp(data: $data){

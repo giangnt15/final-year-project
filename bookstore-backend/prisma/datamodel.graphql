@@ -14,8 +14,19 @@ type User{
     orders: [Order!]! @relation(name: "OrderToUser", onDelete: CASCADE)
     userEvents: [UserEvent!]! @relation(name: "EventToUser", onDelete: CASCADE)
     wishList: [Book!]!
+    authToken: [AuthToken!]! @relation(name: "AuthTokenToUser", onDelete: CASCADE)
 #    cart: Cart! @relation(name: "CartToUser", onDelete: CASCADE)
     reviews: [BookReview!]! @relation(name: "ReviewToUser", onDelete: CASCADE)
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}
+
+type AuthToken{
+    id: ID! @id
+    token: String! @unique
+    expiredAfter: Int!
+    type: AuthTokenType!
+    user: User! @relation(name: "AuthTokenToUser", onDelete: SET_NULL)
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
 }
@@ -229,6 +240,12 @@ type Ward{
 enum BookFormat{
     HardCover
     PaperBack
+}
+
+enum AuthTokenType{
+    AccessToken
+    PasswordToken
+    ActivationToken
 }
 
 enum UserEventType{

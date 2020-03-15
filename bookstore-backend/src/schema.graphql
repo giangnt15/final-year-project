@@ -1,7 +1,7 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
-#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput from './generated/prisma.graphql';
+#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -21,6 +21,16 @@ type User{
     wishList: [Book!]!
     reviews: [BookReview!]!
     createdAt: String!
+    updatedAt: String!
+}
+
+type AuthToken{
+    id: ID!
+    token: String!
+    expiredAfter: Int!
+    type: AuthTokenType!
+    user: User!
+    createdAt: String! 
     updatedAt: String!
 }
 
@@ -282,6 +292,14 @@ type Mutation{
     deleteUserAddress(id: ID!): UserAddress!
     addBookToWishList(bookId: ID!): AddBookToWishListPayload!
     removeBookFromWishList(bookId: ID!): AddBookToWishListPayload!
+    createPasswordToken(email: String!): CreatePasswordTokenPayload!
+    resetPassword(passwordToken: String!, password: String!): CreatePasswordTokenPayload!
+}
+
+type CreatePasswordTokenPayload{
+    statusCode: Int!
+    message: String
+    data: String
 }
 
 type GetWishListPayload{

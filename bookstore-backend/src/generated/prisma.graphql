@@ -1,7 +1,11 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Sun Mar 15 2020 17:23:44 GMT+0700 (Indochina Time)
+# timestamp: Sun Mar 15 2020 19:55:13 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
+  count: Int!
+}
+
+type AggregateAuthToken {
   count: Int!
 }
 
@@ -761,6 +765,515 @@ input AuthorWhereInput {
 
 input AuthorWhereUniqueInput {
   id: ID
+}
+
+type AuthToken implements Node {
+  id: ID!
+  token: String!
+  expiredAfter: Int!
+  type: AuthTokenType!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type AuthTokenConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [AuthTokenEdge]!
+  aggregate: AggregateAuthToken!
+}
+
+input AuthTokenCreateInput {
+  id: ID
+  token: String!
+  expiredAfter: Int!
+  type: AuthTokenType!
+  user: UserCreateOneWithoutAuthTokenInput!
+}
+
+input AuthTokenCreateManyWithoutUserInput {
+  create: [AuthTokenCreateWithoutUserInput!]
+  connect: [AuthTokenWhereUniqueInput!]
+}
+
+input AuthTokenCreateWithoutUserInput {
+  id: ID
+  token: String!
+  expiredAfter: Int!
+  type: AuthTokenType!
+}
+
+"""An edge in a connection."""
+type AuthTokenEdge {
+  """The item at the end of the edge."""
+  node: AuthToken!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum AuthTokenOrderByInput {
+  id_ASC
+  id_DESC
+  token_ASC
+  token_DESC
+  expiredAfter_ASC
+  expiredAfter_DESC
+  type_ASC
+  type_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type AuthTokenPreviousValues {
+  id: ID!
+  token: String!
+  expiredAfter: Int!
+  type: AuthTokenType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input AuthTokenScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AuthTokenScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AuthTokenScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AuthTokenScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  token: String
+
+  """All values that are not equal to given value."""
+  token_not: String
+
+  """All values that are contained in given list."""
+  token_in: [String!]
+
+  """All values that are not contained in given list."""
+  token_not_in: [String!]
+
+  """All values less than the given value."""
+  token_lt: String
+
+  """All values less than or equal the given value."""
+  token_lte: String
+
+  """All values greater than the given value."""
+  token_gt: String
+
+  """All values greater than or equal the given value."""
+  token_gte: String
+
+  """All values containing the given string."""
+  token_contains: String
+
+  """All values not containing the given string."""
+  token_not_contains: String
+
+  """All values starting with the given string."""
+  token_starts_with: String
+
+  """All values not starting with the given string."""
+  token_not_starts_with: String
+
+  """All values ending with the given string."""
+  token_ends_with: String
+
+  """All values not ending with the given string."""
+  token_not_ends_with: String
+  expiredAfter: Int
+
+  """All values that are not equal to given value."""
+  expiredAfter_not: Int
+
+  """All values that are contained in given list."""
+  expiredAfter_in: [Int!]
+
+  """All values that are not contained in given list."""
+  expiredAfter_not_in: [Int!]
+
+  """All values less than the given value."""
+  expiredAfter_lt: Int
+
+  """All values less than or equal the given value."""
+  expiredAfter_lte: Int
+
+  """All values greater than the given value."""
+  expiredAfter_gt: Int
+
+  """All values greater than or equal the given value."""
+  expiredAfter_gte: Int
+  type: AuthTokenType
+
+  """All values that are not equal to given value."""
+  type_not: AuthTokenType
+
+  """All values that are contained in given list."""
+  type_in: [AuthTokenType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [AuthTokenType!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type AuthTokenSubscriptionPayload {
+  mutation: MutationType!
+  node: AuthToken
+  updatedFields: [String!]
+  previousValues: AuthTokenPreviousValues
+}
+
+input AuthTokenSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AuthTokenSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AuthTokenSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AuthTokenSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: AuthTokenWhereInput
+}
+
+enum AuthTokenType {
+  AccessToken
+  PasswordToken
+  ActivationToken
+}
+
+input AuthTokenUpdateInput {
+  token: String
+  expiredAfter: Int
+  type: AuthTokenType
+  user: UserUpdateOneRequiredWithoutAuthTokenInput
+}
+
+input AuthTokenUpdateManyDataInput {
+  token: String
+  expiredAfter: Int
+  type: AuthTokenType
+}
+
+input AuthTokenUpdateManyMutationInput {
+  token: String
+  expiredAfter: Int
+  type: AuthTokenType
+}
+
+input AuthTokenUpdateManyWithoutUserInput {
+  create: [AuthTokenCreateWithoutUserInput!]
+  connect: [AuthTokenWhereUniqueInput!]
+  set: [AuthTokenWhereUniqueInput!]
+  disconnect: [AuthTokenWhereUniqueInput!]
+  delete: [AuthTokenWhereUniqueInput!]
+  update: [AuthTokenUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [AuthTokenUpdateManyWithWhereNestedInput!]
+  deleteMany: [AuthTokenScalarWhereInput!]
+  upsert: [AuthTokenUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input AuthTokenUpdateManyWithWhereNestedInput {
+  where: AuthTokenScalarWhereInput!
+  data: AuthTokenUpdateManyDataInput!
+}
+
+input AuthTokenUpdateWithoutUserDataInput {
+  token: String
+  expiredAfter: Int
+  type: AuthTokenType
+}
+
+input AuthTokenUpdateWithWhereUniqueWithoutUserInput {
+  where: AuthTokenWhereUniqueInput!
+  data: AuthTokenUpdateWithoutUserDataInput!
+}
+
+input AuthTokenUpsertWithWhereUniqueWithoutUserInput {
+  where: AuthTokenWhereUniqueInput!
+  update: AuthTokenUpdateWithoutUserDataInput!
+  create: AuthTokenCreateWithoutUserInput!
+}
+
+input AuthTokenWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AuthTokenWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AuthTokenWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AuthTokenWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  token: String
+
+  """All values that are not equal to given value."""
+  token_not: String
+
+  """All values that are contained in given list."""
+  token_in: [String!]
+
+  """All values that are not contained in given list."""
+  token_not_in: [String!]
+
+  """All values less than the given value."""
+  token_lt: String
+
+  """All values less than or equal the given value."""
+  token_lte: String
+
+  """All values greater than the given value."""
+  token_gt: String
+
+  """All values greater than or equal the given value."""
+  token_gte: String
+
+  """All values containing the given string."""
+  token_contains: String
+
+  """All values not containing the given string."""
+  token_not_contains: String
+
+  """All values starting with the given string."""
+  token_starts_with: String
+
+  """All values not starting with the given string."""
+  token_not_starts_with: String
+
+  """All values ending with the given string."""
+  token_ends_with: String
+
+  """All values not ending with the given string."""
+  token_not_ends_with: String
+  expiredAfter: Int
+
+  """All values that are not equal to given value."""
+  expiredAfter_not: Int
+
+  """All values that are contained in given list."""
+  expiredAfter_in: [Int!]
+
+  """All values that are not contained in given list."""
+  expiredAfter_not_in: [Int!]
+
+  """All values less than the given value."""
+  expiredAfter_lt: Int
+
+  """All values less than or equal the given value."""
+  expiredAfter_lte: Int
+
+  """All values greater than the given value."""
+  expiredAfter_gt: Int
+
+  """All values greater than or equal the given value."""
+  expiredAfter_gte: Int
+  type: AuthTokenType
+
+  """All values that are not equal to given value."""
+  type_not: AuthTokenType
+
+  """All values that are contained in given list."""
+  type_in: [AuthTokenType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [AuthTokenType!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  user: UserWhereInput
+}
+
+input AuthTokenWhereUniqueInput {
+  id: ID
+  token: String
 }
 
 type BatchPayload {
@@ -5367,6 +5880,7 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
+  createAuthToken(data: AuthTokenCreateInput!): AuthToken!
   createCollection(data: CollectionCreateInput!): Collection!
   createOrder(data: OrderCreateInput!): Order!
   createOrderItem(data: OrderItemCreateInput!): OrderItem!
@@ -5385,6 +5899,7 @@ type Mutation {
   createDistrict(data: DistrictCreateInput!): District!
   createBook(data: BookCreateInput!): Book!
   createWard(data: WardCreateInput!): Ward!
+  updateAuthToken(data: AuthTokenUpdateInput!, where: AuthTokenWhereUniqueInput!): AuthToken
   updateCollection(data: CollectionUpdateInput!, where: CollectionWhereUniqueInput!): Collection
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrderItem(data: OrderItemUpdateInput!, where: OrderItemWhereUniqueInput!): OrderItem
@@ -5403,6 +5918,7 @@ type Mutation {
   updateDistrict(data: DistrictUpdateInput!, where: DistrictWhereUniqueInput!): District
   updateBook(data: BookUpdateInput!, where: BookWhereUniqueInput!): Book
   updateWard(data: WardUpdateInput!, where: WardWhereUniqueInput!): Ward
+  deleteAuthToken(where: AuthTokenWhereUniqueInput!): AuthToken
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrderItem(where: OrderItemWhereUniqueInput!): OrderItem
@@ -5421,6 +5937,7 @@ type Mutation {
   deleteDistrict(where: DistrictWhereUniqueInput!): District
   deleteBook(where: BookWhereUniqueInput!): Book
   deleteWard(where: WardWhereUniqueInput!): Ward
+  upsertAuthToken(where: AuthTokenWhereUniqueInput!, create: AuthTokenCreateInput!, update: AuthTokenUpdateInput!): AuthToken!
   upsertCollection(where: CollectionWhereUniqueInput!, create: CollectionCreateInput!, update: CollectionUpdateInput!): Collection!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrderItem(where: OrderItemWhereUniqueInput!, create: OrderItemCreateInput!, update: OrderItemUpdateInput!): OrderItem!
@@ -5439,6 +5956,7 @@ type Mutation {
   upsertDistrict(where: DistrictWhereUniqueInput!, create: DistrictCreateInput!, update: DistrictUpdateInput!): District!
   upsertBook(where: BookWhereUniqueInput!, create: BookCreateInput!, update: BookUpdateInput!): Book!
   upsertWard(where: WardWhereUniqueInput!, create: WardCreateInput!, update: WardUpdateInput!): Ward!
+  updateManyAuthTokens(data: AuthTokenUpdateManyMutationInput!, where: AuthTokenWhereInput): BatchPayload!
   updateManyCollections(data: CollectionUpdateManyMutationInput!, where: CollectionWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrderItems(data: OrderItemUpdateManyMutationInput!, where: OrderItemWhereInput): BatchPayload!
@@ -5457,6 +5975,7 @@ type Mutation {
   updateManyDistricts(data: DistrictUpdateManyMutationInput!, where: DistrictWhereInput): BatchPayload!
   updateManyBooks(data: BookUpdateManyMutationInput!, where: BookWhereInput): BatchPayload!
   updateManyWards(data: WardUpdateManyMutationInput!, where: WardWhereInput): BatchPayload!
+  deleteManyAuthTokens(where: AuthTokenWhereInput): BatchPayload!
   deleteManyCollections(where: CollectionWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrderItems(where: OrderItemWhereInput): BatchPayload!
@@ -7836,6 +8355,7 @@ input PublisherWhereUniqueInput {
 }
 
 type Query {
+  authTokens(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthToken]!
   collections(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Collection]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orderItems(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderItem]!
@@ -7854,6 +8374,7 @@ type Query {
   districts(where: DistrictWhereInput, orderBy: DistrictOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [District]!
   books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book]!
   wards(where: WardWhereInput, orderBy: WardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ward]!
+  authToken(where: AuthTokenWhereUniqueInput!): AuthToken
   collection(where: CollectionWhereUniqueInput!): Collection
   order(where: OrderWhereUniqueInput!): Order
   orderItem(where: OrderItemWhereUniqueInput!): OrderItem
@@ -7872,6 +8393,7 @@ type Query {
   district(where: DistrictWhereUniqueInput!): District
   book(where: BookWhereUniqueInput!): Book
   ward(where: WardWhereUniqueInput!): Ward
+  authTokensConnection(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthTokenConnection!
   collectionsConnection(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CollectionConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orderItemsConnection(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderItemConnection!
@@ -8153,6 +8675,7 @@ input ShippingMethodWhereUniqueInput {
 }
 
 type Subscription {
+  authToken(where: AuthTokenSubscriptionWhereInput): AuthTokenSubscriptionPayload
   collection(where: CollectionSubscriptionWhereInput): CollectionSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   orderItem(where: OrderItemSubscriptionWhereInput): OrderItemSubscriptionPayload
@@ -8189,6 +8712,7 @@ type User implements Node {
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   userEvents(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserEvent!]
   wishList(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
+  authToken(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthToken!]
   reviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookReview!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -8836,6 +9360,7 @@ input UserCreateInput {
   orders: OrderCreateManyWithoutCustomerInput
   userEvents: UserEventCreateManyWithoutUserInput
   wishList: BookCreateManyInput
+  authToken: AuthTokenCreateManyWithoutUserInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -8846,6 +9371,11 @@ input UserCreateOneInput {
 
 input UserCreateOneWithoutAddressesInput {
   create: UserCreateWithoutAddressesInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutAuthTokenInput {
+  create: UserCreateWithoutAuthTokenInput
   connect: UserWhereUniqueInput
 }
 
@@ -8879,6 +9409,26 @@ input UserCreateWithoutAddressesInput {
   orders: OrderCreateManyWithoutCustomerInput
   userEvents: UserEventCreateManyWithoutUserInput
   wishList: BookCreateManyInput
+  authToken: AuthTokenCreateManyWithoutUserInput
+  reviews: BookReviewCreateManyWithoutAuthorInput
+}
+
+input UserCreateWithoutAuthTokenInput {
+  id: ID
+  username: String!
+  fullName: String
+  email: String!
+  phone: String
+  avatar: String
+  gender: Boolean
+  birthdate: DateTime
+  password: String!
+  role: UserRole
+  receiveEmailNotification: Boolean!
+  addresses: UserAddressCreateManyWithoutUserInput
+  orders: OrderCreateManyWithoutCustomerInput
+  userEvents: UserEventCreateManyWithoutUserInput
+  wishList: BookCreateManyInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -8897,6 +9447,7 @@ input UserCreateWithoutOrdersInput {
   addresses: UserAddressCreateManyWithoutUserInput
   userEvents: UserEventCreateManyWithoutUserInput
   wishList: BookCreateManyInput
+  authToken: AuthTokenCreateManyWithoutUserInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -8916,6 +9467,7 @@ input UserCreateWithoutReviewsInput {
   orders: OrderCreateManyWithoutCustomerInput
   userEvents: UserEventCreateManyWithoutUserInput
   wishList: BookCreateManyInput
+  authToken: AuthTokenCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutUserEventsInput {
@@ -8933,6 +9485,7 @@ input UserCreateWithoutUserEventsInput {
   addresses: UserAddressCreateManyWithoutUserInput
   orders: OrderCreateManyWithoutCustomerInput
   wishList: BookCreateManyInput
+  authToken: AuthTokenCreateManyWithoutUserInput
   reviews: BookReviewCreateManyWithoutAuthorInput
 }
 
@@ -9502,6 +10055,7 @@ input UserUpdateDataInput {
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
   wishList: BookUpdateManyInput
+  authToken: AuthTokenUpdateManyWithoutUserInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9520,6 +10074,7 @@ input UserUpdateInput {
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
   wishList: BookUpdateManyInput
+  authToken: AuthTokenUpdateManyWithoutUserInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9548,6 +10103,13 @@ input UserUpdateOneRequiredWithoutAddressesInput {
   connect: UserWhereUniqueInput
   update: UserUpdateWithoutAddressesDataInput
   upsert: UserUpsertWithoutAddressesInput
+}
+
+input UserUpdateOneRequiredWithoutAuthTokenInput {
+  create: UserCreateWithoutAuthTokenInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutAuthTokenDataInput
+  upsert: UserUpsertWithoutAuthTokenInput
 }
 
 input UserUpdateOneRequiredWithoutOrdersInput {
@@ -9585,6 +10147,25 @@ input UserUpdateWithoutAddressesDataInput {
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
   wishList: BookUpdateManyInput
+  authToken: AuthTokenUpdateManyWithoutUserInput
+  reviews: BookReviewUpdateManyWithoutAuthorInput
+}
+
+input UserUpdateWithoutAuthTokenDataInput {
+  username: String
+  fullName: String
+  email: String
+  phone: String
+  avatar: String
+  gender: Boolean
+  birthdate: DateTime
+  password: String
+  role: UserRole
+  receiveEmailNotification: Boolean
+  addresses: UserAddressUpdateManyWithoutUserInput
+  orders: OrderUpdateManyWithoutCustomerInput
+  userEvents: UserEventUpdateManyWithoutUserInput
+  wishList: BookUpdateManyInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9602,6 +10183,7 @@ input UserUpdateWithoutOrdersDataInput {
   addresses: UserAddressUpdateManyWithoutUserInput
   userEvents: UserEventUpdateManyWithoutUserInput
   wishList: BookUpdateManyInput
+  authToken: AuthTokenUpdateManyWithoutUserInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9620,6 +10202,7 @@ input UserUpdateWithoutReviewsDataInput {
   orders: OrderUpdateManyWithoutCustomerInput
   userEvents: UserEventUpdateManyWithoutUserInput
   wishList: BookUpdateManyInput
+  authToken: AuthTokenUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutUserEventsDataInput {
@@ -9636,6 +10219,7 @@ input UserUpdateWithoutUserEventsDataInput {
   addresses: UserAddressUpdateManyWithoutUserInput
   orders: OrderUpdateManyWithoutCustomerInput
   wishList: BookUpdateManyInput
+  authToken: AuthTokenUpdateManyWithoutUserInput
   reviews: BookReviewUpdateManyWithoutAuthorInput
 }
 
@@ -9647,6 +10231,11 @@ input UserUpsertNestedInput {
 input UserUpsertWithoutAddressesInput {
   update: UserUpdateWithoutAddressesDataInput!
   create: UserCreateWithoutAddressesInput!
+}
+
+input UserUpsertWithoutAuthTokenInput {
+  update: UserUpdateWithoutAuthTokenDataInput!
+  create: UserCreateWithoutAuthTokenInput!
 }
 
 input UserUpsertWithoutOrdersInput {
@@ -10049,6 +10638,9 @@ input UserWhereInput {
   wishList_every: BookWhereInput
   wishList_some: BookWhereInput
   wishList_none: BookWhereInput
+  authToken_every: AuthTokenWhereInput
+  authToken_some: AuthTokenWhereInput
+  authToken_none: AuthTokenWhereInput
   reviews_every: BookReviewWhereInput
   reviews_some: BookReviewWhereInput
   reviews_none: BookReviewWhereInput
