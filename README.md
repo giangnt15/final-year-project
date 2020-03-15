@@ -2,6 +2,8 @@
 
 #### Cách chạy project ####
 
+## Em xin lỗi vì hơi nhiều bước ạ, sắp tới em sẽ thuê AWS và đẩy webapp lên ạ ##
+
 B1: Cài nodejs
 B2: Clone project về máy
 B3: Cài docker & docker-compose vào máy
@@ -19,10 +21,11 @@ B4: Mở thư mục Project:
     - npm start
 
 
-** Chú ý **
+## Chú ý ##
 Sau B4.1, truy cập DB(mysql) tại với:
 - host: 127.0.0.1
 - port: 3307
 - username: root
 - password: prisma
 và chạy script trong thư mục DB để chèn data
+
