@@ -9,10 +9,13 @@ import { withApollo } from '@apollo/react-hoc';
 import { addSingleItemToCartAysnc } from '../../redux/actions/cartAction';
 import { useMutation } from '@apollo/react-hooks';
 import { ADD_BOOK_TO_WISH_LIST } from '../../api/bookApi';
-
+import NumberFormat from 'react-number-format';
+import _ from 'lodash';
+import { calculateDiscount } from '../../utils/common';
 
 function ProductItem(props) {
-  const { id, thumbnail, basePrice, title, authors, description } = props.book;
+  const { id, thumbnail, basePrice, title, authors, description, discounts = [] } = props.book;
+  const [discountedPrice, discountRate] = calculateDiscount(basePrice, discounts);
   const { width, thumbHeight, changeFilter, addSingleItemToCart, cart } = props;
   const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
     onError() {
@@ -52,12 +55,15 @@ function ProductItem(props) {
         </div>
       </div>
       <div className="p-view">
-        <span className="real-price ng-binding">67,000₫</span> &nbsp;&nbsp;
-      <span className="price ng-binding" ng-show="productItem.DiscountPercent>0">79,000₫</span>
-        <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
+        <span className="real-price ng-binding"><NumberFormat value={discountedPrice} displayType={'text'}
+          suffix="đ" thousandSeparator={true} /></span> &nbsp;&nbsp;
+      {discountRate>0&&<span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
+          <NumberFormat value={basePrice} displayType={'text'}
+            suffix="đ" thousandSeparator={true} /></span>}
+        {discountRate > 0 && <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
           <label> Giảm giá </label>
-          <span className="ng-binding">16 %</span>
-        </div>
+          <span className="ng-binding">{discountRate*100} %</span>
+        </div>}
         <div className="clearfix" />
       </div>
       {/* <div className="gift-view ng-hide" ng-show="productItem.HasGift">
@@ -108,15 +114,17 @@ function ProductItem(props) {
         <div className="product__thumb" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: thumbHeight }}>
           <NavLink className="first__img" to={`/book/${id}`}><img src={thumbnail} alt="product image" /></NavLink>
           {/* <a className="second__img animation1" href="single-product.html"><img src={thumbnail} alt="product image" /></a> */}
-          <div className="hot__box">
-            <span className="hot-label">BEST SALLER</span>
-          </div>
+          {discountRate > 0 && <div className="hot__box">
+            <span className="hot-label">-{discountRate * 100}%</span>
+          </div>}
         </div>
         <div className="product__content content--center">
           <h4><NavLink to={`/book/${id}`}>{title}</NavLink></h4>
           <ul className="prize d-flex">
-            <li>${basePrice}</li>
-            <li className="old_prize">$35.00</li>
+            <li><NumberFormat value={discountedPrice} displayType={'text'}
+              suffix="đ" thousandSeparator={true} /></li>
+            {discountRate>0&&<li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
+              suffix="đ" thousandSeparator={true} /></li>}
           </ul>
           <div className="action">
             <div className="actions_inner">

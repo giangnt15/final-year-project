@@ -72,11 +72,16 @@ const Query = {
                 collectionName_contains: name
             }
         }
-        return prisma.query.collections({
+        const totalCount = await prisma.query.collectionsConnection({
             where: {
-                id
+                collectionName_contains: name
             }
-        }, info);
+        }, `{aggregate{count}}`);
+        const collections = await prisma.query.collections(opArgs);
+        return {
+            collections,
+            totalCount: totalCount.aggregate.count
+        }
     },
     async getCollection(parent, { id }, { prisma }, info) {
         return prisma.query.collection({

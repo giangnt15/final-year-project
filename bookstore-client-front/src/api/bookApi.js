@@ -17,6 +17,12 @@ export const GET_BOOKS = gql`
         publishedDate
         availableCopies
         pages
+        discounts{
+          id
+          from
+          to
+          discountRate
+        }
         publisher{
           id
           name
@@ -99,6 +105,12 @@ export const GET_BOOK = gql`
       publishedDate
       availableCopies
       pages
+      discounts{
+        id
+        from
+        to
+        discountRate
+      }
       publisher{
         id
         name

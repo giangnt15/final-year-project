@@ -1499,6 +1499,7 @@ h3.widget-title-modal {
 .ht__bradcaump__area {
     padding-bottom: 110px;
     padding-top: 220px;
+    background-attachment: fixed;
 }
 
 .bradcaump__inner .bradcaump-title {

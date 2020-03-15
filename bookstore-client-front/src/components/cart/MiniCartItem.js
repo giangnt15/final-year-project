@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
+import { calculateDiscount } from '../../utils/common';
 
 export default function MiniCartItem(props) {
     const {cartItem, removeItemFromCart} = props;
-    const { title, id, basePrice, qty, thumbnail } = cartItem;
+    const { title, id, basePrice, qty, thumbnail, discounts } = cartItem;
+    const [discountedPrice, discountedRate] = calculateDiscount(basePrice,discounts);
     return (
         <div className="item01 d-flex mt--20">
             <div className="thumb">
@@ -12,7 +14,7 @@ export default function MiniCartItem(props) {
             </div>
             <div className="content">
                 <h6><NavLink to={`/book/${id}`} className="text-ellipsis">{title}</NavLink></h6>
-                <span className="prize"><NumberFormat value={basePrice*qty} displayType={'text'}
+                <span className="prize"><NumberFormat value={discountedPrice*qty} displayType={'text'}
                       suffix="đ" thousandSeparator={true} /></span>
                 <div className="product_prize d-flex justify-content-between">
                     <span className="qun"><NumberFormat value={qty} displayType={'text'}

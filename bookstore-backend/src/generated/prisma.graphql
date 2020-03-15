@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Fri Mar 13 2020 22:43:48 GMT+0700 (Indochina Time)
+# timestamp: Sun Mar 15 2020 17:23:44 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -1264,11 +1264,6 @@ input BookCreateManyWithoutCollectionsInput {
   connect: [BookWhereUniqueInput!]
 }
 
-input BookCreateManyWithoutDiscountsInput {
-  create: [BookCreateWithoutDiscountsInput!]
-  connect: [BookWhereUniqueInput!]
-}
-
 input BookCreateManyWithoutPublisherInput {
   create: [BookCreateWithoutPublisherInput!]
   connect: [BookWhereUniqueInput!]
@@ -1276,6 +1271,11 @@ input BookCreateManyWithoutPublisherInput {
 
 input BookCreateOneInput {
   create: BookCreateInput
+  connect: BookWhereUniqueInput
+}
+
+input BookCreateOneWithoutDiscountsInput {
+  create: BookCreateWithoutDiscountsInput
   connect: BookWhereUniqueInput
 }
 
@@ -3190,18 +3190,6 @@ input BookUpdateManyWithoutCollectionsInput {
   upsert: [BookUpsertWithWhereUniqueWithoutCollectionsInput!]
 }
 
-input BookUpdateManyWithoutDiscountsInput {
-  create: [BookCreateWithoutDiscountsInput!]
-  connect: [BookWhereUniqueInput!]
-  set: [BookWhereUniqueInput!]
-  disconnect: [BookWhereUniqueInput!]
-  delete: [BookWhereUniqueInput!]
-  update: [BookUpdateWithWhereUniqueWithoutDiscountsInput!]
-  updateMany: [BookUpdateManyWithWhereNestedInput!]
-  deleteMany: [BookScalarWhereInput!]
-  upsert: [BookUpsertWithWhereUniqueWithoutDiscountsInput!]
-}
-
 input BookUpdateManyWithoutPublisherInput {
   create: [BookCreateWithoutPublisherInput!]
   connect: [BookWhereUniqueInput!]
@@ -3224,6 +3212,13 @@ input BookUpdateOneRequiredInput {
   connect: BookWhereUniqueInput
   update: BookUpdateDataInput
   upsert: BookUpsertNestedInput
+}
+
+input BookUpdateOneRequiredWithoutDiscountsInput {
+  create: BookCreateWithoutDiscountsInput
+  connect: BookWhereUniqueInput
+  update: BookUpdateWithoutDiscountsDataInput
+  upsert: BookUpsertWithoutDiscountsInput
 }
 
 input BookUpdateOneRequiredWithoutReviewsInput {
@@ -3373,11 +3368,6 @@ input BookUpdateWithWhereUniqueWithoutCollectionsInput {
   data: BookUpdateWithoutCollectionsDataInput!
 }
 
-input BookUpdateWithWhereUniqueWithoutDiscountsInput {
-  where: BookWhereUniqueInput!
-  data: BookUpdateWithoutDiscountsDataInput!
-}
-
 input BookUpdateWithWhereUniqueWithoutPublisherInput {
   where: BookWhereUniqueInput!
   data: BookUpdateWithoutPublisherDataInput!
@@ -3386,6 +3376,11 @@ input BookUpdateWithWhereUniqueWithoutPublisherInput {
 input BookUpsertNestedInput {
   update: BookUpdateDataInput!
   create: BookCreateInput!
+}
+
+input BookUpsertWithoutDiscountsInput {
+  update: BookUpdateWithoutDiscountsDataInput!
+  create: BookCreateWithoutDiscountsInput!
 }
 
 input BookUpsertWithoutReviewsInput {
@@ -3415,12 +3410,6 @@ input BookUpsertWithWhereUniqueWithoutCollectionsInput {
   where: BookWhereUniqueInput!
   update: BookUpdateWithoutCollectionsDataInput!
   create: BookCreateWithoutCollectionsInput!
-}
-
-input BookUpsertWithWhereUniqueWithoutDiscountsInput {
-  where: BookWhereUniqueInput!
-  update: BookUpdateWithoutDiscountsDataInput!
-  create: BookCreateWithoutDiscountsInput!
 }
 
 input BookUpsertWithWhereUniqueWithoutPublisherInput {
@@ -3927,7 +3916,6 @@ type Collection implements Node {
   collectionName: String!
   description: String
   thumbnail: String!
-  cover: String!
   books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -3948,7 +3936,6 @@ input CollectionCreateInput {
   collectionName: String!
   description: String
   thumbnail: String!
-  cover: String!
   books: BookCreateManyWithoutCollectionsInput
 }
 
@@ -3962,7 +3949,6 @@ input CollectionCreateWithoutBooksInput {
   collectionName: String!
   description: String
   thumbnail: String!
-  cover: String!
 }
 
 """An edge in a connection."""
@@ -3983,8 +3969,6 @@ enum CollectionOrderByInput {
   description_DESC
   thumbnail_ASC
   thumbnail_DESC
-  cover_ASC
-  cover_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -3996,7 +3980,6 @@ type CollectionPreviousValues {
   collectionName: String!
   description: String
   thumbnail: String!
-  cover: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -4170,46 +4153,6 @@ input CollectionScalarWhereInput {
 
   """All values not ending with the given string."""
   thumbnail_not_ends_with: String
-  cover: String
-
-  """All values that are not equal to given value."""
-  cover_not: String
-
-  """All values that are contained in given list."""
-  cover_in: [String!]
-
-  """All values that are not contained in given list."""
-  cover_not_in: [String!]
-
-  """All values less than the given value."""
-  cover_lt: String
-
-  """All values less than or equal the given value."""
-  cover_lte: String
-
-  """All values greater than the given value."""
-  cover_gt: String
-
-  """All values greater than or equal the given value."""
-  cover_gte: String
-
-  """All values containing the given string."""
-  cover_contains: String
-
-  """All values not containing the given string."""
-  cover_not_contains: String
-
-  """All values starting with the given string."""
-  cover_starts_with: String
-
-  """All values not starting with the given string."""
-  cover_not_starts_with: String
-
-  """All values ending with the given string."""
-  cover_ends_with: String
-
-  """All values not ending with the given string."""
-  cover_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -4297,7 +4240,6 @@ input CollectionUpdateInput {
   collectionName: String
   description: String
   thumbnail: String
-  cover: String
   books: BookUpdateManyWithoutCollectionsInput
 }
 
@@ -4305,14 +4247,12 @@ input CollectionUpdateManyDataInput {
   collectionName: String
   description: String
   thumbnail: String
-  cover: String
 }
 
 input CollectionUpdateManyMutationInput {
   collectionName: String
   description: String
   thumbnail: String
-  cover: String
 }
 
 input CollectionUpdateManyWithoutBooksInput {
@@ -4336,7 +4276,6 @@ input CollectionUpdateWithoutBooksDataInput {
   collectionName: String
   description: String
   thumbnail: String
-  cover: String
 }
 
 input CollectionUpdateWithWhereUniqueWithoutBooksInput {
@@ -4519,46 +4458,6 @@ input CollectionWhereInput {
 
   """All values not ending with the given string."""
   thumbnail_not_ends_with: String
-  cover: String
-
-  """All values that are not equal to given value."""
-  cover_not: String
-
-  """All values that are contained in given list."""
-  cover_in: [String!]
-
-  """All values that are not contained in given list."""
-  cover_not_in: [String!]
-
-  """All values less than the given value."""
-  cover_lt: String
-
-  """All values less than or equal the given value."""
-  cover_lte: String
-
-  """All values greater than the given value."""
-  cover_gt: String
-
-  """All values greater than or equal the given value."""
-  cover_gte: String
-
-  """All values containing the given string."""
-  cover_contains: String
-
-  """All values not containing the given string."""
-  cover_not_contains: String
-
-  """All values starting with the given string."""
-  cover_starts_with: String
-
-  """All values not starting with the given string."""
-  cover_not_starts_with: String
-
-  """All values ending with the given string."""
-  cover_ends_with: String
-
-  """All values not ending with the given string."""
-  cover_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -4620,7 +4519,7 @@ type Discount implements Node {
   discountRate: Float
   from: DateTime
   to: DateTime
-  appliedTo(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
+  appliedTo: Book!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -4641,7 +4540,7 @@ input DiscountCreateInput {
   discountRate: Float
   from: DateTime
   to: DateTime
-  appliedTo: BookCreateManyWithoutDiscountsInput
+  appliedTo: BookCreateOneWithoutDiscountsInput!
 }
 
 input DiscountCreateManyWithoutAppliedToInput {
@@ -4936,7 +4835,7 @@ input DiscountUpdateInput {
   discountRate: Float
   from: DateTime
   to: DateTime
-  appliedTo: BookUpdateManyWithoutDiscountsInput
+  appliedTo: BookUpdateOneRequiredWithoutDiscountsInput
 }
 
 input DiscountUpdateManyDataInput {
@@ -5187,9 +5086,7 @@ input DiscountWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  appliedTo_every: BookWhereInput
-  appliedTo_some: BookWhereInput
-  appliedTo_none: BookWhereInput
+  appliedTo: BookWhereInput
 }
 
 input DiscountWhereUniqueInput {

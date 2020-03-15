@@ -18,6 +18,8 @@ import AccountPage from './components/pages/auth/AccountPage';
 import CartPage from './components/pages/cart/CartPage';
 import CheckoutPage from './components/cart/CheckoutPage';
 import PrivateRoute from './components/shared/PrivateRoute';
+import CollectionsPage from './components/collection/CollectionsPage';
+import CollectionPage from './components/collection/CollectionPage';
 
 function App(props) {
     let history = useHistory();
@@ -29,6 +31,8 @@ function App(props) {
         <Switch>
           <Route path="/" exact component={HomePage}></Route>
           <Route path="/home" exact component={HomePage}></Route>
+          <Route path="/collections" exact component={CollectionsPage}></Route>
+          <Route path="/collection/:id" exact component={CollectionPage}></Route>
           <Route path="/auth/login" exact component={LoginPage}></Route>
           <Route path="/auth/signup" exact component={SignupPage}></Route>
           <Route path="/auth/account" render={()=><PrivateRoute render={() => <AccountPage />} />}></Route>

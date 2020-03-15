@@ -38,7 +38,7 @@ function ShopGrid(props) {
   // const goToPage = (pageNumber) => {
   //   setCurrentPage(pageNumber);
   // }
-  const { books, userSettings, changeShopPage, changeSortDirection, changeViewMode, filters, client } = props;
+  const { books, userSettings, changeShopPage, changeSortDirection, changeViewMode, filters, client} = props;
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publishers, setPublishers] = useState([]);
@@ -336,6 +336,12 @@ function ShopGrid(props) {
           publishedDate
           availableCopies
           pages
+          discounts{
+            id 
+            from 
+            to 
+            discountRate
+          }
           publisher{
             id
             name
@@ -395,7 +401,7 @@ function ShopGrid(props) {
                 <nav className="bradcaump-content">
                   <NavLink className="breadcrumb_item" to="/">Trang chủ</NavLink>
                   <span className="brd-separetor">/</span>
-                  <span className="breadcrumb_item active">Shop</span>
+                  <span className="breadcrumb_item active">Cửa hàng sách</span>
                 </nav>
               </div>
             </div>

@@ -13,6 +13,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_CATEGORIES } from '../../../api/categoryApi';
 import { GET_AUTHORS } from '../../../api/authorApi';
 import { FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT,RESET_FILTERS } from '../../../constants';
+import { GET_COLLECTIONS } from '../../../api/collectionApi';
 
 function Header(props) {
 
@@ -35,6 +36,15 @@ function Header(props) {
   });
 
   const { loading: loadingAuthors, data: dataAuthors = {} } = useQuery(GET_AUTHORS, {
+    variables: {
+      first: 8
+    },
+    onError(err) {
+      console.log(err.toString());
+    }
+  });
+
+  const { loading: loadingCollection, data: dataCollections = {getCollections: {}} } = useQuery(GET_COLLECTIONS, {
     variables: {
       first: 8
     },
@@ -125,12 +135,13 @@ function Header(props) {
                       <li><NavLink to="/books" style={{ fontWeight: 600 }}>Tất cả tác giả <i className="fs-13 fa fa-angle-right"></i></NavLink></li>
                     </ul>
                     <ul className="item item03">
-                      <li className="title">Collections</li>
-                      <li><a href="shop-grid.html">Science </a></li>
-                      <li><a href="shop-grid.html">Fiction/Fantasy</a></li>
-                      <li><a href="shop-grid.html">Self-Improvemen</a></li>
-                      <li><a href="shop-grid.html">Home &amp; Garden</a></li>
-                      <li><a href="shop-grid.html">Humor Books</a></li>
+                      <li className="title">Tuyển tập</li>
+                      {!loadingCollection &&dataCollections.getCollections && dataCollections.getCollections.collections.map(item => (
+                        <li key={item.id} onClick={() => {
+                          history.push("/collection/"+item.id);
+                        }}><a>{item.collectionName} </a></li>
+                      ))}
+                      <li><NavLink to="/collections" style={{ fontWeight: 600 }}>Tất cả tuyển tập <i className="fs-13 fa fa-angle-right"></i></NavLink></li>
                     </ul>
                   </div>
                 </li>
@@ -139,8 +150,7 @@ function Header(props) {
           </div>
           <div className="col-md-6 col-sm-6 col-6 col-lg-2">
             <ul className="header__sidebar__right d-flex justify-content-end align-items-center">
-              <li className="shop_search" onClick={toggleSearch}><a className="search__active" href="#" /></li>
-              <li className="wishlist"><a href="#" /></li>
+              <li className="shop_search p-r-20 p-l-10" onClick={toggleSearch}><a className="search__active" href="#" /></li>
               <li className="shopcart">
                 <Popover style={{ overflow: 'auto' }} placement="bottom" content={
                   <div><MiniCart cart={cart} /></div>

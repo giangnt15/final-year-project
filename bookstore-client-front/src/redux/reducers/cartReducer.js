@@ -1,4 +1,5 @@
 import { ADD_SINGLE_ITEM_TO_CART, ADDING_SINGLE_ITEMS_TO_CART, ADD_SINGLE_ITEMS_TO_FAILED, CHANGE_CART_ITEM_QTY_FAILED, CHANGE_CART_ITEM_QTY_SUCCESSFULLY, CHANGING_CART_ITEM_QTY, REMOVE_ITEM_FROM_CART_SUCCESSFULLY, RESET_CART } from "../../constants";
+import { calculateDiscount } from "../../utils/common";
 
 
 const calculateCartTotalQty = (items) => {
@@ -13,10 +14,14 @@ const calculateCartTotalQty = (items) => {
 
 const calculateCartSubTotal = (items) => {
     if (items.length === 0) return 0;
-    if (items.length === 1) return items[0].qty * items[0].basePrice;
+    if (items.length === 1) {
+        const [discountedPrice, discountRate] = calculateDiscount(items[0].basePrice, items[0].discounts);
+        return items[0].qty * discountedPrice;
+    }
     let subTotal = 0;
     for (let item of items) {
-        subTotal += item.basePrice * item.qty;
+        const [discountedPrice, discountRate] = calculateDiscount(item.basePrice, item.discounts);
+        subTotal += discountedPrice * item.qty;
     }
     return subTotal;
 }
@@ -25,11 +30,11 @@ const bsCartJSON = localStorage.getItem('bs_cart');
 let cartItems = [];
 try {
     cartItems = JSON.parse(bsCartJSON);
-    if (!Array.isArray(cartItems)){
+    if (!Array.isArray(cartItems)) {
         cartItems = [];
     }
-}catch{
-    cartItems =[];
+} catch{
+    cartItems = [];
 }
 
 const initialState = {
@@ -56,7 +61,7 @@ export default function cartReducer(state = initialState, action) {
             } else {
                 items.push({ ...action.item, qty: action.qty });
             }
-            localStorage.setItem('bs_cart',JSON.stringify(items));
+            localStorage.setItem('bs_cart', JSON.stringify(items));
             return {
                 ...state,
                 cartTotalQty: calculateCartTotalQty(items),
@@ -68,8 +73,8 @@ export default function cartReducer(state = initialState, action) {
             itemExisted = items.find(item => item.id === action.item.id);
             if (itemExisted) {
                 itemExisted.qty = parseInt(action.qty)
-            } 
-            localStorage.setItem('bs_cart',JSON.stringify(items));
+            }
+            localStorage.setItem('bs_cart', JSON.stringify(items));
             return {
                 ...state,
                 adding: false,
@@ -84,15 +89,15 @@ export default function cartReducer(state = initialState, action) {
                 adding: false
             }
         case REMOVE_ITEM_FROM_CART_SUCCESSFULLY:
-            items = items.filter(item=>item.id!==action.itemId);
-            localStorage.setItem('bs_cart',JSON.stringify(items));
+            items = items.filter(item => item.id !== action.itemId);
+            localStorage.setItem('bs_cart', JSON.stringify(items));
             return {
                 ...state,
                 items,
                 cartTotalQty: calculateCartTotalQty(items),
                 cartSubTotal: calculateCartSubTotal(items)
             }
-        case RESET_CART: 
+        case RESET_CART:
             return {
                 items: [],
                 adding: false,

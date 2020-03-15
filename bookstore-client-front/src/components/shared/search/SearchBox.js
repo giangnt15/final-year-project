@@ -82,6 +82,12 @@ function SearchBox(props) {
             publishedDate
             availableCopies
             pages
+            discounts{
+              id 
+              from 
+              to 
+              discountRate
+            }
             publisher{
               id
               name

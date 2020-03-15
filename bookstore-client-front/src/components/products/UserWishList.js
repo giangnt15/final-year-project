@@ -14,6 +14,7 @@ function UserWishList(props) {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu")
         },
+        fetchPolicy: 'network-only',
         onCompleted(data) {
             if (!data.getWishList.statusCode === 200) {
                 message.error(data.getWishList.message);

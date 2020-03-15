@@ -15,6 +15,7 @@ import { RESET_FILTERS, FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISH
 import { addSingleItemToCartAysnc } from '../../../redux/actions/cartAction';
 import { withApollo } from '@apollo/react-hoc';
 import ProductSectionContainer from '../../../containers/products/ProductSectionContainer';
+import { calculateDiscount } from '../../../utils/common';
 
 function ProductPage(props) {
   const { auth, changeFilter, cart, addSingleItemToCart } = props;
@@ -30,14 +31,14 @@ function ProductPage(props) {
       id: bookId
     }
   });
-  const [addBookToWishList, {loading: addingToWishList}] = useMutation(ADD_BOOK_TO_WISH_LIST,{
-    onError(){
+  const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
+    onError() {
       message.error("Có lỗi xảy ra, vui lòng thử lại sau");
     },
-    onCompleted(data){
-      if (data.addBookToWishList.statusCode===200){
+    onCompleted(data) {
+      if (data.addBookToWishList.statusCode === 200) {
         message.success("Đã thêm vào danh sách ưa thích")
-      }else {
+      } else {
         message.error(data.addBookToWishList.message);
       }
     }
@@ -90,8 +91,8 @@ function ProductPage(props) {
   }
 
   const avgScore = calculateReviewScore(dataBookReviews ? dataBookReviews.getBookReviewsByBook : undefined);
-
-  const { id, title, basePrice, description, thumbnail, dimensions, translator, format, isbn, publishedDate, availableCopies, pages, publisher, authors, categories } = data.getBook;
+  const { id, title, basePrice, description, thumbnail, dimensions, translator, format, isbn, publishedDate, discounts, availableCopies, pages, publisher, authors, categories } = data.getBook;
+  const [discountedPrice, discountRate] = calculateDiscount(basePrice, discounts);
   return (
     <Fragment>
       <div className="ht__bradcaump__area bg-image--5">
@@ -129,12 +130,12 @@ function ProductPage(props) {
                         <div className="book-authors">
                           Tác giả:&nbsp;
                       {authors.map((item, index) => (
-                            <Fragment key={item.id} ><a onClick={() => {
-                              changeFilter(RESET_FILTERS);
-                              changeFilter(FILTER_TYPE_AUTHOR, item.id);
-                              history.push('/books');
-                            }} className="text-primary">{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
-                          ))}
+                          <Fragment key={item.id} ><a onClick={() => {
+                            changeFilter(RESET_FILTERS);
+                            changeFilter(FILTER_TYPE_AUTHOR, item.id);
+                            history.push('/books');
+                          }} className="text-primary">{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
+                        ))}
                         </div>
                         &nbsp;&nbsp;&nbsp;
                     <div className="book-format text-primary">
@@ -146,8 +147,11 @@ function ProductPage(props) {
                         <a onClick={() => onReadMoreClick('review')}>(Xem {dataBookReviews ? dataBookReviews.getBookReviewsByBook.totalCount : 0} đánh giá)</a>
                       </div>
                       <div className="price-box">
-                        <span><NumberFormat value={basePrice} displayType={'text'}
+                        <span><NumberFormat value={discountedPrice} displayType={'text'}
                           suffix="đ" thousandSeparator={true} /></span>
+                       {discountRate>0&& <p style={{ textDecoration: 'line-through' }}>
+                          <NumberFormat style={{fontSize: 'inherit', color: 'inherit', fontWeight: 300}} value={basePrice} displayType={'text'}
+                            suffix="đ" thousandSeparator={true} /></p>}
                       </div>
                       <div className="product__overview">
                         <div className="product_overview_content" dangerouslySetInnerHTML={{ __html: description }}></div>
@@ -175,11 +179,11 @@ function ProductPage(props) {
                             htmlType="submit" title="Add to Cart">THÊM VÀO GIỎ</Button>
                         </div>
                         <div className="product-addto-links clearfix">
-                          <a className="wishlist" onClick={()=>addBookToWishList({
+                          <a className="wishlist" onClick={() => addBookToWishList({
                             variables: {
                               bookId
                             }
-                          })}/>
+                          })} />
                         </div>
                       </div>
                       <div className="product_meta">
@@ -309,6 +313,12 @@ function ProductPage(props) {
                 publishedDate
                 availableCopies
                 pages
+                discounts{
+                  id 
+                  from 
+                  to 
+                  discountRate
+                }
                 publisher{
                   id
                   name
@@ -349,6 +359,12 @@ function ProductPage(props) {
                 publishedDate
                 availableCopies
                 pages
+                discounts{
+                  id 
+                  from 
+                  to 
+                  discountRate
+                }
                 publisher{
                   id
                   name

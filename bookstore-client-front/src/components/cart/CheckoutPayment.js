@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { CREATE_ORDER } from '../../api/orderApi';
 import { resetCart } from '../../redux/actions/cartAction';
 import { connect } from 'react-redux';
+import { calculateDiscount } from '../../utils/common';
 
 const { Group: RadioGroup } = Radio;
 
@@ -98,16 +99,18 @@ function CheckoutPayment(props) {
                             </div>
                         </div>
                         <div className="card-body">
-                            {orderItems.map(item => (
+                            {orderItems.map(item =>{
+                                const [discountedPrice] = calculateDiscount(item.basePrice, item.discounts);
+                                return (
                                 <div key={item.id} className="d-flex fs-11" style={{
                                     justifyContent: 'space-between', paddingBottom: 8,
                                     borderBottom: '1px solid rgba(0,0,0,.125)'
                                 }}>
                                     <div style={{ maxWidth: "80%" }}>{item.qty} x <NavLink className="text-primary" to={"/book/" + item.id}>{item.title}</NavLink></div>
-                                    <NumberFormat value={item.qty * item.basePrice} displayType={'text'}
+                                    <NumberFormat value={item.qty * discountedPrice} displayType={'text'}
                                         suffix="đ" thousandSeparator={true} />
                                 </div>
-                            ))}
+                            )})}
                             <div className="m-t-8 fs-11 p-b-8" style={{
                                 borderBottom: '2px solid #000'
                             }}>

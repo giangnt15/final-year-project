@@ -5,10 +5,12 @@ import { Input } from 'antd';
 import { connect } from 'react-redux';
 import { addSingleItemToCartAysnc, changeCartItemQtyAsync } from '../../../redux/actions/cartAction';
 import { withApollo } from '@apollo/react-hoc';
+import { calculateDiscount } from '../../../utils/common';
 
 function CartPageItem(props) {
 
     const { book, changeCartItemQty, removeItemFromCart} = props;
+    const [discountedPrice] = calculateDiscount(book.basePrice, book.discounts);
 
     return (
         <div className="row shopping-cart-item p-b-8 m-b-8" style={{ flexWrap: 'nowrap', borderBottom: '1px solid #ccc' }}>
@@ -27,7 +29,7 @@ function CartPageItem(props) {
                         </p>
                         <p className="cart-item-price">
                             <span className="font-weight-bold">
-                                <NumberFormat value={book.basePrice} displayType={'text'}
+                                <NumberFormat value={discountedPrice} displayType={'text'}
                                     suffix="đ" thousandSeparator={true} />
                             </span>
                         </p>

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import getUserId from '../utils/getUserId';
 import checkAdmin, { getUserRole } from '../utils/adminAuth';
+import moment from 'moment';
 
 const Mutation = {
     async signUp(parent, { data }, { prisma, env }, info) {
@@ -341,7 +342,7 @@ const Mutation = {
             } else {
                 let orderItemPrice = orderItems[i].basePrice;
                 for (let discount of orderItems[i].discounts) {
-                    if (moment(discount.from).isBefore(moment()) && moment().isAfter(moment(discount.to))) {
+                    if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
                         orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate) * data.items[i].quantity)
                     }
                 }

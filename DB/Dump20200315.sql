@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `BookReview` WRITE;
 /*!40000 ALTER TABLE `BookReview` DISABLE KEYS */;
-INSERT INTO `BookReview` VALUES ('ck7dgw9y100fx0711506l4t70','Raat hayyyyyyyyy!','',5,'2020-03-04 15:19:58.296','2020-03-04 15:19:58.296','ck7dfix1600eg0711i0q0d8k7','ck64vufmf03bi08187dgw90b8'),('ck7dgwrmv00gb0711m38yuv60','khong hayyyyyyyyy!','',1,'2020-03-04 15:20:21.222','2020-03-04 15:20:21.222','ck7dfix1600eg0711i0q0d8k7','ck64vufmf03bi08187dgw90b8'),('ck7ewby4m00r807113zal8tye','Binh thuong','',3,'2020-03-05 15:19:49.894','2020-03-05 15:19:49.894','ck7dfix1600eg0711i0q0d8k7','ck64u9izx02co0818ey28y9w2'),('ck7ixy66m03v40711l73w5rgp','Goog','Rất hay',5,'2020-03-08 11:16:11.086','2020-03-08 11:16:11.086','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt');
+INSERT INTO `BookReview` VALUES ('ck7dgw9y100fx0711506l4t70','Raat hayyyyyyyyy!','',5,'2020-03-04 15:19:58.296','2020-03-04 15:19:58.296','ck7dfix1600eg0711i0q0d8k7','ck64vufmf03bi08187dgw90b8'),('ck7dgwrmv00gb0711m38yuv60','khong hayyyyyyyyy!','',1,'2020-03-04 15:20:21.222','2020-03-04 15:20:21.222','ck7dfix1600eg0711i0q0d8k7','ck64vufmf03bi08187dgw90b8'),('ck7ewby4m00r807113zal8tye','Binh thuong','',3,'2020-03-05 15:19:49.894','2020-03-05 15:19:49.894','ck7dfix1600eg0711i0q0d8k7','ck64u9izx02co0818ey28y9w2'),('ck7ixy66m03v40711l73w5rgp','Goog','Rất hay',5,'2020-03-08 11:16:11.086','2020-03-08 11:16:11.086','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt'),('ck7j2ijbc004u074567ey57w8','OK','',5,'2020-03-08 13:23:59.653','2020-03-08 13:23:59.653','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt');
 /*!40000 ALTER TABLE `BookReview` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,6 +61,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `BookReviewReply` WRITE;
 /*!40000 ALTER TABLE `BookReviewReply` DISABLE KEYS */;
+INSERT INTO `BookReviewReply` VALUES ('ck7j3zufx00de0745nyjp8uj5','OK','2020-03-08 14:05:26.876','2020-03-08 14:05:26.876','ck7j2ijbc004u074567ey57w8','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt'),('ck7j43r5800e50745cm8it9tm','Ok cái gì?','2020-03-08 14:08:29.228','2020-03-08 14:08:29.228','ck7j2ijbc004u074567ey57w8','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt'),('ck7j44na900ek0745ju7jd3y2','Good?','2020-03-08 14:09:10.880','2020-03-08 14:09:10.880','ck7ixy66m03v40711l73w5rgp','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt'),('ck7j475q700fb0745wwo8py5v','ý là Good?','2020-03-08 14:11:08.095','2020-03-08 14:11:08.095','ck7ixy66m03v40711l73w5rgp','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt'),('dfbcjsd1','Thế à','2020-03-08 12:21:11.000','2020-03-08 12:21:11.000','ck7ixy66m03v40711l73w5rgp','ck7dfix1600eg0711i0q0d8k7','ck64w2o5i03gn0818ak740gbt');
 /*!40000 ALTER TABLE `BookReviewReply` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,6 +71,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Collection` WRITE;
 /*!40000 ALTER TABLE `Collection` DISABLE KEYS */;
+INSERT INTO `Collection` VALUES ('ck7sh7nar01390745lmdm6ju6','Danh tác Việt Nam - Tuyển tập','Việt Nam danh tác khởi đầu với giai đoạn văn học sử 1930 - 1945. Đây là thời kỳ văn học tiếng Việt đạt nhiều thành tựu cả thơ và văn xuôi, đánh dấu sự chuyển mình của các tác gia Việt Nam thoát ly văn chương biền ngẫu với ảnh hưởng của văn học phương Tây, đặc biệt ảnh hưởng từ Pháp. Ở giai đoạn này, dễ dàng nhận thấy có nhiều phong cách mang đậm dấu ấn cá nhân, đề cao cái tôi trong sáng tạo của từng nhà văn. Dấu ấn đó được thấy rõ với “Việc làng” của Ngô Tất Tố, một tác phẩm phác họa làng quê Bắc kỳ đầy những hủ tục với những rối rắm trong làng xóm, họ hàng…Hay “Số đỏ” của Vũ Trọng Phụng đã dựng lên một bức tranh về một xã hội kệch cỡm ở Hà Nội những năm 30 của thế kỷ XX. Sự tinh tế của người xưa được lột tả rõ nét với những thú chơi tao nhã như: ẩm trà, ẩm tửu, thả thơ, cho chữ…qua tác phẩm “Vang bóng một thời ” của Nguyễn Tuân. Những món ngon, phong vị ẩm thực riêng của đất Hà Thành đều có đủ trong “Miếng ngon Hà Nội” của Vũ Bằng..Riêng nhà văn Thạch Lam có tới hai tác phẩm gồm tập chuyện ngắn “Gió đầu mùa” và bút ký “Hà Nội băm sáu phố phường” trong bộ Danh tác Việt Nam. Với những người yêu Hà Nội thì đọc Danh tác Việt Nam không chỉ là đọc những tác phẩm văn học có giá trị mà qua đây, người đọc còn có thể tìm lại hình ảnh một Hà Nội xưa với vẻ đẹp bình dị nhưng quý phái đủ mê hoặc lòng người; hay tìm lại ký ức xưa với những gánh hàng rong, những hoài niệm một thời…','https://toquoc.mediacdn.vn/upload/oldcinetvn/userfiles/image/2014/danh%20tac.jpg','2020-03-15 03:25:21.459','2020-03-15 03:25:21.459');
 /*!40000 ALTER TABLE `Collection` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,6 +81,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Discount` WRITE;
 /*!40000 ALTER TABLE `Discount` DISABLE KEYS */;
+INSERT INTO `Discount` VALUES ('ck7sxac6d02ai07457utdytpq',NULL,0.200000000000000000000000000000,'2020-03-14 00:00:00.000','2020-03-30 00:00:00.000','2020-03-15 10:55:20.868','2020-03-15 10:55:20.868','ck64tzwle026t0818z0ny19sx');
 /*!40000 ALTER TABLE `Discount` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +101,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Order` WRITE;
 /*!40000 ALTER TABLE `Order` DISABLE KEYS */;
-INSERT INTO `Order` VALUES ('ck7hh9ikx038a0711raue9jth',0,NULL,NULL,'2020-03-07 10:41:20.707','2020-03-07 10:41:20.707','ck7dfix1600eg0711i0q0d8k7','ck7dfjkyn00f50711ldc93e2v','COD',0.000000000000000000000000000000,82000.000000000000000000000000000000,82000.000000000000000000000000000000,'STD_DELIVERY','Ordered'),('ck7ijdvjq03li0711inalqwrl',0,NULL,NULL,'2020-03-08 04:28:29.557','2020-03-08 04:28:29.557','ck7dfix1600eg0711i0q0d8k7','ck7dfjkyn00f50711ldc93e2v','COD',0.000000000000000000000000000000,82000.000000000000000000000000000000,82000.000000000000000000000000000000,'STD_DELIVERY','Ordered'),('ck7ijhrss03mh0711jqxq60ky',0,NULL,NULL,'2020-03-08 04:31:31.323','2020-03-08 05:30:25.654','ck7dfix1600eg0711i0q0d8k7','ck7dfjkyn00f50711ldc93e2v','COD',0.000000000000000000000000000000,109000.000000000000000000000000000000,109000.000000000000000000000000000000,'STD_DELIVERY','Canceled');
+INSERT INTO `Order` VALUES ('ck7qa4f7k00680745bitqvtrw','Canceled',0,0.000000000000000000000000000000,345000.000000000000000000000000000000,345000.000000000000000000000000000000,NULL,NULL,'2020-03-13 14:31:21.342','2020-03-13 14:34:10.802','ck7dfix1600eg0711i0q0d8k7','STD_DELIVERY','COD','Tòa nhà Technosoft, Ngõ 15, phố Duy Tân','0369735088','Nguyễn Trường Giang','005','01','00167'),('ck7syqcfu02il0745q1yb2964','Canceled',0,0.000000000000000000000000000000,50000.000000000000000000000000000000,50000.000000000000000000000000000000,NULL,NULL,'2020-03-15 11:35:47.321','2020-03-15 11:37:13.388','ck7dfix1600eg0711i0q0d8k7','STD_DELIVERY','COD','Tòa nhà Technosoft, Ngõ 15, phố Duy Tân','0369735088','Nguyễn Trường Giang','005','01','00167'),('ck7sysqdu02jk0745uq55vgq1','Ordered',0,0.000000000000000000000000000000,170000.000000000000000000000000000000,170000.000000000000000000000000000000,NULL,NULL,'2020-03-15 11:37:38.704','2020-03-15 11:37:38.704','ck7dfix1600eg0711i0q0d8k7','STD_DELIVERY','COD','Tòa nhà Technosoft, Ngõ 15, phố Duy Tân','0369735088','Nguyễn Trường Giang','005','01','00167');
 /*!40000 ALTER TABLE `Order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,7 +111,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `OrderItem` WRITE;
 /*!40000 ALTER TABLE `OrderItem` DISABLE KEYS */;
-INSERT INTO `OrderItem` VALUES ('ck7hh9il3038b0711jcvyv4o6',1,'2020-03-07 10:41:20.720','2020-03-07 10:41:20.720','ck64w2o5i03gn0818ak740gbt','ck7hh9ikx038a0711raue9jth',82000.000000000000000000000000000000),('ck7ijdvk303lj071118owr5rf',1,'2020-03-08 04:28:29.558','2020-03-08 04:28:29.558','ck64w2o5i03gn0818ak740gbt','ck7ijdvjq03li0711inalqwrl',82000.000000000000000000000000000000),('ck7ijhrsv03mi0711tvud9s7m',1,'2020-03-08 04:31:31.324','2020-03-08 04:31:31.324','ck64w2o5i03gn0818ak740gbt','ck7ijhrss03mh0711jqxq60ky',27000.000000000000000000000000000000),('ck7ijhrt203mj07115nhkzins',1,'2020-03-08 04:31:31.324','2020-03-08 04:31:31.324','ck64uwxie02r908187xkmh2vh','ck7ijhrss03mh0711jqxq60ky',82000.000000000000000000000000000000);
+INSERT INTO `OrderItem` VALUES ('ck7hh9il3038b0711jcvyv4o6',1.000000000000000000000000000000,2020,'2020-03-07 10:41:20.720','0000-00-00 00:00:00.000','ck7hh9ikx038a0711raue9jth','82000.0000000000000000000'),('ck7ijdvk303lj071118owr5rf',1.000000000000000000000000000000,2020,'2020-03-08 04:28:29.558','0000-00-00 00:00:00.000','ck7ijdvjq03li0711inalqwrl','82000.0000000000000000000'),('ck7ijhrsv03mi0711tvud9s7m',1.000000000000000000000000000000,2020,'2020-03-08 04:31:31.324','0000-00-00 00:00:00.000','ck7ijhrss03mh0711jqxq60ky','27000.0000000000000000000'),('ck7ijhrt203mj07115nhkzins',1.000000000000000000000000000000,2020,'2020-03-08 04:31:31.324','0000-00-00 00:00:00.000','ck7ijhrss03mh0711jqxq60ky','82000.0000000000000000000'),('ck7oz0dse00f307450gags63q',76000.000000000000000000000000000000,2,'2020-03-12 16:32:30.912','2020-03-12 16:32:30.912','ck64vufmf03bi08187dgw90b8',NULL),('ck7oz0dsp00f407454uxgu3oj',27000.000000000000000000000000000000,1,'2020-03-12 16:32:30.913','2020-03-12 16:32:30.913','ck64uwxie02r908187xkmh2vh',NULL),('ck7oz0dsx00f50745hec4fcxd',109000.000000000000000000000000000000,1,'2020-03-12 16:32:30.913','2020-03-12 16:32:30.913','ck64unn0l02lh08183umlulbg',NULL),('ck7q8v1xj002m0745xpiw0vmz',95000.000000000000000000000000000000,1,'2020-03-13 13:56:04.531','2020-03-13 13:56:04.531','ck64sn4oh01lo0818qta5k6sn',NULL),('ck7qa4f7y00690745xhvm4uaz',345000.000000000000000000000000000000,1,'2020-03-13 14:31:21.343','2020-03-13 14:31:21.343','ck5gy8ykf00h907187dx089au','ck7qa4f7k00680745bitqvtrw'),('ck7syqcfz02im0745b4l7mkse',50000.000000000000000000000000000000,1,'2020-03-15 11:35:47.321','2020-03-15 11:35:47.321','ck64tzwle026t0818z0ny19sx','ck7syqcfu02il0745q1yb2964'),('ck7sysqe902jl0745s3y2ccvp',130000.000000000000000000000000000000,1,'2020-03-15 11:37:38.705','2020-03-15 11:37:38.705','ck64tq6mm020u0818prsyeypb','ck7sysqdu02jk0745uq55vgq1'),('ck7sysqef02jm0745b6jvjsrf',40000.000000000000000000000000000000,1,'2020-03-15 11:37:38.706','2020-03-15 11:37:38.706','ck64tzwle026t0818z0ny19sx','ck7sysqdu02jk0745uq55vgq1');
 /*!40000 ALTER TABLE `OrderItem` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +161,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES ('ck7c61nmj00du0711onfd716t','boybuon_50@yahoo.com',NULL,'boybuon_50@yahoo.com',NULL,'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=2477126849170231&height=50&width=50&ext=1585848492&hash=AeT9aY8qMZaJAs-F',NULL,'1998-02-15 00:00:00.000','$2a$10$KrBBSVFq1Yv./CXxYAX5/e1oP5yptvs5hdVVUe3CllAY96MMxYiSG','User',0,'2020-03-03 17:28:27.355','2020-03-03 17:28:27.355'),('ck7dfix1600eg0711i0q0d8k7','boybuon_501@yahoo.com','Nguyễn Trường Giang','boybuon_501@yahoo.com','0369735088','https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=2477126849170231&height=50&width=50&ext=1585924883&hash=AeQJexC_qy_KkUop',1,'1998-02-15 00:00:00.000','$2a$10$su3/Li4Dl6Nm3l7z1ROlCu8GIWY6cpwpnlxwjoLcHYdoP3bImqquy','User',0,'2020-03-04 14:41:35.418','2020-03-08 05:39:34.614');
+INSERT INTO `User` VALUES ('ck7c61nmj00du0711onfd716t','boybuon_50@yahoo.com',NULL,'boybuon_50@yahoo.com',NULL,'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=2477126849170231&height=50&width=50&ext=1585848492&hash=AeT9aY8qMZaJAs-F',NULL,'1998-02-15 00:00:00.000','$2a$10$KrBBSVFq1Yv./CXxYAX5/e1oP5yptvs5hdVVUe3CllAY96MMxYiSG','User',0,'2020-03-03 17:28:27.355','2020-03-03 17:28:27.355'),('ck7dfix1600eg0711i0q0d8k7','boybuon_501@yahoo.com','Nguyễn Trường Giang','boybuon_501@yahoo.com','0369735088','https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=2477126849170231&height=50&width=50&ext=1585924883&hash=AeQJexC_qy_KkUop',1,'1998-02-15 00:00:00.000','$2a$10$su3/Li4Dl6Nm3l7z1ROlCu8GIWY6cpwpnlxwjoLcHYdoP3bImqquy','User',0,'2020-03-04 14:41:35.418','2020-03-12 16:39:09.129');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +171,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `UserAddress` WRITE;
 /*!40000 ALTER TABLE `UserAddress` DISABLE KEYS */;
-INSERT INTO `UserAddress` VALUES ('ck7c54w2800bv0711e5ijwb6c','Tòa nhà Technosoft, Ngõ 15 Duy Tân','0369735088','Nguyễn Trường Giang','2020-03-03 17:02:58.639','2020-03-03 17:02:58.639',NULL,'00167','005','01'),('ck7dfjkyn00f50711ldc93e2v','đường Nguyễn Chí Thanh, quận 8','3697350889','Giang','2020-03-04 14:42:06.431','2020-03-04 14:42:06.431','ck7dfix1600eg0711i0q0d8k7','00001','001','01');
+INSERT INTO `UserAddress` VALUES ('ck7c54w2800bv0711e5ijwb6c','Tòa nhà Technosoft, Ngõ 15 Duy Tân','0369735088','Nguyễn Trường Giang','2020-03-03 17:02:58.639','2020-03-03 17:02:58.639',NULL,'00167','005','01'),('ck7niu69r0026074513hu8k12','Tòa nhà Technosoft, Ngõ 15, phố Duy Tân','0369735088','Nguyễn Trường Giang','2020-03-11 16:12:01.177','2020-03-13 14:03:39.409','ck7dfix1600eg0711i0q0d8k7','00167','005','01');
 /*!40000 ALTER TABLE `UserAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,16 +220,18 @@ UNLOCK TABLES;
 
 LOCK TABLES `_BookToCollection` WRITE;
 /*!40000 ALTER TABLE `_BookToCollection` DISABLE KEYS */;
+INSERT INTO `_BookToCollection` VALUES ('ck64tzwle026t0818z0ny19sx','ck7sh7nar01390745lmdm6ju6'),('ck64u9izx02co0818ey28y9w2','ck7sh7nar01390745lmdm6ju6'),('ck64uih1h02i60818rwdqwnpj','ck7sh7nar01390745lmdm6ju6'),('ck64unn0l02lh08183umlulbg','ck7sh7nar01390745lmdm6ju6'),('ck64uwxie02r908187xkmh2vh','ck7sh7nar01390745lmdm6ju6'),('ck64v3p5y02vh0818i8xvgyqy','ck7sh7nar01390745lmdm6ju6'),('ck64vufmf03bi08187dgw90b8','ck7sh7nar01390745lmdm6ju6');
 /*!40000 ALTER TABLE `_BookToCollection` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `_DiscountToBook`
+-- Dumping data for table `_BookToUser`
 --
 
-LOCK TABLES `_DiscountToBook` WRITE;
-/*!40000 ALTER TABLE `_DiscountToBook` DISABLE KEYS */;
-/*!40000 ALTER TABLE `_DiscountToBook` ENABLE KEYS */;
+LOCK TABLES `_BookToUser` WRITE;
+/*!40000 ALTER TABLE `_BookToUser` DISABLE KEYS */;
+INSERT INTO `_BookToUser` VALUES ('ck64u9izx02co0818ey28y9w2','ck7dfix1600eg0711i0q0d8k7'),('ck64uih1h02i60818rwdqwnpj','ck7dfix1600eg0711i0q0d8k7');
+/*!40000 ALTER TABLE `_BookToUser` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -238,4 +243,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-08 20:14:02
+-- Dump completed on 2020-03-15 19:08:50

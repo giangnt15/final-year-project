@@ -29,7 +29,6 @@ type Collection{
     collectionName: String!
     description: String
     thumbnail: String!
-    cover: String!
     books: [Book!]!
     createdAt: String!
     updatedAt: String! 
@@ -187,7 +186,7 @@ type Discount{
     discountRate: Float
     from: String
     to: String
-    appliedTo: [Book!]!
+    appliedTo: Book!
 }
 
 type Publisher{
@@ -238,7 +237,7 @@ type Query{
     getCategory(id: ID!): BookCategory!
     getAuthors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
     getAuthor(id: ID!): Author!
-    getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): [Collection!]!
+    getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): GetCollectionsPayload!
     getCollection(id: ID!): Collection!
     getBookReviewsByBook(bookId: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
     getBookReviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
@@ -252,6 +251,11 @@ type Query{
     getOrderById(id: ID!): Order!
     getReviewRepliesByReview(reviewId: ID!): [BookReviewReply!]!
     getWishList: GetWishListPayload!
+}
+
+type GetCollectionsPayload{
+    collections: [Collection!]!
+    totalCount: Int
 }
 
 type Mutation{

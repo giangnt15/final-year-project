@@ -2,8 +2,6 @@ import React, { Fragment } from 'react';
 import SlickSlider from '../shared/slider/SlickSlider';
 import MainSlider from '../shared/slider/MainSlider';
 import ProductSectionContainer from '../../containers/products/ProductSectionContainer';
-import ResponsiveDialog from '../shared/dialog/CustomDialog';
-import { TextField } from '@material-ui/core';
 
 function HomePage(props) {
     return (
@@ -33,6 +31,12 @@ function HomePage(props) {
                 publishedDate
                 availableCopies
                 pages
+                discounts{
+                  id 
+                  from 
+                  to 
+                  discountRate
+              }
                 publisher{
                   id
                   name
@@ -73,6 +77,12 @@ function HomePage(props) {
                 publishedDate
                 availableCopies
                 pages
+                discounts{
+                  id 
+                  from 
+                  to 
+                  discountRate
+              }
                 publisher{
                   id
                   name
