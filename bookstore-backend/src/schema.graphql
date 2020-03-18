@@ -261,6 +261,7 @@ type Query{
     getOrderById(id: ID!): Order!
     getReviewRepliesByReview(reviewId: ID!): [BookReviewReply!]!
     getWishList: GetWishListPayload!
+    getBestSeller(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksPayload!
 }
 
 type GetCollectionsPayload{

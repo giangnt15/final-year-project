@@ -53,13 +53,23 @@ function CheckoutAddress(props) {
                         </div>}
             </div>
             <p className="m-t-8 fs-12" style={{ color: '#000' }}>Bạn muốn giao hàng tới một địa chỉ khác?
-                <a className="text-primary" onClick={() => setDrawerVisible(true)}>Thêm địa chỉ giao hàng mới</a>
+                <a className="text-primary" onClick={() => {
+                    setEdittingAddress({
+                        fullName: '',
+                        phone: '',
+                        address: '',
+                        province: '',
+                        district: '',
+                        ward: ''
+                    });
+                    setDrawerVisible(true)
+                }}>Thêm địa chỉ giao hàng mới</a>
             </p>
-            <UserAddressDrawer 
-            drawerVisible={drawerVisible} 
-            setDrawerVisible={setDrawerVisible} 
-            isCreating={!edittingAddress.id} edittingAddress={edittingAddress}
-            refetchUserAddresses={refetchUserAddresses} />
+            <UserAddressDrawer
+                drawerVisible={drawerVisible}
+                setDrawerVisible={setDrawerVisible}
+                isCreating={!edittingAddress.id} edittingAddress={edittingAddress}
+                refetchUserAddresses={refetchUserAddresses} />
         </div>
     )
 }

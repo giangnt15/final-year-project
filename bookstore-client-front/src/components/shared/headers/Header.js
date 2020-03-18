@@ -145,6 +145,7 @@ function Header(props) {
                     </ul>
                   </div>
                 </li>
+                <li className="drop with--one--item"><NavLink to="/best-seller">Bán chạy</NavLink></li>
               </ul>
             </nav>
           </div>

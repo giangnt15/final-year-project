@@ -8,7 +8,12 @@ const env = {
     PRISMA_SECRET: process.env.PRISMA_SECRET,
     JWT_SECRET: process.env.JWT_SECRET,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-    CLIENT_HOST: process.env.CLIENT_HOST
+    CLIENT_HOST: process.env.CLIENT_HOST,
+    MYSQL_HOST: process.env.MYSQL_HOST,
+    MYSQL_PORT: process.env.MYSQL_PORT,
+    MYSQL_USER: process.env.MYSQL_USER,
+    MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
+    MYSQL_DB_NAME: process.env.MYSQL_DB_NAME
 }
 
 export default env;

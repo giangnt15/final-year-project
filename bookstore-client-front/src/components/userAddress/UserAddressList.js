@@ -50,13 +50,28 @@ function UserAddressList(props) {
                                     <div className="card" style={{
                                         borderStyle: 'dashed', cursor: 'pointer',
                                         alignItems: 'center', justifyContent: 'center'
-                                    }} onClick={() => { setEdittingAddress(); setDrawerVisible(true) }}>
+                                    }} onClick={() => { setEdittingAddress({
+                                        fullName: '',
+                                        phone: '',
+                                        address: '',
+                                        province: '',
+                                        district: '',
+                                        ward: ''
+                                    }); setDrawerVisible(true) }}>
                                         <div className="card-body d-flex">
                                             <i className="fa fa-plus" style={{ color: "#7E7E7E", fontSize: 20 }}></i>&nbsp;
                                 </div>
                                     </div>
-                                </div></Fragment> : <div className="d-flex justify-content-center w-100">
+                                </div></Fragment> : <div className="d-flex align-items-center flex-column justify-content-center w-100">
                                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Bạn chưa có địa chỉ giao hàng nào" />
+                                <a className="text-primary" onClick={() => { setEdittingAddress({
+                                        fullName: '',
+                                        phone: '',
+                                        address: '',
+                                        province: '',
+                                        district: '',
+                                        ward: ''
+                                    });setDrawerVisible(true) }}>Thêm</a>
                             </div>}
                 </div>
             </div>

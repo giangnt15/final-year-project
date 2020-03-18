@@ -22,6 +22,7 @@ import CollectionsPage from './components/collection/CollectionsPage';
 import CollectionPage from './components/collection/CollectionPage';
 import ForgotPassword from './components/pages/auth/ForgotPassword';
 import ResetPassword from './components/pages/auth/ResetPassword';
+import BestSellerList from './components/shared/shop/BestSellerList';
 
 function App(props) {
     let history = useHistory();
@@ -45,6 +46,7 @@ function App(props) {
           <Route path="/checkout" exact render={()=><PrivateRoute render={() => <CheckoutPage />} />}></Route>
           <Route path="/book/:id" component={ProductPage}></Route>
           <Route path="/books" exact render={(props) => <ShopGridContainer {...props} />}></Route>
+          <Route path="/best-seller" exact render={(props) => <BestSellerList {...props} />}></Route>
           <Route component={NotFound404Page}></Route>
         </Switch>
         {!isLoginPage && <BackToTop />}

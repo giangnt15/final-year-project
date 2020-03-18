@@ -1,5 +1,6 @@
 import getUserId from '../utils/getUserId';
 import checkAdmin, { getUserRole } from '../utils/adminAuth';
+import prisma from '../prisma';
 
 const Query = {
     async getBooks(parent, args, { prisma }, info) {
@@ -267,22 +268,22 @@ const Query = {
             throw new Error("Bạn không có quyền xem đơn hàng này.")
         }
     },
-    async getReviewRepliesByReview(parent, {reviewId},{prisma},info){
+    async getReviewRepliesByReview(parent, { reviewId }, { prisma }, info) {
         return prisma.query.bookReviewReplies({
             where: {
                 bookReview: {
                     id: reviewId
                 }
             }
-        },info);
+        }, info);
     },
-    async getWishList(parent, args, {prisma,httpContext,info}){
+    async getWishList(parent, args, { prisma, httpContext, info }) {
         const userId = getUserId(httpContext);
         const user = await prisma.query.user({
             where: {
                 id: userId
             }
-        },`{id wishList{id title thumbnail reviews{id rating}}}`);
+        }, `{id wishList{id title thumbnail reviews{id rating}}}`);
         return {
             statusCode: 200,
             message: "Đã bỏ khỏi danh sách ưa thích",
@@ -290,6 +291,88 @@ const Query = {
                 books: user.wishList
             }
         }
+    },
+    async getBestSeller(parent, { first, skip, dateFrom, dateTo }, { mySqlConnection }, info) {
+        let books = [];
+        let totalCount = 0;
+        const getBooks = () => new Promise((res, rej) => {
+            mySqlConnection.query(`
+            CALL Proc_GetBestSeller(${skip},${first}, ${dateFrom ? `'${dateFrom}'` : 'null'}, ${dateTo ? `'${dateTo}'` : 'null'} );
+            `, (err, res0, fields) => {
+                if (err) {
+                    console.log(err);
+                    rej(err);
+                }
+                books = res0[0];
+                mySqlConnection.query(`
+                CALL Proc_CountBestSeller(${dateFrom ? `'${dateFrom}'` : 'null'}, ${dateTo ? `'${dateTo}'` : 'null'});
+                `, (err, res1, fields) => {
+                    if (err) {
+                        console.log(err);
+                        rej(err);
+                    }
+                    totalCount = res1[0][0].totalCount;
+                    res({
+                        books,
+                        totalCount
+                    });
+                });
+            });
+
+        });
+        try {
+           const result = await getBooks();
+            if (result.books && result.books.length > 0) {
+                const books1 = prisma.query.books({
+                    where: {
+                        id_in: result.books.map(item=>item.id)
+                    }
+                },`{
+                    id
+                    title
+                    basePrice
+                    description
+                    thumbnail
+                    images
+                    dimensions
+                    translator
+                    format
+                    isbn
+                    publishedDate
+                    availableCopies
+                    pages
+                    discounts{
+                      id
+                      from
+                      to
+                      discountRate
+                    }
+                    publisher{
+                      id
+                      name
+                    }
+                    authors{
+                      id
+                      pseudonym
+                    }
+                    categories{
+                      id
+                      name
+                    }
+                  }`)
+                return {
+                    books: books1,
+                    totalCount
+                }
+            }
+            throw new Error();
+        } catch (ex) {
+            return {
+                books: [],
+                totalCount: 0
+            }
+        }
+
     }
 }
 

@@ -126,3 +126,44 @@ export const GET_BOOK = gql`
     }
   }
 `;
+
+export const GET_BEST_SELLER = gql`
+  query getBestSeller($first: Int!, $skip: Int!, $dateFrom: String, $dateTo: String){
+    getBestSeller(first: $first, skip: $skip, dateFrom: $dateFrom, dateTo: $dateTo){
+      books{
+        id
+        title
+        basePrice
+        description
+        thumbnail
+        images
+        dimensions
+        translator
+        format
+        isbn
+        publishedDate
+        availableCopies
+        pages
+        discounts{
+          id
+          from
+          to
+          discountRate
+        }
+        publisher{
+          id
+          name
+        }
+        authors{
+          id
+          pseudonym
+        }
+        categories{
+          id
+          name
+        }
+      }
+      totalCount
+    }
+  }
+`
