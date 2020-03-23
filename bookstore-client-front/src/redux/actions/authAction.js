@@ -68,11 +68,24 @@ export const login = (client, { email, password }) => {
                     }
                 }
             });
-            localStorage.setItem('userInfo', JSON.stringify(res.data.login.user));
-            localStorage.setItem('token', res.data.login.token);
-            dispatch(loginSuccessfully(res.data.login));
+            if (res.data.login.statusCode === 200) {
+                localStorage.setItem('userInfo', JSON.stringify(res.data.login.user));
+                localStorage.setItem('token', res.data.login.token);
+                dispatch(loginSuccessfully(res.data.login));
+            } else if (res.data.login.statusCode === 400) {
+                message.error(res.data.login.message);
+                dispatch(loginFailed());
+            } else if (res.data.login.statusCode === 405) {
+                localStorage.setItem('userInfo', JSON.stringify(res.data.login.user));
+                history.push('/email-activation');
+                dispatch(loginFailed());
+            }else{
+                dispatch(loginFailed());
+            }
+
         } catch (ex) {
             console.log(ex)
+            message.error("Có lỗi xảy ra, vui lòng thử lại sau");
             dispatch(loginFailed());
         }
     }
@@ -98,7 +111,7 @@ export const updateUser = (client, data) => {
     }
 }
 
-export const signUp = (client, { email, username, password, avatar, birthdate,fullName,gender,phone }) => {
+export const signUp = (client, { email, username, password, avatar, birthdate, fullName, gender, phone }) => {
     return async dispatch => {
         dispatch(signingUp());
         try {
@@ -119,6 +132,7 @@ export const signUp = (client, { email, username, password, avatar, birthdate,fu
             });
             localStorage.setItem('userInfo', JSON.stringify(res.data.signUp.user));
             localStorage.setItem('token', res.data.signUp.token);
+            history.push('/email-activation');
             dispatch(signUpSuccessfully(res.data.signUp));
         } catch (ex) {
             dispatch(signUpFailed());

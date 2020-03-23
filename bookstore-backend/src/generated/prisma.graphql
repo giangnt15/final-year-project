@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Sun Mar 15 2020 19:55:13 GMT+0700 (Indochina Time)
+# timestamp: Sat Mar 21 2020 19:33:18 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -8706,6 +8706,7 @@ type User implements Node {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole!
   receiveEmailNotification: Boolean!
   addresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress!]
@@ -9354,6 +9355,7 @@ input UserCreateInput {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
@@ -9404,6 +9406,7 @@ input UserCreateWithoutAddressesInput {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole
   receiveEmailNotification: Boolean!
   orders: OrderCreateManyWithoutCustomerInput
@@ -9423,6 +9426,7 @@ input UserCreateWithoutAuthTokenInput {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
@@ -9442,6 +9446,7 @@ input UserCreateWithoutOrdersInput {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
@@ -9461,6 +9466,7 @@ input UserCreateWithoutReviewsInput {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
@@ -9480,6 +9486,7 @@ input UserCreateWithoutUserEventsInput {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole
   receiveEmailNotification: Boolean!
   addresses: UserAddressCreateManyWithoutUserInput
@@ -9972,6 +9979,8 @@ enum UserOrderByInput {
   birthdate_DESC
   password_ASC
   password_DESC
+  isActive_ASC
+  isActive_DESC
   role_ASC
   role_DESC
   receiveEmailNotification_ASC
@@ -9992,6 +10001,7 @@ type UserPreviousValues {
   gender: Boolean
   birthdate: DateTime
   password: String!
+  isActive: Boolean!
   role: UserRole!
   receiveEmailNotification: Boolean!
   createdAt: DateTime!
@@ -10049,6 +10059,7 @@ input UserUpdateDataInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
@@ -10068,6 +10079,7 @@ input UserUpdateInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
@@ -10087,6 +10099,7 @@ input UserUpdateManyMutationInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
 }
@@ -10142,6 +10155,7 @@ input UserUpdateWithoutAddressesDataInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   orders: OrderUpdateManyWithoutCustomerInput
@@ -10160,6 +10174,7 @@ input UserUpdateWithoutAuthTokenDataInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
@@ -10178,6 +10193,7 @@ input UserUpdateWithoutOrdersDataInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
@@ -10196,6 +10212,7 @@ input UserUpdateWithoutReviewsDataInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
@@ -10214,6 +10231,7 @@ input UserUpdateWithoutUserEventsDataInput {
   gender: Boolean
   birthdate: DateTime
   password: String
+  isActive: Boolean
   role: UserRole
   receiveEmailNotification: Boolean
   addresses: UserAddressUpdateManyWithoutUserInput
@@ -10568,6 +10586,10 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   password_not_ends_with: String
+  isActive: Boolean
+
+  """All values that are not equal to given value."""
+  isActive_not: Boolean
   role: UserRole
 
   """All values that are not equal to given value."""

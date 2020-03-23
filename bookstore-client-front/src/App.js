@@ -23,10 +23,11 @@ import CollectionPage from './components/collection/CollectionPage';
 import ForgotPassword from './components/pages/auth/ForgotPassword';
 import ResetPassword from './components/pages/auth/ResetPassword';
 import BestSellerList from './components/shared/shop/BestSellerList';
+import ActivationEmailPage from './components/pages/auth/ActivationEmailPage';
 
 function App(props) {
     let history = useHistory();
-    const isLoginPage = history.location.pathname.endsWith("/auth/login") 
+    const isLoginPage = history.location.pathname.endsWith("/auth/login")  || history.location.pathname.endsWith("/email-activation") 
     || history.location.pathname.endsWith("/auth/signup") || history.location.pathname.indexOf("/reset-password")>=0
     return (
       <Fragment>
@@ -41,6 +42,7 @@ function App(props) {
           <Route path="/reset-password" exact component={ForgotPassword}></Route>
           <Route path="/reset-password/:token" exact component={ResetPassword}></Route>
           <Route path="/auth/signup" exact component={SignupPage}></Route>
+          <Route path="/email-activation" exact component={ActivationEmailPage}></Route>
           <Route path="/auth/account" render={()=><PrivateRoute render={() => <AccountPage />} />}></Route>
           <Route path="/checkout/cart" exact render={()=><CartPage />}></Route>
           <Route path="/checkout" exact render={()=><PrivateRoute render={() => <CheckoutPage />} />}></Route>

@@ -7,24 +7,52 @@ import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
 
 const Mutation = {
-    async signUp(parent, { data }, { prisma, env }, info) {
+    async signUp(parent, { data }, { prisma, env ,sgMailer}, info) {
         const hashed = await bcrypt.hash(data.password, 10);
-        console.log(data);
         const user = await prisma.mutation.createUser({
             data: {
                 ...data,
                 receiveEmailNotification: false,
+                isActive: false,
                 role: 'User',
                 password: hashed
             }
         });
+        const token = uuidv4();
+        const authToken = await prisma.mutation.createAuthToken({
+            data: {
+                token,
+                expiredAfter: 86400000,
+                type: "ActivationToken",
+                user: {
+                    connect: {
+                        id: user.id
+                    }
+                }
+            }
+        });
+        try {
+            sgMailer.send({
+                from: {
+                    email: "noreply@bookstore.vn",
+                    name: "Bookstore"
+                },
+                to: data.email,
+                html: emailTemplate.accountActivation(`${env.CLIENT_HOST}/account-activation/${token}`),
+                subject: "[Bookstore] Kích hoạt tài khoản",
+            });
+        }catch(err){
+            console.log(err);
+        }
         return {
+            statusCode: 405,
+            message: "Tài khoản chưa được kích hoạt",
             user,
-            token: jwt.sign({
-                userId: user.id,
-            }, env.JWT_SECRET, {
-                expiresIn: '2 days'
-            })
+            // token: jwt.sign({
+            //     userId: user.id,
+            // }, env.JWT_SECRET, {
+            //     expiresIn: '2 days'
+            // })
         }
     },
     async login(parent, { data }, { prisma, env }, info) {
@@ -39,14 +67,29 @@ const Mutation = {
             }
         });
         if (!users.length) {
-            throw new Error("Wrong username or password!");
+            return {
+                statusCode: 400,
+                message: "Sai tên đăng nhập hoặc mật khẩu"
+            }
         }
         const user = users[0];
         const matched = await bcrypt.compare(password, user.password);
         if (!matched) {
-            throw new Error("Wrong username or password!");
+            return {
+                statusCode: 400,
+                message: "Sai tên đăng nhập hoặc mật khẩu"
+            }
+        }
+        if (!user.isActive){
+            return {
+                statusCode: 405,
+                message: "Tài khoản chưa được kích hoạt",
+                user
+            }
         }
         return {
+            statusCode: 200,
+            message: "OK",
             user,
             token: jwt.sign({
                 userId: user.id,
@@ -531,7 +574,7 @@ const Mutation = {
             message: "Đã bỏ khỏi danh sách ưa thích"
         }
     },
-    async createPasswordToken(parent, { email }, { prisma, sgMailer,env }, info) {
+    async createPasswordToken(parent, { email }, { prisma, sgMailer, env }, info) {
         const user = await prisma.query.user({
             where: {
                 email
@@ -570,19 +613,19 @@ const Mutation = {
             message: "OK"
         }
     },
-    async resetPassword(parent, { passwordToken ,password }, { prisma }, info) {
+    async resetPassword(parent, { passwordToken, password }, { prisma }, info) {
         const authToken = await prisma.query.authToken({
             where: {
                 token: passwordToken
             }
         }, `{id token expiredAfter type createdAt user{id}}`);
-        if (!authToken){
+        if (!authToken) {
             return {
                 statusCode: 400,
                 message: "Token không hợp lệ"
             }
         }
-        if (moment(authToken.createdAt).add(authToken.expiredAfter, 'milliseconds').isBefore(moment())){
+        if (moment(authToken.createdAt).add(authToken.expiredAfter, 'milliseconds').isBefore(moment())) {
             return {
                 statusCode: 400,
                 message: "Token đã hết hạn"
