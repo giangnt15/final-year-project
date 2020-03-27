@@ -37,7 +37,17 @@
     width: 20px
 }
 
-.sidebar-menu>li:hover>a, .sidebar-menu>li.active>a {
+.sidebar-menu>li:hover>a {
+    color: #fff;
+    background: #1e282c;
+}
+
+.sidebar-menu>li.hover>a {
+    color: #fff;
+    background: #1e282c;
+}
+
+.sidebar-menu>li.active>a {
     color: #fff;
     background: #1e282c;
     border-left-color: #3c8dbc
@@ -66,10 +76,6 @@
     padding: 0;
     margin-right: 10px;
     margin-top: 3px
-}
-
-.sidebar-menu li.active>a>.fa-angle-left {
-    transform: rotate(-90deg)
 }
 
 .sidebar-menu li.active>.treeview-menu {
@@ -109,6 +115,10 @@
 
 .sidebar-menu .treeview-menu>li.active>a, .sidebar-menu .treeview-menu>li>a:hover {
     color: #fff
+}
+
+.sidebar-menu .treeview-menu>li.active>a, .sidebar-menu .treeview-menu>li>a.active {
+    color: #fff !important;
 }
 
 @media (min-width:768px) {

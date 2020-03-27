@@ -1,5 +1,13 @@
 import gql from 'graphql-tag';
 
+export const CREATE_BOOK = gql`
+  mutation createBook($data: BookCreateInput!){
+    createBook(data: $data){
+      id
+    }
+  }
+`
+
 export const GET_BOOKS = gql`
   query getBooks($where: BookWhereInput, $orderBy: BookOrderByInput, $first: Int, $skip: Int, $selection: String){
     getBooks(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection) {

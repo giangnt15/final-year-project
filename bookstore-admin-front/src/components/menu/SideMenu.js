@@ -1,7 +1,75 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import './SidebarNav.min.css';
+import { NavLink, useLocation } from 'react-router-dom';
+
 
 function SideMenu(props) {
+
+    const location = useLocation();
+    const { pathname } = location;
+
+    const [navs, setNavs] = useState([
+        {
+            label: "Dashboard",
+            link: "/",
+            icon: 'dashboard'
+        },
+        {
+            label: "Danh mục",
+            icon: 'book',
+            children: [{
+                label: "Sách",
+                link: "/catalog/books"
+            }, {
+                label: "Thể loại",
+                link: '/catalog/categories'
+            }, {
+                label: "Tuyển tập",
+                link: '/catalog/collections'
+            }, {
+                label: "Đánh giá",
+                link: '/catalog/reviews',
+            }, {
+                label: "Tác giả",
+                link: "/catalog/authors",
+            },
+            {
+                label: "Nhà xuất bản",
+                link: '/catalog/publishers'
+            }]
+        }, {
+            label: "Bán hàng",
+            icon: 'shopping-cart',
+            children: [{
+                label: "Đơn hàng",
+                link: '/sales/orders'
+            }]
+        }, {
+            label: "Người dùng",
+            icon: 'users',
+            children: [{
+                label: "Người dùng",
+                link: '/users/users'
+            }]
+        }, 
+        {
+            label: "Khuyến mại",
+            icon: "gift",
+            children: [{
+                link: "/promotion/discounts",
+                label: 'Giảm giá'
+            }]
+        }
+    ])
+    const isLinkActive = (nav) => {
+        if (nav.link) {
+            if (pathname === nav.link)
+                return true;
+            return false;
+        }
+        return nav.children.some(item => item.link === pathname);
+    }
+
     return (
         <div className="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
             {/*left-fixed -navigation*/}
@@ -19,75 +87,42 @@ function SideMenu(props) {
                     <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul className="sidebar-menu">
                             <li className="header">MAIN NAVIGATION</li>
-                            <li className="treeview">
-                                <a href="index.html">
-                                    <i className="fa fa-dashboard" /> <span>Dashboard</span>
+                            {navs.map((nav, index) => (<li key={index}
+                                onClick={(e) => {
+                                    setNavs(prev => {
+                                        const newState = [...prev];
+                                        if (!newState[index].isOpen) {
+                                            newState.forEach(item => item.isOpen = undefined);
+                                            newState[index].isOpen = true;
+                                        } else {
+                                            newState[index].isOpen = undefined;
+                                        }
+                                        return newState;
+                                    });
+                                }}
+                                className={`treeview${isLinkActive(nav) ? " active" : ""}`}>
+                                {!nav.link ? <Fragment><a>
+                                    <i className={`fa fa-${nav.icon}`} /> <span>{nav.label}</span>
+                                    <i className={`fa fa-angle-${nav.isOpen ? 'down m-t-4' : 'left'} pull-right`}></i>
                                 </a>
-                            </li>
-                            <li className="treeview">
-                                <a href="#">
-                                    <i className="fa fa-book" />
-                                    <span>Danh mục</span>
-                                    <i className="fa fa-angle-left pull-right" />
-                                </a>
-                                <ul className="treeview-menu">
-                                    <li><a href="grids.html"><i className="fa fa-angle-right" /> Grids</a></li>
-                                    <li><a href="media.html"><i className="fa fa-angle-right" /> Media Css</a></li>
-                                </ul>
-                            </li>
-                            <li className="treeview">
-                                <a href="charts.html">
-                                    <i className="fa fa-shopping-cart" />
-                                    <span>Bán hàng</span>
-                                    {/* <span className="label label-primary pull-right">new</span> */}
-                                    <i className="fa fa-angle-left pull-right" />
-                                </a>
-                            </li>
-                            <li className="treeview">
-                                <a href="charts.html">
-                                    <i className="fa fa-comments" />
-                                    <span>Đánh giá</span>
-                                </a>
-                            </li>
-                            <li className="treeview">
-                            </li><li className="treeview">
-                                <a href="#">
-                                    <i className="fa fa-archive" />
-                                    <span>Tuyển tập</span>
-                                    <i className="fa fa-angle-left pull-right" />
-                                </a>
-                                <ul className="treeview-menu">
-                                    <li><a href="general.html"><i className="fa fa-angle-right" /> General</a></li>
-                                    <li><a href="icons.html"><i className="fa fa-angle-right" /> Icons</a></li>
-                                    <li><a href="buttons.html"><i className="fa fa-angle-right" /> Buttons</a></li>
-                                    <li><a href="typography.html"><i className="fa fa-angle-right" /> Typography</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="widgets.html">
-                                    <i className="fa fa-pencil-square-o" /> <span>Tác giả</span>
-                                    <small className="label pull-right label-info">08</small>
-                                </a>
-                            </li>
-                            <li className="treeview">
-                                <a href="#">
-                                    <i className="fa fa-gift" /> <span>Khuyến mại</span>
-                                    <i className="fa fa-angle-left pull-right" />
-                                </a>
-                                <ul className="treeview-menu">
-                                    <li><a href="forms.html"><i className="fa fa-angle-right" /></a></li>
-                                    <li><a href="validation.html"><i className="fa fa-angle-right" /> Form Validations</a></li>
-                                </ul>
-                            </li>
-                            <li className="treeview">
-                                <a href="#">
-                                    <i className="fa fa-globe" /> <span>Nhà xuất bản</span>
-                                    <i className="fa fa-angle-left pull-right" />
-                                </a>
-                                <ul className="treeview-menu">
-                                    <li><a href="tables.html"><i className="fa fa-angle-right" /> Simple tables</a></li>
-                                </ul>
-                            </li>
+                                    {nav.children &&
+                                        <ul className={`treeview-menu${nav.isOpen ? " menu-open" : ""}`} style={{ display: nav.isOpen ? 'block' : 'none' }}>
+                                            {
+                                                nav.children.map((c, i) => {
+                                                    return (
+                                                        <li key={i}>
+                                                            <NavLink onClick={(e) => e.stopPropagation()} to={c.link} activeClassName="active">
+                                                                <i className="fa fa-angle-right" /> {c.label}
+                                                            </NavLink>
+                                                        </li>
+                                                    )
+                                                })
+                                            }
+                                        </ul>}
+                                </Fragment> : (<NavLink to={nav.link} activeClassName="active">
+                                    <i className={`fa fa-${nav.icon}`} /> <span>{nav.label}</span>
+                                </NavLink>)}
+                            </li>))}
                         </ul>
                     </div>
                     {/* /.navbar-collapse */}

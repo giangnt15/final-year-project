@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, Fragment } from 'react';
-import { Collapse, Select, message, Table, Button, Input, Checkbox } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-
+import { Collapse, Select, message, Table, Button, Input, Checkbox, Icon } from 'antd';
+import { SearchOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import useScroll from '../../custom-hooks/useScroll';
 
 const { Panel } = Collapse;
 
@@ -144,11 +144,16 @@ function ListCommon(Component, defaultOrderBy, listName) {
             }
         }
 
+        const isScrolled = useScroll(62);
 
         return (
             <div className="content-wrapper">
-                <div className="content-header m-b-20">
+                <div className={`content-header m-b-20${isScrolled?' sticky':''}`}>
                     <h3>{listName}</h3>
+                    <div className="pull-right">
+                        <Button type="primary"><PlusOutlined /> Thêm mới</Button>
+                        <Button  className="m-l-8" type="danger"><DeleteOutlined /> Xóa chọn</Button>
+                    </div>
                 </div>
                 <div className="content-body">
                     <Component {...props} filterDropdownCustom={filterDropdownCustom}
@@ -156,7 +161,7 @@ function ListCommon(Component, defaultOrderBy, listName) {
                         orderBy={orderBy}
                         handleSearch={handleSearch} handleReset={handleReset}
                         searchValues={searchValues} setSearchValues={setSearchValues}
-                        rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}
+                        rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}   
                         selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys}
                         currentPage={currentPage} setCurrentPage={setCurrentPage}
                         renderSort={renderSort}

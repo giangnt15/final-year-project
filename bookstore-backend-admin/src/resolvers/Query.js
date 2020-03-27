@@ -37,6 +37,20 @@ const Query = {
         }, info);
         return categories;
     },
+    async getCategoriesPaging(parent, args, { prisma }, info) {
+        const { where, orderBy, first, skip } = args;
+        const categories = await prisma.query.bookCategories({
+            where,
+            orderBy,
+            first,
+            skip
+        }, `{id name createdAt updatedAt}`);
+        const count = await prisma.query.bookCategoriesConnection({ where }, `{aggregate {count}}`);
+        return {
+            categories,
+            totalCount: count.aggregate.totalCount
+        }
+    },
     async getCategory(parent, { id }, { prisma, info }) {
         return prisma.query.bookCategory({
             where: {
@@ -372,7 +386,28 @@ const Query = {
                 totalCount: 0
             }
         }
-
+    },
+    async getUsers(parent, {where, orderBy, first,skip,selection}, {httpContext, prisma}, info){
+        // const userId = getUserId(httpContext);
+        // const userRole = getUserRole(userId, prisma);
+        // if (userRole!=="Admin"){
+        //     return {
+        //         users: [],
+        //         totalCount: 0
+        //     }
+        // }else{
+            const users = await prisma.query.users({
+                where,
+                orderBy,
+                first,
+                skip
+            },selection);
+            const count = await prisma.query.usersConnection({where}, `{aggregate{count}}`);
+            return {
+                users,
+                totalCount: count.aggregate.count
+            }
+        // }
     }
 }
 

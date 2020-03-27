@@ -128,6 +128,7 @@ type Book{
     id: ID! @id
     title: String!
     description: String
+    shortDescription: String
     categories: [BookCategory!]! @relation(name: "BookToCategory")
     authors: [Author!]! @relation(name: "BookToAuthor")
     reviews: [BookReview!]! @relation(name: "ReviewToBook", onDelete: CASCADE)

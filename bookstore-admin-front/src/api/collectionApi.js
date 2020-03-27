@@ -6,7 +6,10 @@ export const GET_COLLECTIONS = gql`
             collections{
                 id
                 collectionName
+                description
                 thumbnail
+                createdAt
+                updatedAt
             }
             totalCount
         }

@@ -1,7 +1,7 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
-#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType from './generated/prisma.graphql';
+#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType, UserWhereInput,UserOrderByInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -145,6 +145,7 @@ type Book{
     id: ID!
     title: String!
     description: String
+    shortDescription: String
     categories: [BookCategory!]!
     authors: [Author!]!
     reviews: [BookReview!]!
@@ -162,6 +163,8 @@ type Book{
     thumbnail: String!
     images: String
     discounts: [Discount!]!
+    createdAt: String!
+    updatedAt: String!
 }
 
 type BookReview{
@@ -190,6 +193,8 @@ type BookCategory{
     id: ID!
     name: String!
     books(where: BookWhereInput): [Book!]!
+    createdAt: String!
+    updatedAt: String!
 }
 
 type Discount{
@@ -246,6 +251,7 @@ type Query{
     getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String): BooksPayload!
     getBook(id: ID!): Book!
     getCategories(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
+    getCategoriesPaging(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, first: Int, skip: Int): CategoryPayload!
     getCategory(id: ID!): BookCategory!
     getAuthors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
     getAuthor(id: ID!): Author!
@@ -264,6 +270,17 @@ type Query{
     getReviewRepliesByReview(reviewId: ID!): [BookReviewReply!]!
     getWishList: GetWishListPayload!
     getBestSeller(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksPayload!
+    getUsers(where: UserWhereInput,orderBy: UserOrderByInput, first: Int, skip:Int, selection: String): UsersPayload!
+}
+
+type UsersPayload{
+    users: [User!]!
+    totalCount: Int
+}
+
+type CategoryPayload{
+    categories: [BookCategory!]!
+    totalCount: Int
 }
 
 type GetCollectionsPayload{
@@ -477,10 +494,12 @@ input BookUpdateInput{
 input BookCreateInput{
     title: String!
     description: String
+    shortDescription: String
     categories: [ID!]!
     translator: String
     authors: [ID!]!
     isbn: String!
+    sku: String!
     format: BookFormat!
     dimensions: String
     publishedDate: String
@@ -489,7 +508,7 @@ input BookCreateInput{
     basePrice: Float!
     pages: Int
     thumbnail: String!
-    images: String!
+    images: String
 }
 
 input UserLoginInput{

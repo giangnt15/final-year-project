@@ -21,7 +21,6 @@ export const LOGIN = gql`
             token
         }
     }
-
 `
 export const UPDATE_USER = gql`
     mutation updateUser($data: CustomUserUpdateInput!){
@@ -78,6 +77,27 @@ export const SIGNUP = gql`
                 role
             }
             token
+        }
+    }
+`
+
+export const GET_USERS = gql`
+    query getUsers($where: UserWhereInput, $orderBy: UserOrderByInput, $first: Int,$skip: Int, $selection: String){
+        getUsers(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection){
+            users{
+                id
+                username
+                fullName
+                email
+                avatar
+                phone
+                isActive
+                gender
+                birthdate
+                role
+                createdAt
+            }
+            totalCount
         }
     }
 `
