@@ -9,6 +9,8 @@ function ListCommon(Component, defaultOrderBy, listName) {
 
     return function ListCommonWrapper(props) {
 
+        const {onClickCreate} = props;
+
         const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
         const [currentPage, setCurrentPage] = useState(1);
@@ -20,7 +22,6 @@ function ListCommon(Component, defaultOrderBy, listName) {
         const [searchValues, setSearchValues] = useState({
 
         })
-
         const searchInput = useRef();
 
         let searchTimeout = null;
@@ -151,7 +152,7 @@ function ListCommon(Component, defaultOrderBy, listName) {
                 <div className={`content-header m-b-20${isScrolled?' sticky':''}`}>
                     <h3>{listName}</h3>
                     <div className="pull-right">
-                        <Button type="primary"><PlusOutlined /> Thêm mới</Button>
+                        <Button type="primary" onClick={onClickCreate} ><PlusOutlined /> Thêm mới</Button>
                         <Button  className="m-l-8" type="danger"><DeleteOutlined /> Xóa chọn</Button>
                     </div>
                 </div>

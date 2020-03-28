@@ -10,8 +10,8 @@ import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { GET_PUBLISHERS_BASIC } from '../../api/publisherApi';
 import { GET_CATEGORIES_BASIC } from '../../api/categoryApi';
 import { GET_AUTHORS_BASIC } from '../../api/authorApi';
-import { CREATE_BOOK } from '../../api/bookApi';
-import { useHistory } from 'react-router-dom';
+import { CREATE_BOOK, UPDATE_BOOK, GET_BOOK } from '../../api/bookApi';
+import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { DATE_VN, DATE_US } from '../../constants';
 
@@ -27,6 +27,7 @@ function ProductDetail(props) {
     const { isCreating } = props;
     const isScrolled = useScroll(62);
     const history = useHistory();
+    const { id } = useParams();
     const [inputs, setInputs] = useState({
         title: '',
         format: '',
@@ -46,6 +47,44 @@ function ProductDetail(props) {
         thumbnail: ''
     });
 
+    const [getBook, { loading: gettingBook }] = useLazyQuery(GET_BOOK, {
+        onError() {
+            message.error("Có lỗi xảy ra khi lấy dữ liệu");
+        },
+        onCompleted(data) {
+            const { title, format, shortDescription, description, sku, isbn, categories,
+                publisher, authors, translator, dimensions, pages, publishedDate, availableCopies, basePrice, thumbnail } = data.getBook;
+            setInputs({
+                title,
+                format,
+                shortDescription,
+                description,
+                sku,
+                isbn,
+                categories: categories.map(item => item.id),
+                authors: authors.map(item => item.id),
+                publisher: publisher.id,
+                translator,
+                dimensions,
+                pages,
+                availableCopies,
+                basePrice,
+                thumbnail,
+                publishedDate: moment(publishedDate)
+            })
+        }
+    })
+
+    useEffect(() => {
+        if (!isCreating) {
+            getBook({
+                variables: {
+                    id
+                }
+            })
+        }
+    }, [id]);
+
     const onInputChange = (e, d) => {
         const { name, value } = e.target;
         setInputs(prev => {
@@ -61,9 +100,18 @@ function ProductDetail(props) {
             message.error("Có lỗi xảy ra khi tạo mới sách");
         },
         onCompleted() {
-            history.push('/catalog/books')
+            message.success("Tạo sách thành công");
         }
     });
+
+    const [updateBook, { loading: updatingBook }] = useMutation(UPDATE_BOOK, {
+        onError() {
+            message.error("Có lỗi xảy ra khi cập nhật thông tin sách");
+        },
+        onCompleted() {
+            message.success("Cập nhật thông tin sách thành công");
+        }
+    })
 
     const [getAuthors, { loading: loadingAuthors, data: dataAuthors = { getAuthors: [] } }] = useLazyQuery(GET_AUTHORS_BASIC, {
         onError() {
@@ -105,17 +153,50 @@ function ProductDetail(props) {
             <div className={`content-header m-b-20${isScrolled ? ' sticky' : ''}`}>
                 <h3>{isCreating ? "Thêm sách mới" : "Cập nhật thông tin sách"}</h3>
                 <div className="pull-right">
-                    <Button type="primary" onClick={() => {
-                        createBook({
-                            variables: {
-                                data: {
-                                    ...inputs,
-                                    publishedDate: inputs.publishedDate.format(DATE_US)
+                    <Button type="primary"
+                        loading={isCreating ? creatingBook : updatingBook}
+                        onClick={() => {
+                            isCreating ?
+                                createBook({
+                                    variables: {
+                                        data: {
+                                            ...inputs,
+                                            publishedDate: inputs.publishedDate.format(DATE_US)
+                                        }
+                                    }
+                                }) : updateBook({
+                                    variables: {
+                                        id,
+                                        data: {
+                                            ...inputs,
+                                            publishedDate: inputs.publishedDate.format(DATE_US)
+                                        }
+                                    }
+                                })
+                        }} ><SaveOutlined className="m-l-2" /> Lưu</Button>
+                    {/* <Button className="m-l-8"
+                    onClick={() => {
+                        isCreating ?
+                            createBook({
+                                variables: {
+                                    data: {
+                                        ...inputs,
+                                        publishedDate: inputs.publishedDate.format(DATE_US)
+                                    }
                                 }
-                            }
-                        })
-                    }} ><SaveOutlined /> Lưu</Button>
-                    <Button className="m-l-8" type="primary"><SaveOutlined /> Lưu và tiếp tục sửa</Button>
+                            }) : updateBook({
+                                variables: {
+                                    id,
+                                    data: {
+                                        ...inputs,
+                                        publishedDate: inputs.publishedDate.format(DATE_US)
+                                    }
+                                }
+                            })
+                    }}
+                    loading={isCreating?creatingBook:updatingBook}
+                    type="primary"><SaveOutlined
+                        className="m-l-2"  /> Lưu và tiếp tục sửa</Button> */}
                 </div>
             </div>
             <div className="content-body">
@@ -164,7 +245,7 @@ function ProductDetail(props) {
                         >
                             <CKEditor
                                 editor={ClassicEditor}
-                                data={inputs.desciption}
+                                data={inputs.description}
                                 config={ckEditorConfig}
                                 onInit={editor => {
                                     // You can store the "editor" and use when it is needed.
@@ -193,7 +274,7 @@ function ProductDetail(props) {
                                     labelAlign="right"
                                     rules={[{ required: true, message: 'Please input your username!' }]}
                                 >
-                                    <Input name="sku" values={inputs.sku} onChange={onInputChange} />
+                                    <Input name="sku" value={inputs.sku} onChange={onInputChange} />
                                 </Form.Item>
                             </div>
                             <Form.Item

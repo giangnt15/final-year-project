@@ -7,15 +7,30 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import client from './apollo-client/index';
 import { LocaleProvider } from 'antd';
 import viVN from 'antd/lib/locale-provider/vi_VN';
-import {Router} from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import history from './utils/history';
+import moment from 'moment';
+import 'moment/locale/vi';
+import thunk from 'redux-thunk';
+import rootReducer from './redux/reducers';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+const composeEnhancers = composeWithDevTools({
+    // Specify here name, actionsBlacklist, actionsCreators and other options
+});
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+moment.locale('vi');
 
 ReactDOM.render(<ApolloProvider client={client}>
-    <LocaleProvider locale={viVN}>
-        <Router history={history}>
-            <App />
-        </Router>
-    </LocaleProvider>
+    <Provider store={store}>
+        <LocaleProvider locale={viVN}>
+            <Router history={history}>
+                <App />
+            </Router>
+        </LocaleProvider>
+    </Provider>
 </ApolloProvider>, document.getElementById('main-content'));
 
 // If you want your app to work offline and load faster, you can change

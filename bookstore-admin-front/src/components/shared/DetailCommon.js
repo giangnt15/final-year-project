@@ -6,7 +6,7 @@ const { Panel } = Collapse;
 
 function DetailCommon(props) {
 
-    const { isCreating } = props;
+    const { isCreating, headerName } = props;
 
     const isScrolled = useScroll(62);
 

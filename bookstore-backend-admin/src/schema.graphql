@@ -476,11 +476,13 @@ input CustomUserUpdateInput{
 input BookUpdateInput{
     title: String
     description: String
+    shortDescription: String
     categories: [ID!]
+    translator: String
     authors: [ID!]
     isbn: String
+    sku: String
     format: BookFormat
-    translator: String
     dimensions: String
     publishedDate: String
     publisher: ID

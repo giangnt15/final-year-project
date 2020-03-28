@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format';
 import { GET_AUTHORS_BASIC } from '../../../api/authorApi';
 import { GET_PUBLISHERS_BASIC } from '../../../api/publisherApi';
 import { GET_CATEGORIES_BASIC } from '../../../api/categoryApi';
+import { NavLink } from 'react-router-dom';
 
 function ProductList(props) {
     const { selectedRowKeys, setSelectedRowKeys, currentPage, setCurrentPage, rowsPerPage, setRowsPerPage
@@ -252,7 +253,7 @@ function ProductList(props) {
         return books.map((item, index) => {
             return {
                 ...item,
-                title: <a>{item.title}</a>,
+                title: <NavLink to={`/catalog/book/edit/${item.id}`}>{item.title}</NavLink>,
                 key: item.id,
                 basePrice: <NumberFormat value={item.basePrice} displayType={'text'}
                     suffix="đ" thousandSeparator={true} />,
@@ -269,7 +270,13 @@ function ProductList(props) {
 
     return (
         <Table columns={columns} loading={loading}
-            rowSelection={selectedRowKeys}
+            rowSelection={{
+                selectedRowKeys,
+                onChange(keys){
+                    console.log(keys);
+                    setSelectedRowKeys(keys);
+                }
+            }}
             scroll={{ x: 1200 }}
             bordered={true}
             pagination={{

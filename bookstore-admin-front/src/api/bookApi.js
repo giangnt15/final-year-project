@@ -7,6 +7,13 @@ export const CREATE_BOOK = gql`
     }
   }
 `
+export const UPDATE_BOOK = gql`
+  mutation updateBook($id: ID!,$data: BookUpdateInput!){
+    updateBook(id: $id,data: $data){
+      id
+    }
+  }
+`
 
 export const GET_BOOKS = gql`
   query getBooks($where: BookWhereInput, $orderBy: BookOrderByInput, $first: Int, $skip: Int, $selection: String){
@@ -105,6 +112,8 @@ export const GET_BOOK = gql`
       title
       basePrice
       description
+      shortDescription
+      sku
       thumbnail
       images
       dimensions

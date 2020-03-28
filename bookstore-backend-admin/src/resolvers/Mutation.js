@@ -179,8 +179,8 @@ const Mutation = {
         return prisma.mutation.updateBook(opArgs, info);
     },
     async createBook(parent, { data }, { prisma, httpContext, env }, info) {
-        // const userId = getUserId(httpContext);
-        // checkAdmin(userId, prisma);
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
         const idsCategories = data.categories.map(item => ({
             id: item
         }));
