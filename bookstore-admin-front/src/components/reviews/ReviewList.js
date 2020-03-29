@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {  message, Table, Button, Rate } from 'antd';
+import { message, Table, Button, Rate } from 'antd';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 
 import { GET_REVIEWS } from '../../api/reviewApi';
@@ -8,7 +8,7 @@ import { DATE_TIME_VN_24H } from '../../constants';
 
 function ReviewList(props) {
     const { selectedRowKeys, setSelectedRowKeys, currentPage, setCurrentPage, rowsPerPage, setRowsPerPage
-        , orderBy, setOrderBy, searchValues, setSearchValues, renderSort, getColumnSearchProps,
+        , orderBy, setOrderBy, searchValues, setSearchValues,canRefetch,setCanRefetch, renderSort, getColumnSearchProps,
         filterDropdownCustom } = props;
 
     useEffect(() => {
@@ -16,7 +16,7 @@ function ReviewList(props) {
     }, [])
 
 
-    const { loading, data = { getBookReviews: { bookReviews: [] } } } = useQuery(GET_REVIEWS, {
+    const { loading, data = { getBookReviews: { bookReviews: [] } },refetch } = useQuery(GET_REVIEWS, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
@@ -26,6 +26,13 @@ function ReviewList(props) {
             skip: (currentPage - 1) * rowsPerPage,
         }
     });
+
+    useEffect(()=>{
+        if (canRefetch){
+            refetch();
+            setCanRefetch(false);
+        }
+    },[canRefetch]);
 
     const columns = [
         {
@@ -56,9 +63,9 @@ function ReviewList(props) {
             dataIndex: 'rating',
             key: 'rating',
             ...renderSort('rating'),
-            render: (rating)=>{
+            render: (rating) => {
                 return {
-                    children: <Rate value={rating} disabled style={{fontSize: 13}} />
+                    children: <Rate value={rating} disabled style={{ fontSize: 13 }} />
                 }
             }
         },
@@ -67,7 +74,7 @@ function ReviewList(props) {
             dataIndex: 'createdAt',
             key: 'createdAt',
             ...renderSort('createdAt'),
-            render: (createdAt)=>{
+            render: (createdAt) => {
                 return {
                     children: moment(createdAt).format(DATE_TIME_VN_24H)
                 }
@@ -78,13 +85,19 @@ function ReviewList(props) {
         return reviews.map((item, index) => {
             return {
                 ...item,
+                key: item.id
             }
         })
     }
 
     return (
         <Table columns={columns} loading={loading}
-            rowSelection={selectedRowKeys}
+            rowSelection={{
+                selectedRowKeys,
+                onChange(keys) {
+                    setSelectedRowKeys(keys);
+                }
+            }}
             scroll={{ x: 1200 }}
             bordered={true}
             pagination={{

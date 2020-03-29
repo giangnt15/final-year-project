@@ -48,7 +48,7 @@ const Query = {
         const count = await prisma.query.bookCategoriesConnection({ where }, `{aggregate {count}}`);
         return {
             categories,
-            totalCount: count.aggregate.totalCount
+            totalCount: count.aggregate.count
         }
     },
     async getCategory(parent, { id }, { prisma, info }) {

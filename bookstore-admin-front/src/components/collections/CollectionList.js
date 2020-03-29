@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React, { Children, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CATEGORIES_PAGING_NO_RELATION } from '../../api/categoryApi';
 import { message, Table } from 'antd';
@@ -10,10 +10,10 @@ import { GET_COLLECTIONS } from '../../api/collectionApi';
 function CollectionList(props) {
 
     const { selectedRowKeys, setSelectedRowKeys, currentPage, setCurrentPage, rowsPerPage, setRowsPerPage
-        , orderBy, setOrderBy, searchValues, setSearchValues, renderSort, getColumnSearchProps,
+        , orderBy, setOrderBy, searchValues,canRefetch,setCanRefetch, setSearchValues, renderSort, getColumnSearchProps,
         filterDropdownCustom } = props;
 
-    const { loading, data = { getCollections: { collections: [] } } } = useQuery(GET_COLLECTIONS, {
+    const { loading, data = { getCollections: { collections: [] } },refetch } = useQuery(GET_COLLECTIONS, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
@@ -23,7 +23,14 @@ function CollectionList(props) {
             skip: (currentPage - 1) * rowsPerPage,
             first: rowsPerPage
         }
-    })
+    });
+    
+    useEffect(()=>{
+        if (canRefetch){
+            refetch();
+            setCanRefetch(false);
+        }
+    },[canRefetch]);
 
     const columns = [{
         title: 'Ảnh',
@@ -44,20 +51,6 @@ function CollectionList(props) {
         },
         ...getColumnSearchProps('collectionName'),
         ...renderSort('collectionName'),
-    }, {
-        title: 'Mô tả',
-        dataIndex: 'description',
-        key: 'description',
-        colSpan: 2,
-        render: (des) => {
-            return {
-                children: des,
-                props: {
-                    colSpan: 2
-                }
-            }
-        },
-        ellipsis: true
     }, {
         title: 'Ngày tạo',
         dataIndex: 'createdAt',
@@ -94,7 +87,12 @@ function CollectionList(props) {
 
     return (
         <Table columns={columns} loading={loading}
-            rowSelection={selectedRowKeys}
+            rowSelection={{
+                selectedRowKeys,
+                onChange(keys) {
+                    setSelectedRowKeys(keys);
+                }
+            }}
             scroll={{ x: 1200 }}
             bordered={true}
             pagination={{

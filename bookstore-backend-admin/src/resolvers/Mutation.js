@@ -315,7 +315,7 @@ const Mutation = {
     async updateBookCategory(parent, { data, id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         checkAdmin(userId, prisma);
-        return prisma.mutation.createBookCategory({
+        return prisma.mutation.updateBookCategory({
             where: {
                 id
             },
@@ -649,7 +649,63 @@ const Mutation = {
             statusCode: 200,
             message: "Đổi mật khẩu thành công"
         }
-    }
+    },
+    async deleteBooks(parent, {id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId,prisma);
+
+        if (userRole!=="Admin"){
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.deleteManyBooks({
+            where: {
+                id_in: id
+            }
+        });
+    },
+    async deleteCategories(parent, {id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const userRole =  await getUserRole(userId,prisma);
+
+        if (userRole!=="Admin"){
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.deleteManyBookCategories({
+            where: {
+                id_in: id
+            }
+        });
+    },
+    async deleteReviews(parent, {id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId,prisma);
+
+        if (userRole!=="Admin"){
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.deleteManyBookReviews({
+            where:{
+                id_in: id
+            }
+        });
+    },
+    async deleteCollections(parent, {id}, {prisma,httpContext},info){
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId,prisma);
+
+        if (userRole!=="Admin"){
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.deleteManyCollections({
+            where:{
+                id_in: id
+            }
+        });
+    },
 }
 
 export default Mutation;

@@ -12,6 +12,41 @@ export const GET_CATEGORIES = gql`
     }
 `
 
+
+export const GET_CATEGORY = gql`
+    query getCategory($id: ID!){
+        getCategory(id: $id){
+            id
+            name
+        }
+    }
+`
+
+export const CREATE_CATEGORY = gql`
+    mutation createBookCategory($data: BookCategoryCreateInput!){
+        createBookCategory(data: $data){
+            id
+        }
+    }
+`
+
+
+export const DELETE_CATEGORIES = gql`
+  mutation deleteCategories($id: [ID!]!){
+    deleteCategories(id: $id){
+      count
+    }
+  }
+`
+
+export const UPDATE_CATEGORY = gql`
+    mutation updateBookCategory($id: ID!,$data: BookCategoryUpdateInput!){
+        updateBookCategory(id: $id, data: $data){
+            id
+        }
+    }
+`
+
 export const GET_CATEGORIES_BASIC = gql`
     query getCategories($where: BookCategoryWhereInput,$orderBy: BookCategoryOrderByInput, $first: Int, $skip: Int){
         getCategories(where: $where,orderBy: $orderBy, first: $first, skip: $skip){

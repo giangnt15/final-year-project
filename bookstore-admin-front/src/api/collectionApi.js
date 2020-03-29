@@ -26,3 +26,25 @@ export const GET_COLLECTION = gql`
         }
     }
 `
+export const DELETE_COLLECTIONS = gql`
+  mutation deleteCollections($id: [ID!]!){
+    deleteCollections(id: $id){
+      count
+    }
+  }
+`
+export const CREATE_COLLECTION = gql`
+  mutation createCollection($data: CollectionCreateInput!){
+    createCollection(data: $data){
+      id
+    }
+  }
+`
+
+export const UPDATE_COLLECTION = gql`
+  mutation updateCollection($id: ID!,$data: CollectionUpdateInput!){
+    updateCollection(id: $id,data: $data){
+      id
+    }
+  }
+`

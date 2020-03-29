@@ -1,7 +1,8 @@
-#import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput from './generated/prisma.graphql'
+#import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput,BookCategoryCreateInput,BookCategoryUpdateInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
 #import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType, UserWhereInput,UserOrderByInput from './generated/prisma.graphql';
+#import BatchPayload, CollectionUpdateInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -314,6 +315,11 @@ type Mutation{
     removeBookFromWishList(bookId: ID!): AddBookToWishListPayload!
     createPasswordToken(email: String!): CreatePasswordTokenPayload!
     resetPassword(passwordToken: String!, password: String!): CreatePasswordTokenPayload!
+
+    deleteBooks(id: [ID!]!): BatchPayload!
+    deleteCategories(id: [ID!]!): BatchPayload!
+    deleteReviews(id: [ID!]!): BatchPayload!
+    deleteCollections(id: [ID!]!): BatchPayload!
 }
 
 type CreatePasswordTokenPayload{
@@ -409,14 +415,6 @@ input PublisherUpdateInput{
     image: String
 }
 
-input BookCategoryCreateInput{
-    name: String!
-}
-
-input BookCategoryUpdateInput{
-    name: String
-}
-
 input BookReviewCreateInput{
     book: ID!
     reviewHeader: String
@@ -449,18 +447,11 @@ input UserAddressUpdateInput{
     fullName: String
 }
 
-input CollectionUpdateInput{
-    collectionName: String
-    description: String
-    thumbnail: String
-    cover: String
-}
 
 input CollectionCreateInput{
     collectionName: String!
     description: String
     thumbnail: String!
-    cover: String!
 }
 
 input CustomUserUpdateInput{

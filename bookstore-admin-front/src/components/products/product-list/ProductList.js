@@ -10,7 +10,7 @@ import { NavLink } from 'react-router-dom';
 
 function ProductList(props) {
     const { selectedRowKeys, setSelectedRowKeys, currentPage, setCurrentPage, rowsPerPage, setRowsPerPage
-        , orderBy, setOrderBy, searchValues, setSearchValues, renderSort, getColumnSearchProps,
+        , orderBy, setOrderBy, searchValues,canRefetch,setCanRefetch, setSearchValues, renderSort, getColumnSearchProps,
         filterDropdownCustom } = props;
 
     const [getAuthors, { loading: loadingAuthors, data: dataAuthors = { getAuthors: [] } }] = useLazyQuery(GET_AUTHORS_BASIC, {
@@ -57,7 +57,7 @@ function ProductList(props) {
         value: item.id
     }));
 
-    const { loading, data = { getBooks: { books: [] } } } = useQuery(GET_BOOKS, {
+    const { loading, data = { getBooks: { books: [] } },refetch } = useQuery(GET_BOOKS, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
@@ -118,6 +118,13 @@ function ProductList(props) {
               }`
         }
     });
+
+    useEffect(()=>{
+        if (canRefetch){
+            refetch();
+            setCanRefetch(false);
+        }
+    },[canRefetch]);
 
     const columns = [
         {
@@ -273,7 +280,6 @@ function ProductList(props) {
             rowSelection={{
                 selectedRowKeys,
                 onChange(keys){
-                    console.log(keys);
                     setSelectedRowKeys(keys);
                 }
             }}

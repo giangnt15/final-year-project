@@ -15,6 +15,14 @@ export const UPDATE_BOOK = gql`
   }
 `
 
+export const DELETE_BOOKS = gql`
+  mutation deleteBooks($id: [ID!]!){
+    deleteBooks(id: $id){
+      count
+    }
+  }
+`
+
 export const GET_BOOKS = gql`
   query getBooks($where: BookWhereInput, $orderBy: BookOrderByInput, $first: Int, $skip: Int, $selection: String){
     getBooks(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection) {
@@ -51,6 +59,30 @@ export const GET_BOOKS = gql`
           id
           name
         }
+      }
+      totalCount
+    }
+  }
+`;
+
+export const GET_BOOKS_NO_RELATION = gql`
+  query getBooks($where: BookWhereInput, $orderBy: BookOrderByInput, $first: Int, $skip: Int){
+    getBooks(where: $where, orderBy: $orderBy, first: $first, skip: $skip) {
+      books{
+        id
+        title
+        basePrice
+        description
+        thumbnail
+        sku
+        images
+        dimensions
+        translator
+        format
+        isbn
+        publishedDate
+        availableCopies
+        pages
       }
       totalCount
     }

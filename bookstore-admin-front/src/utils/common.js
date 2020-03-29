@@ -25,4 +25,9 @@ function calculateDiscount(basePrice, discounts){
     }
     return [discountedPrice, discountRate];
 }
-export {getOrderStatusText,calculateDiscount};
+
+function convertErrString(errString){
+    return errString.replace("GraphQL error: ",'').replace("Network error: ",'');
+}
+
+export {getOrderStatusText,calculateDiscount,convertErrString};

@@ -2,14 +2,19 @@ import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { Collapse, Select, message, Table, Button, Input, Checkbox, Icon } from 'antd';
 import { SearchOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import useScroll from '../../custom-hooks/useScroll';
+import { useMutation } from '@apollo/react-hooks';
+import { useLocation } from 'react-router-dom';
+import { convertErrString } from '../../utils/common';
 
 const { Panel } = Collapse;
 
-function ListCommon(Component, defaultOrderBy, listName) {
+function ListCommon(Component, defaultOrderBy, listName, deleteManyApi) {
 
     return function ListCommonWrapper(props) {
 
-        const {onClickCreate} = props;
+        const { onClickCreate,showDelete=true } = props;
+
+        const location = useLocation();
 
         const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -22,9 +27,28 @@ function ListCommon(Component, defaultOrderBy, listName) {
         const [searchValues, setSearchValues] = useState({
 
         })
+        const [canRefetch, setCanRefetch] = useState(false);
         const searchInput = useRef();
 
         let searchTimeout = null;
+
+        const [deleteMany, { loading: deletingMany }] = useMutation(deleteManyApi, {
+            onCompleted(data) {
+                if (location.pathname.indexOf('reviews') >= 0) {
+                    message.success(`Xóa thành công ${data.deleteReviews.count} bản ghi`)
+                } else if (location.pathname.indexOf('books') >= 0) {
+                    message.success(`Xóa thành công ${data.deleteBooks.count} bản ghi`)
+                } else if (location.pathname.indexOf('collections') >= 0) {
+                    message.success(`Xóa thành công ${data.deleteCollections.count} bản ghi`)
+                } else if (location.pathname.indexOf('categories') >= 0) {
+                    message.success(`Xóa thành công ${data.deleteCategories.count} bản ghi`)
+                }
+                setCanRefetch(true);
+            },
+            onError(err) {
+                message.error(convertErrString(err.message));
+            }
+        })
 
         const handleSearch = (e) => {
             const { name, value } = e.target;
@@ -149,20 +173,29 @@ function ListCommon(Component, defaultOrderBy, listName) {
 
         return (
             <div className="content-wrapper">
-                <div className={`content-header m-b-20${isScrolled?' sticky':''}`}>
+                <div className={`content-header m-b-20${isScrolled ? ' sticky' : ''}`}>
                     <h3>{listName}</h3>
                     <div className="pull-right">
                         <Button type="primary" onClick={onClickCreate} ><PlusOutlined /> Thêm mới</Button>
-                        <Button  className="m-l-8" type="danger"><DeleteOutlined /> Xóa chọn</Button>
+                        {showDelete&&<Button disabled={selectedRowKeys.length === 0}
+                            loading={deletingMany}
+                            onClick={() => deleteMany({
+                                variables: {
+                                    id: selectedRowKeys
+                                }
+                            })}
+                            className="m-l-8" type="danger"><DeleteOutlined /> Xóa chọn</Button>}
                     </div>
                 </div>
-                <div className="content-body">
+                <div className="content-body" style={{ minHeight: '120%', backgroundColor: 'inherit' }}>
                     <Component {...props} filterDropdownCustom={filterDropdownCustom}
+                        setCanRefetch={setCanRefetch}
+                        canRefetch={canRefetch}
                         getColumnSearchProps={getColumnSearchProps}
                         orderBy={orderBy}
                         handleSearch={handleSearch} handleReset={handleReset}
                         searchValues={searchValues} setSearchValues={setSearchValues}
-                        rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}   
+                        rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}
                         selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys}
                         currentPage={currentPage} setCurrentPage={setCurrentPage}
                         renderSort={renderSort}

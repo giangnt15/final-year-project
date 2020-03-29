@@ -36,6 +36,15 @@ export const GET_REVIEWS_BY_BOOK = gql`
     }
 `
 
+
+export const DELETE_REVIEWS = gql`
+  mutation deleteReviews($id: [ID!]!){
+    deleteReviews(id: $id){
+      count
+    }
+  }
+`
+
 export const GET_REVIEWS = gql`
     query getBookReviews($where: BookReviewWhereInput, $orderBy: BookReviewOrderByInput, $first: Int,$skip: Int){
         getBookReviews(where: $where, orderBy: $orderBy, first: $first, skip: $skip){

@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React, { Children, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CATEGORIES_PAGING_NO_RELATION } from '../../api/categoryApi';
 import { message, Table } from 'antd';
@@ -9,10 +9,10 @@ import { NavLink } from 'react-router-dom';
 function CategoryList(props) {
 
     const { selectedRowKeys, setSelectedRowKeys, currentPage, setCurrentPage, rowsPerPage, setRowsPerPage
-        , orderBy, setOrderBy, searchValues, setSearchValues, renderSort, getColumnSearchProps,
+        , orderBy, setOrderBy,canRefetch,setCanRefetch, searchValues, setSearchValues, renderSort, getColumnSearchProps,
         filterDropdownCustom } = props;
 
-    const { loading, data = { getCategoriesPaging: { categories: [] } } } = useQuery(GET_CATEGORIES_PAGING_NO_RELATION, {
+    const { loading, data = { getCategoriesPaging: { categories: [] } }, refetch } = useQuery(GET_CATEGORIES_PAGING_NO_RELATION, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
@@ -24,7 +24,14 @@ function CategoryList(props) {
             skip: (currentPage - 1) * rowsPerPage,
             first: rowsPerPage
         }
-    })
+    });
+
+    useEffect(()=>{
+        if (canRefetch){
+            refetch();
+            setCanRefetch(false);
+        }
+    },[canRefetch]);
 
     const columns = [{
         title: 'Tên',
@@ -75,7 +82,12 @@ function CategoryList(props) {
 
     return (
         <Table columns={columns} loading={loading}
-            rowSelection={selectedRowKeys}
+            rowSelection={{
+                selectedRowKeys,
+                onChange(keys) {
+                    setSelectedRowKeys(keys);
+                }
+            }}
             scroll={{ x: 1200 }}
             bordered={true}
             pagination={{

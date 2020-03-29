@@ -10,7 +10,7 @@ import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { GET_PUBLISHERS_BASIC } from '../../api/publisherApi';
 import { GET_CATEGORIES_BASIC } from '../../api/categoryApi';
 import { GET_AUTHORS_BASIC } from '../../api/authorApi';
-import { CREATE_BOOK, UPDATE_BOOK, GET_BOOK } from '../../api/bookApi';
+import { CREATE_BOOK, UPDATE_BOOK, GET_BOOK, DELETE_BOOKS } from '../../api/bookApi';
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { DATE_VN, DATE_US } from '../../constants';
@@ -47,7 +47,7 @@ function ProductDetail(props) {
         thumbnail: ''
     });
 
-    const [getBook, { loading: gettingBook }] = useLazyQuery(GET_BOOK, {
+    const [getBook, { loading: gettingBook, refetch: refetchBook }] = useLazyQuery(GET_BOOK, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
@@ -72,16 +72,15 @@ function ProductDetail(props) {
                 thumbnail,
                 publishedDate: moment(publishedDate)
             })
+        },
+        variables: {
+            id
         }
     })
 
     useEffect(() => {
         if (!isCreating) {
-            getBook({
-                variables: {
-                    id
-                }
-            })
+            getBook();
         }
     }, [id]);
 
@@ -99,8 +98,8 @@ function ProductDetail(props) {
         onError() {
             message.error("Có lỗi xảy ra khi tạo mới sách");
         },
-        onCompleted() {
-            message.success("Tạo sách thành công");
+        onCompleted(data) {
+            history.push('/catalog/book/edit/' + data.createBook.id);
         }
     });
 
@@ -110,6 +109,7 @@ function ProductDetail(props) {
         },
         onCompleted() {
             message.success("Cập nhật thông tin sách thành công");
+            refetchBook();
         }
     })
 
