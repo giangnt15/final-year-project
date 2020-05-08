@@ -79,6 +79,8 @@ function CollectionPage(props) {
                     from 
                     to 
                     discountRate
+                    discountAmount
+                    usePercentage
                 }
                 publisher{
                   id

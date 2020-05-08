@@ -154,7 +154,7 @@ function UserList(props) {
             return {
                 ...item,
                 key: item.id,
-                email: <NavLink to={`/users/user/edit/${item.id}`}>{item.email}</NavLink>,
+                email: <NavLink to={`/users/edit/${item.id}`}>{item.email}</NavLink>,
             }
         })
     }
@@ -170,7 +170,7 @@ function UserList(props) {
                 showTotal: (total) =>
                     `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= data.getUsers.totalCount ? currentPage * rowsPerPage : data.getUsers.totalCount} trên ${data.getUsers.totalCount} kết quả`,
                 showSizeChanger: true,
-                onShowSizeChange: (current, size) => setRowsPerPage(size),
+                onShowSizeChange(current, size){this.current = 1; setRowsPerPage(size)},
                 total: data.getUsers.totalCount,
                 onChange: (page) => { setCurrentPage(page) }
             }}

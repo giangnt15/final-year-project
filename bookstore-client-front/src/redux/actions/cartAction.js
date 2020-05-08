@@ -72,7 +72,7 @@ export const changeCartItemQtyAsync = (client, item,qty)=>{
                 return;
             }
             const {qty: availableCopies} = res.data.getItemStockQty;
-            if (!availableCopies) throw new Error();
+            if (availableCopies===null||availableCopies===undefined) throw new Error();
             if (qty>availableCopies){
                 message.error(`Chỉ còn ${availableCopies} cuốn.`);
                 dispatch(changeCartItemQtyFailed());
@@ -102,7 +102,7 @@ export const addSingleItemToCartAysnc = (client, item,qty)=>{
                 return;
             }
             const {qty: availableCopies} = res.data.getItemStockQty;
-            if (!availableCopies) throw new Error();
+            if (availableCopies===null||availableCopies===undefined) throw new Error();
             if (qty>availableCopies){
                 message.error(`Chỉ còn ${availableCopies} cuốn.`);
                 dispatch(addSingleItemToCartFail());

@@ -81,7 +81,7 @@ function Header(props) {
     <ul style={{ listStyleType: 'none', lineHeight: 2 }}>
       <li><NavLink to="/auth/account/orders/history"><i className="fa fa-list-ol"></i>&nbsp;Đơn hàng</NavLink></li>
       <li><NavLink to="/auth/account/edit"><i className="fa fa-user-circle"></i>&nbsp;Tài khoản</NavLink></li>
-      <li><NavLink to="/auth/wish-list"><i className="fa fa-heart"></i>&nbsp;Sản phẩm yêu thích</NavLink></li>
+      <li><NavLink to="/auth/account/wish-list"><i className="fa fa-heart"></i>&nbsp;Sản phẩm yêu thích</NavLink></li>
       <li><a onClick={logout} ><i className="fa fa-sign-out"></i>&nbsp;Đăng xuất</a></li>
     </ul>
   </Fragment>);
@@ -136,7 +136,7 @@ function Header(props) {
                     </ul>
                     <ul className="item item03">
                       <li className="title">Tuyển tập</li>
-                      {!loadingCollection &&dataCollections.getCollections && dataCollections.getCollections.collections.map(item => (
+                      {!loadingCollection &&dataCollections.getCollections&&dataCollections.getCollections.collections && dataCollections.getCollections.collections.map(item => (
                         <li key={item.id} onClick={() => {
                           history.push("/collection/"+item.id);
                         }}><a>{item.collectionName} </a></li>

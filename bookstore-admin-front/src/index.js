@@ -5,7 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ApolloProvider } from '@apollo/react-hooks';
 import client from './apollo-client/index';
-import { LocaleProvider } from 'antd';
+import { LocaleProvider, ConfigProvider } from 'antd';
 import viVN from 'antd/lib/locale-provider/vi_VN';
 import { Router } from 'react-router-dom';
 import history from './utils/history';
@@ -25,11 +25,11 @@ moment.locale('vi');
 
 ReactDOM.render(<ApolloProvider client={client}>
     <Provider store={store}>
-        <LocaleProvider locale={viVN}>
+        <ConfigProvider locale={viVN}>
             <Router history={history}>
                 <App />
             </Router>
-        </LocaleProvider>
+        </ConfigProvider>
     </Provider>
 </ApolloProvider>, document.getElementById('main-content'));
 

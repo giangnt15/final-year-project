@@ -22,6 +22,8 @@ export const GET_BOOKS = gql`
           from
           to
           discountRate
+          usePercentage
+          discountAmount
         }
         publisher{
           id
@@ -110,6 +112,8 @@ export const GET_BOOK = gql`
         from
         to
         discountRate
+        usePercentage
+        discountAmount
       }
       publisher{
         id
@@ -149,6 +153,8 @@ export const GET_BEST_SELLER = gql`
           from
           to
           discountRate
+          usePercentage
+          discountAmount
         }
         publisher{
           id

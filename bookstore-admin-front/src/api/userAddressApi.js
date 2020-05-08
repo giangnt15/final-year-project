@@ -30,8 +30,8 @@ export const GET_WARDS = gql`
 `
 
 export const CREATE_USER_ADDRESS = gql`
-    mutation createUserAddress($data: UserAddressCreateInput!){
-        createUserAddress(data: $data){
+    mutation createUserAddress($data: UserAddressCreateInput!, $user: ID!){
+        createUserAddress(data: $data, user: $user){
             id
         }
     }
@@ -71,6 +71,32 @@ export const GET_USER_ADDRESSES = gql`
                 name
             }
             address
+        }
+    }
+`
+
+export const GET_USER_ADDRESSES_ADMIN = gql`
+    query getUserAddressesAdmin($where: UserAddressWhereInput, $orderBy: UserAddressOrderByInput, $first: Int,$skip: Int,$selection: String!){
+        getUserAddressesAdmin(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection){
+            addresses{
+                id
+                fullName
+                phone
+                province{
+                    id
+                    name
+                }
+                district{
+                    id
+                    name
+                }
+                ward{
+                    id
+                    name
+                }
+                address
+            }
+            totalCount
         }
     }
 `

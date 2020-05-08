@@ -9,6 +9,7 @@ import { GET_AUTHORS } from '../../../api/authorApi';
 import { GET_PUBLISHERS } from '../../../api/publisherApi';
 import PriceFilter from '../filters/PriceFilter';
 import { NavLink } from 'react-router-dom';
+import { message, Empty } from 'antd';
 
 const sortDirections = [
   {
@@ -38,7 +39,7 @@ function ShopGrid(props) {
   // const goToPage = (pageNumber) => {
   //   setCurrentPage(pageNumber);
   // }
-  const { books, userSettings, changeShopPage, changeSortDirection, changeViewMode, filters, client} = props;
+  const { books, userSettings, changeShopPage, changeSortDirection, changeViewMode, filters, client } = props;
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publishers, setPublishers] = useState([]);
@@ -191,60 +192,64 @@ function ShopGrid(props) {
       }
     }
     (async function getFilters() {
-      const resCat = await client.query({
-        query: GET_CATEGORIES,
-        variables: {
-          bookWhere: catBookWhere,
-          where: {
-            books_some: {
-              authors_some: {
-                id: filters.author
-              },
-              publisher: {
-                id: filters.publisher
+      try {
+        const resCat = await client.query({
+          query: GET_CATEGORIES,
+          variables: {
+            bookWhere: catBookWhere,
+            where: {
+              books_some: {
+                authors_some: {
+                  id: filters.author
+                },
+                publisher: {
+                  id: filters.publisher
+                }
               }
-            }
+            },
+            orderBy: "name_ASC"
           },
-          orderBy: "name_ASC"
-        }
-      });
-      const resAuth = await client.query({
-        query: GET_AUTHORS,
-        variables: {
-          bookWhere: authBookWhere,
-          where: {
-            books_some: {
-              categories_some: {
-                id: filters.category
-              },
-              publisher: {
-                id: filters.publisher
+        });
+        const resAuth = await client.query({
+          query: GET_AUTHORS,
+          variables: {
+            bookWhere: authBookWhere,
+            where: {
+              books_some: {
+                categories_some: {
+                  id: filters.category
+                },
+                publisher: {
+                  id: filters.publisher
+                }
               }
-            }
-          },
-          orderBy: "pseudonym_ASC"
-        }
-      });
-      const resPub = await client.query({
-        query: GET_PUBLISHERS,
-        variables: {
-          bookWhere: pubBookWhere,
-          where: {
-            books_some: {
-              authors_some: {
-                id: filters.author
-              },
-              categories_some: {
-                id: filters.category
-              },
-            }
-          },
-          orderBy: "name_ASC"
-        }
-      });
-      setAuthors(resAuth.data.getAuthors);
-      setCategories(resCat.data.getCategories);
-      setPublishers(resPub.data.getPublishers);
+            },
+            orderBy: "pseudonym_ASC"
+          }
+        });
+        const resPub = await client.query({
+          query: GET_PUBLISHERS,
+          variables: {
+            bookWhere: pubBookWhere,
+            where: {
+              books_some: {
+                authors_some: {
+                  id: filters.author
+                },
+                categories_some: {
+                  id: filters.category
+                },
+              }
+            },
+            orderBy: "name_ASC"
+          }
+        });
+        setAuthors(resAuth.data.getAuthors);
+        setCategories(resCat.data.getCategories);
+        setPublishers(resPub.data.getPublishers);
+      } catch (err) {
+        message.error("Có lỗi xảy ra khi lấy dữ liệu");
+      }
     })()
 
   }, [filters.category, filters.author, filters.publisher, filters.price ? filters.price.id : undefined])
@@ -341,6 +346,8 @@ function ShopGrid(props) {
             from 
             to 
             discountRate
+            discountAmount
+            usePercentage
           }
           publisher{
             id
@@ -371,11 +378,17 @@ function ShopGrid(props) {
     if (listWrapper) {
       listWrapper.scrollIntoView();
     }
-    return books.books.map((book, index) => {
+    if (books && books.books && books.books.length) {
+      return books.books.map((book, index) => {
+        return (
+          <div key={index}><ProductItem width={220} thumbHeight={240} book={book} /></div>
+        )
+      });
+    } else {
       return (
-        <div key={index}><ProductItem width={220} thumbHeight={240} book={book} /></div>
+        <div className="d-flex justify-content-center w-100"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" /></div>
       )
-    });
+    }
   }
 
   const renderProductsList = () => {
@@ -383,11 +396,17 @@ function ShopGrid(props) {
     if (listWrapper) {
       listWrapper.scrollIntoView();
     }
-    return books.books.map((book, index) => {
+    if (books && books.books && books.books.length) {
+      return books.books.map((book, index) => {
+        return (
+          <div key={index}><ListProductItem width={300} thumbHeight={360} book={book} /></div>
+        )
+      });
+    } else {
       return (
-        <div key={index}><ListProductItem width={300} thumbHeight={360} book={book} /></div>
+        <div className="d-flex justify-content-center w-100"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" /></div>
       )
-    });
+    }
   }
 
   return (

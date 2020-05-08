@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
 
 const Mutation = {
-    async signUp(parent, { data }, { prisma, env ,sgMailer}, info) {
+    async signUp(parent, { data }, { prisma, env, sgMailer }, info) {
         const hashed = await bcrypt.hash(data.password, 10);
         const user = await prisma.mutation.createUser({
             data: {
@@ -41,7 +41,7 @@ const Mutation = {
                 html: emailTemplate.accountActivation(`${env.CLIENT_HOST}/account-activation/${token}`),
                 subject: "[Bookstore] Kích hoạt tài khoản",
             });
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
         return {
@@ -80,13 +80,13 @@ const Mutation = {
                 message: "Sai tên đăng nhập hoặc mật khẩu"
             }
         }
-        if (user.role!=="Admin"){
+        if (user.role !== "Admin") {
             return {
                 statusCode: 400,
                 message: "Sai tên đăng nhập hoặc mật khẩu"
             }
         }
-        if (!user.isActive){
+        if (!user.isActive) {
             return {
                 statusCode: 405,
                 message: "Tài khoản chưa được kích hoạt",
@@ -129,6 +129,40 @@ const Mutation = {
         return prisma.mutation.updateUser({
             where: {
                 id: userId
+            },
+            data: {
+                ...dataToChange
+            }
+        }, info);
+    },
+    async updateUserAdmin(parent, { id, data }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+        if (userRole !== "Admin") {
+            throw new Error("Unauthorized");
+        }
+        const user = await prisma.query.user({
+            where: {
+                id
+            }
+        });
+        if (!user) throw new Error('User not existed!');
+        const dataToChange = {
+            fullName: data.fullName,
+            gender: data.gender,
+            phone: data.phone,
+            birthdate: data.birthdate,
+            isActive: data.isActive,
+            email: data.email,
+            role: data.role
+        }
+        if (data.changePassword) {
+            if (!data.password || data.password.length < 8) throw new Error('Password length is invalid');
+            dataToChange.password = await bcrypt.hash(data.password, 10);
+        }
+        return prisma.mutation.updateUser({
+            where: {
+                id
             },
             data: {
                 ...dataToChange
@@ -223,8 +257,10 @@ const Mutation = {
             data
         }, info)
     },
-    async createUserAddress(parent, { data }, { prisma, httpContext }, info) {
+    async createUserAddress(parent, { data, user }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+        if (userRole !== "Admin") throw new Error("Unauthorized");
         return prisma.mutation.createUserAddress({
             data: {
                 ...data,
@@ -245,7 +281,7 @@ const Mutation = {
                 },
                 user: {
                     connect: {
-                        id: userId
+                        id: user
                     }
                 }
             }
@@ -285,6 +321,34 @@ const Mutation = {
                     }
                 }
             }, info);
+        } else if (userRole === "Admin") {
+            const addressExisted = await prisma.exists.UserAddress({
+                id
+            })
+            if (!addressExisted) throw new Error('Address not existed!');
+            return prisma.mutation.updateUserAddress({
+                where: {
+                    id
+                },
+                data: {
+                    ...data,
+                    ward: {
+                        connect: {
+                            id: data.ward
+                        }
+                    },
+                    district: {
+                        connect: {
+                            id: data.district
+                        }
+                    },
+                    province: {
+                        connect: {
+                            id: data.province
+                        }
+                    }
+                }
+            }, info);
         }
     },
     async deleteUserAddress(parent, { id }, { prisma, httpContext }, info) {
@@ -295,6 +359,16 @@ const Mutation = {
                 user: {
                     id: userId
                 },
+                id
+            });
+            if (!addressExisted) throw new Error('Address not existed!');
+            return prisma.mutation.deleteUserAddress({
+                where: {
+                    id
+                }
+            }, info);
+        } else if (userRole === "Admin") {
+            const addressExisted = await prisma.exists.UserAddress({
                 id
             });
             if (!addressExisted) throw new Error('Address not existed!');
@@ -356,6 +430,24 @@ const Mutation = {
             data
         }, info)
     },
+    async deleteAuthors(parent, { id }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.deleteManyAuthors({
+            where: {
+                id_in: id
+            }
+        }, info)
+    },
+    async deleteAuthor(parent, { id }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        checkAdmin(userId, prisma);
+        return prisma.mutation.deleteAuthor({
+            where: {
+                id
+            }
+        }, info)
+    },
     async createBookReview(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         if (data.rating > 5 || data.rating <= 0) {
@@ -394,7 +486,11 @@ const Mutation = {
                 let orderItemPrice = orderItems[i].basePrice;
                 for (let discount of orderItems[i].discounts) {
                     if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
-                        orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate) * data.items[i].quantity)
+                        if (discount.usePercentage) {
+                            orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate) * data.items[i].quantity)
+                        } else {
+                            orderItemPrice = (orderItemPrice - discount.discountAmount * data.items[i].quantity)
+                        }
                     }
                 }
                 subTotal += orderItemPrice;
@@ -491,6 +587,36 @@ const Mutation = {
                 },
                 data: {
                     orderStatus
+                }
+            }, info);
+        }
+        throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");
+    },
+    async updateOrderAddress(parent, { orderId, data }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const role = await getUserRole(userId, prisma);
+        if (role === "Admin") {
+            return prisma.mutation.updateOrder({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    ...data,
+                    recipientProvince: {
+                        connect: {
+                            id: data.recipientProvince
+                        }
+                    },
+                    recipientDistrict: {
+                        connect: {
+                            id: data.recipientDistrict
+                        }
+                    },
+                    recipientWard: {
+                        connect: {
+                            id: data.recipientWard
+                        }
+                    }
                 }
             }, info);
         }
@@ -650,11 +776,11 @@ const Mutation = {
             message: "Đổi mật khẩu thành công"
         }
     },
-    async deleteBooks(parent, {id}, {prisma,httpContext},info){
+    async deleteBooks(parent, { id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const userRole = await getUserRole(userId,prisma);
+        const userRole = await getUserRole(userId, prisma);
 
-        if (userRole!=="Admin"){
+        if (userRole !== "Admin") {
             throw new Error("Unauthorized");
         }
 
@@ -664,11 +790,11 @@ const Mutation = {
             }
         });
     },
-    async deleteCategories(parent, {id}, {prisma,httpContext},info){
+    async deleteCategories(parent, { id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const userRole =  await getUserRole(userId,prisma);
+        const userRole = await getUserRole(userId, prisma);
 
-        if (userRole!=="Admin"){
+        if (userRole !== "Admin") {
             throw new Error("Unauthorized");
         }
 
@@ -678,30 +804,93 @@ const Mutation = {
             }
         });
     },
-    async deleteReviews(parent, {id}, {prisma,httpContext},info){
+    async deleteReviews(parent, { id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const userRole = await getUserRole(userId,prisma);
+        const userRole = await getUserRole(userId, prisma);
 
-        if (userRole!=="Admin"){
+        if (userRole !== "Admin") {
             throw new Error("Unauthorized");
         }
 
         return prisma.mutation.deleteManyBookReviews({
-            where:{
+            where: {
                 id_in: id
             }
         });
     },
-    async deleteCollections(parent, {id}, {prisma,httpContext},info){
+    async deleteCollections(parent, { id }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
-        const userRole = await getUserRole(userId,prisma);
+        const userRole = await getUserRole(userId, prisma);
 
-        if (userRole!=="Admin"){
+        if (userRole !== "Admin") {
             throw new Error("Unauthorized");
         }
 
         return prisma.mutation.deleteManyCollections({
-            where:{
+            where: {
+                id_in: id
+            }
+        });
+    },
+    async createDiscount(parent, { data }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+
+        if (userRole !== "Admin") {
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.createDiscount({
+            data: {
+                ...data,
+                from: new Date(data.from),
+                to: new Date(data.to),
+            }
+        });
+    },
+    async updateDiscount(parent, { id, data }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+
+        if (userRole !== "Admin") {
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.updateDiscount({
+            where: {
+                id
+            },
+            data: {
+                ...data,
+                from: data.from?new Date(data.from):undefined,
+                to: data.to?new Date(data.to):undefined,
+            }
+        });
+    },
+    async deleteDiscounts(parent, { id }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+
+        if (userRole !== "Admin") {
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.deleteManyDiscounts({
+            where: {
+                id_in: id
+            }
+        });
+    },
+    async deletePublishers(parent, { id }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const userRole = await getUserRole(userId, prisma);
+
+        if (userRole !== "Admin") {
+            throw new Error("Unauthorized");
+        }
+
+        return prisma.mutation.deleteManyPublishers({
+            where: {
                 id_in: id
             }
         });

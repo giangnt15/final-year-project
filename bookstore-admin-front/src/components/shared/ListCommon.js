@@ -12,7 +12,7 @@ function ListCommon(Component, defaultOrderBy, listName, deleteManyApi) {
 
     return function ListCommonWrapper(props) {
 
-        const { onClickCreate,showDelete=true } = props;
+        const { onClickCreate, showDelete = true, standAlone } = props;
 
         const location = useLocation();
 
@@ -31,24 +31,29 @@ function ListCommon(Component, defaultOrderBy, listName, deleteManyApi) {
         const searchInput = useRef();
 
         let searchTimeout = null;
-
         const [deleteMany, { loading: deletingMany }] = useMutation(deleteManyApi, {
             onCompleted(data) {
                 if (location.pathname.indexOf('reviews') >= 0) {
-                    message.success(`Xóa thành công ${data.deleteReviews.count} bản ghi`)
+                    message.success(`Xóa thành công ${data.deleteReviews.count} bản ghi`);
                 } else if (location.pathname.indexOf('books') >= 0) {
-                    message.success(`Xóa thành công ${data.deleteBooks.count} bản ghi`)
+                    message.success(`Xóa thành công ${data.deleteBooks.count} bản ghi`);
                 } else if (location.pathname.indexOf('collections') >= 0) {
-                    message.success(`Xóa thành công ${data.deleteCollections.count} bản ghi`)
+                    message.success(`Xóa thành công ${data.deleteCollections.count} bản ghi`);
                 } else if (location.pathname.indexOf('categories') >= 0) {
-                    message.success(`Xóa thành công ${data.deleteCategories.count} bản ghi`)
+                    message.success(`Xóa thành công ${data.deleteCategories.count} bản ghi`);
+                } else if (location.pathname.indexOf('discounts') >= 0) {
+                    message.success(`Xóa thành công ${data.deleteDiscounts.count} bản ghi`);
+                } else if (location.pathname.indexOf('authors') >= 0) {
+                    message.success(`Xóa thành công ${data.deleteAuthors.count} bản ghi`);
+                } else if (location.pathname.indexOf('publishers') >= 0) {
+                    message.success(`Xóa thành công ${data.deletePublishers.count} bản ghi`);
                 }
                 setCanRefetch(true);
             },
             onError(err) {
                 message.error(convertErrString(err.message));
             }
-        })
+        });
 
         const handleSearch = (e) => {
             const { name, value } = e.target;
@@ -170,39 +175,53 @@ function ListCommon(Component, defaultOrderBy, listName, deleteManyApi) {
         }
 
         const isScrolled = useScroll(62);
-
-        return (
-            <div className="content-wrapper">
-                <div className={`content-header m-b-20${isScrolled ? ' sticky' : ''}`}>
-                    <h3>{listName}</h3>
-                    <div className="pull-right">
-                        <Button type="primary" onClick={onClickCreate} ><PlusOutlined /> Thêm mới</Button>
-                        {showDelete&&<Button disabled={selectedRowKeys.length === 0}
-                            loading={deletingMany}
-                            onClick={() => deleteMany({
-                                variables: {
-                                    id: selectedRowKeys
-                                }
-                            })}
-                            className="m-l-8" type="danger"><DeleteOutlined /> Xóa chọn</Button>}
+        if (standAlone) {
+           return <Component {...props} filterDropdownCustom={filterDropdownCustom}
+                setCanRefetch={setCanRefetch}
+                canRefetch={canRefetch}
+                getColumnSearchProps={getColumnSearchProps}
+                orderBy={orderBy}
+                handleSearch={handleSearch} handleReset={handleReset}
+                searchValues={searchValues} setSearchValues={setSearchValues}
+                rowsPerPage={rowsPerPage} setRowsPerPage={(size) => { setCurrentPage(1); setRowsPerPage(size); }}
+                selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys}
+                currentPage={currentPage} setCurrentPage={setCurrentPage}
+                renderSort={renderSort}
+            />
+        } else {
+            return (
+                <div className="content-wrapper">
+                    <div className={`content-header m-b-20${isScrolled ? ' sticky' : ''}`}>
+                        <h3>{listName}</h3>
+                        <div className="pull-right">
+                            <Button type="primary" onClick={onClickCreate} ><PlusOutlined /> Thêm mới</Button>
+                            {showDelete && <Button disabled={selectedRowKeys.length === 0}
+                                loading={deletingMany}
+                                onClick={() => deleteMany({
+                                    variables: {
+                                        id: selectedRowKeys
+                                    }
+                                })}
+                                className="m-l-8" type="danger"><DeleteOutlined /> Xóa chọn</Button>}
+                        </div>
                     </div>
-                </div>
-                <div className="content-body" style={{ minHeight: '120%', backgroundColor: 'inherit' }}>
-                    <Component {...props} filterDropdownCustom={filterDropdownCustom}
-                        setCanRefetch={setCanRefetch}
-                        canRefetch={canRefetch}
-                        getColumnSearchProps={getColumnSearchProps}
-                        orderBy={orderBy}
-                        handleSearch={handleSearch} handleReset={handleReset}
-                        searchValues={searchValues} setSearchValues={setSearchValues}
-                        rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}
-                        selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys}
-                        currentPage={currentPage} setCurrentPage={setCurrentPage}
-                        renderSort={renderSort}
-                    />
-                </div>
-            </div >
-        )
+                    <div className="content-body" style={{ minHeight: '120%', backgroundColor: 'inherit' }}>
+                        <Component {...props} filterDropdownCustom={filterDropdownCustom}
+                            setCanRefetch={setCanRefetch}
+                            canRefetch={canRefetch}
+                            getColumnSearchProps={getColumnSearchProps}
+                            orderBy={orderBy}
+                            handleSearch={handleSearch} handleReset={handleReset}
+                            searchValues={searchValues} setSearchValues={setSearchValues}
+                            rowsPerPage={rowsPerPage} setRowsPerPage={(size) => { setCurrentPage(1); setRowsPerPage(size); }}
+                            selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys}
+                            currentPage={currentPage} setCurrentPage={setCurrentPage}
+                            renderSort={renderSort}
+                        />
+                    </div>
+                </div >
+            )
+        }
     }
 }
 

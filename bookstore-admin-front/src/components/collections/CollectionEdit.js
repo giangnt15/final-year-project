@@ -12,7 +12,7 @@ import { GET_BOOKS_NO_RELATION, GET_BOOKS } from '../../api/bookApi';
 import NumberFormat from 'react-number-format';
 
 const { Panel } = Collapse;
-const {Option} =Select;
+const { Option } = Select;
 
 const ckEditorConfig = {
     language: 'vi',
@@ -27,7 +27,9 @@ function CollectionEdit(props) {
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const [orderBy, setOrderBy] = useState('title_DESC');
-    
+    const [booksToAdd, setBooksToAdd] = useState([]);
+    const [drawerActive, setDrawerActive] = useState(false);
+
     const { id } = useParams();
 
     const [inputs, setInputs] = useState({
@@ -36,11 +38,9 @@ function CollectionEdit(props) {
         thumbnail: ''
     });
 
-    const [booksToAdd,setBooksToAdd] = useState([]);
 
     const history = useHistory();
     const isScrolled = useScroll(62);
-    const [drawerActive, setDrawerActive] = useState(false);
 
 
     const onInputChange = (e) => {
@@ -53,29 +53,31 @@ function CollectionEdit(props) {
         })
     }
 
-    const {loading: gettingCollection, refetch: refetchCollection} = useQuery(GET_COLLECTION, {
-        onError(){
-            message.error("Có lỗi xảy ra khi cập nhật tuyển tập");
+    const { loading: gettingCollection, refetch: refetchCollection } = useQuery(GET_COLLECTION, {
+        onError() {
+            message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
-        onCompleted(data){
-            setInputs(prev=>({
-                ...prev,
-                collectionName: data.getCollection.collectionName,
-                thumbnail: data.getCollection.thumbnail,
-                description: data.getCollection.description,
+        onCompleted(data) {
+            if (data.getCollection) {
+                setInputs(prev => ({
+                    ...prev,
+                    collectionName: data.getCollection.collectionName,
+                    thumbnail: data.getCollection.thumbnail,
+                    description: data.getCollection.description,
 
-            }))
+                }))
+            }
         },
         variables: {
             id
         }
     })
 
-    const [updateCollection, {loading: updatingCollection}] = useMutation(UPDATE_COLLECTION, {
-        onError(){
+    const [updateCollection, { loading: updatingCollection }] = useMutation(UPDATE_COLLECTION, {
+        onError() {
             message.error("Có lỗi xảy ra khi cập nhật tuyển tập");
         },
-        onCompleted(){
+        onCompleted() {
             message.success("Cập nhật thành công")
         }
     })
@@ -287,7 +289,7 @@ function CollectionEdit(props) {
                         </div>
                     </Panel>
                     <Panel header={<span><i className="fa fa-book m-r-12"></i>Sách</span>} key="2" showArrow={false}>
-                            <Fragment><div className="actions">
+                        <Fragment><div className="actions">
                             <Button type="primary" onClick={() => setDrawerActive(true)}><span><PlusOutlined /> Thêm sách vào tuyển tập</span></Button>
                             <Button disabled={selectedRowKeys.length === 0}
                                 loading={updatingCollection}
@@ -322,7 +324,7 @@ function CollectionEdit(props) {
                                     showTotal: (total) =>
                                         `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= dataGettingBooks.getBooks.totalCount ? currentPage * rowsPerPage : dataGettingBooks.getBooks.totalCount} trên ${dataGettingBooks.getBooks.totalCount} kết quả`,
                                     showSizeChanger: true,
-                                    onShowSizeChange: (current, size) => setRowsPerPage(size),
+                                    onShowSizeChange(current, size) { this.current = 1; setRowsPerPage(size) },
                                     total: dataGettingBooks.getBooks.totalCount,
                                     onChange: (page) => { setCurrentPage(page) }
                                 }}
@@ -331,7 +333,7 @@ function CollectionEdit(props) {
                     </Panel>
                 </Collapse>
                 <Drawer
-                    title="Create a new account"
+                    title="Thêm sách vào tuyển tập"
                     width={400}
                     onClose={() => setDrawerActive(false)}
                     visible={drawerActive}

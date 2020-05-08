@@ -39,6 +39,23 @@ export const UPDATE_USER = gql`
     }
 `
 
+export const UPDATE_USER_ADMIN = gql`
+    mutation updateUserAdmin($id: ID!, $data: CustomUserUpdateInputAdmin!){
+        updateUserAdmin(id: $id, data: $data){
+            id
+            username
+            fullName
+            avatar
+            email
+            phone
+            gender
+            birthdate
+            password
+            role
+        }
+    }
+`
+
 export const CREATE_PASSWORD_TOKEN = gql`
     mutation createPasswordToken($email: String!){
         createPasswordToken(email: $email){
@@ -95,6 +112,36 @@ export const GET_USERS = gql`
                 gender
                 birthdate
                 role
+                createdAt
+            }
+            totalCount
+        }
+    }
+`
+
+export const GET_USER_BY_ID = gql`
+    query getUserById($id: ID!){
+        getUserById(id: $id){
+            id
+            username
+            fullName
+            email
+            avatar
+            phone
+            isActive
+            gender
+            birthdate
+            role
+            createdAt
+        }
+    }
+`
+
+export const GET_USERS_BASIC = gql`
+    query getUsers($where: UserWhereInput, $orderBy: UserOrderByInput, $first: Int,$skip: Int, $selection: String){
+        getUsers(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection){
+            users{
+                id
                 createdAt
             }
             totalCount

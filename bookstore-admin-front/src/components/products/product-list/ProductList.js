@@ -291,7 +291,7 @@ function ProductList(props) {
                 showTotal: (total) =>
                     `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= data.getBooks.totalCount ? currentPage * rowsPerPage : data.getBooks.totalCount} trên ${data.getBooks.totalCount} kết quả`,
                 showSizeChanger: true,
-                onShowSizeChange: (current, size) => setRowsPerPage(size),
+                onShowSizeChange(current, size){this.current = 1; setRowsPerPage(size)},
                 total: data.getBooks.totalCount,
                 onChange: (page) => { setCurrentPage(page) }
             }}

@@ -101,7 +101,7 @@ function CollectionList(props) {
                 showTotal: (total) =>
                     `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= data.getCollections.totalCount ? currentPage * rowsPerPage : data.getCollections.totalCount} trên ${data.getCollections.totalCount} kết quả`,
                 showSizeChanger: true,
-                onShowSizeChange: (current, size) => setRowsPerPage(size),
+                onShowSizeChange(current, size){this.current = 1; setRowsPerPage(size)},
                 total: data.getCollections.totalCount,
                 onChange: (page) => { setCurrentPage(page) }
             }}

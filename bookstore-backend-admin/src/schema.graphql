@@ -1,8 +1,8 @@
 #import AuthorOrderByInput, CollectionOrderByInput, UserAddressOrderByInput,BookCategoryCreateInput,BookCategoryUpdateInput from './generated/prisma.graphql'
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
-#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType, UserWhereInput,UserOrderByInput from './generated/prisma.graphql';
-#import BatchPayload, CollectionUpdateInput from './generated/prisma.graphql';
+#import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType, UserWhereInput,UserOrderByInput , DiscountCreateInput from './generated/prisma.graphql';
+#import BatchPayload, CollectionUpdateInput,UserAddressWhereInput, UserAddressOrderByInput, DiscountWhereInput ,BookUpdateManyWithoutPublisherInput, DiscountUpdateInput,DiscountOrderByInput from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -97,7 +97,9 @@ type OrderItem{
     id: ID!
     order: Order!
     item: Book!
-    price: Float!
+    discount: Float
+    totalItemPrice: Float! # giá 1 sp nhân số lượng
+    price: Float! #giá 1 sp sau khi tính km
     quantity: Int!
 }
 
@@ -200,11 +202,13 @@ type BookCategory{
 
 type Discount{
     id: ID!
-    reason: String
+    name: String
     discountRate: Float
     from: String
     to: String
-    appliedTo: Book!
+    appliedTo: [Book]!
+    usePercentage: Boolean
+    discountAmount: Float
 }
 
 type Publisher{
@@ -213,6 +217,7 @@ type Publisher{
     description: String
     image: String
     books(where: BookWhereInput): [Book!]!
+    createdAt: String
 }
 
 type Author{
@@ -222,6 +227,14 @@ type Author{
     image: String
     description: String
     books(where: BookWhereInput): [Book!]!
+    createdAt: String
+}
+
+type CommonStatistic{
+    orders: Int!
+    customers: Int!
+    income: Float!
+    lowStocks: Int!
 }
 
 enum BookFormat{
@@ -238,6 +251,7 @@ enum UserEventType{
 
 enum UserRole{
     User
+    Staff
     Admin
 }
 
@@ -255,13 +269,17 @@ type Query{
     getCategoriesPaging(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, first: Int, skip: Int): CategoryPayload!
     getCategory(id: ID!): BookCategory!
     getAuthors(where: AuthorWhereInput, orderBy: AuthorOrderByInput, first: Int, skip: Int): [Author!]!
+    getAuthorsPaging(where: AuthorWhereInput, orderBy: AuthorOrderByInput, first: Int, skip: Int): AuthorPayload!
     getAuthor(id: ID!): Author!
     getCollections(name: String, orderBy: CollectionOrderByInput, first: Int,skip: Int): GetCollectionsPayload!
     getCollection(id: ID!): Collection!
     getBookReviewsByBook(bookId: ID, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
     getBookReviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, first: Int,skip: Int): GetBookReviewsByBookPayload!
     getUserAddresses: [UserAddress!]!
+    getUserAddressesAdmin(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput,first: Int,skip: Int,selection: String): UserAddressPayload!
     getPublishers(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): [Publisher!]!
+    getPublishersPaging(where: PublisherWhereInput, orderBy: PublisherOrderByInput, first: Int, skip: Int): PublisherPayload!
+    getPublisher(id: ID!): Publisher!
     getItemStockQty(id: ID!): GetItemStockQtyPayload!
     getProvinces: [Province!]!
     getDistricts(provinceId: ID!): [District!]!
@@ -271,7 +289,34 @@ type Query{
     getReviewRepliesByReview(reviewId: ID!): [BookReviewReply!]!
     getWishList: GetWishListPayload!
     getBestSeller(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksPayload!
+    getBestSellerList(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BestSellerListPayload!
     getUsers(where: UserWhereInput,orderBy: UserOrderByInput, first: Int, skip:Int, selection: String): UsersPayload!
+    getUserById(id: ID!): User!
+    getCommonStatistics: CommonStatistic!
+
+    getDiscounts(where: DiscountWhereInput, orderBy: DiscountOrderByInput, first: Int, skip: Int): DiscountPayload!
+    getDiscountById(id: ID!): Discount!
+}
+
+
+type PublisherPayload{
+    publishers: [Publisher!]!
+    totalCount: Int
+}
+
+type AuthorPayload{
+    authors: [Author!]!
+    totalCount: Int
+}
+
+type DiscountPayload{
+    discounts: [Discount!]!
+    totalCount: Int
+}
+
+type UserAddressPayload{
+    addresses: [UserAddress!]!
+    totalCount: Int
 }
 
 type UsersPayload{
@@ -293,11 +338,12 @@ type Mutation{
     signUp(data: UserSignupInput!): AuthPayload!
     login(data: UserLoginInput!): AuthPayload!
     updateUser(data: CustomUserUpdateInput!): User!
+    updateUserAdmin(id: ID!, data: CustomUserUpdateInputAdmin!): User!
     createBook(data: BookCreateInput!): Book!
     updateBook(id: ID!, data: BookUpdateInput!): Book!
     createCollection(data: CollectionCreateInput!): Collection!
     updateCollection(id: ID!, data: CollectionUpdateInput!): Collection!
-    createUserAddress(data: UserAddressCreateInput!): UserAddress!
+    createUserAddress(data: UserAddressCreateInput!, user: ID!): UserAddress!
     updateUserAddress(id: ID!,data: UserAddressUpdateInput!): UserAddress!
     createBookReview(data: BookReviewCreateInput!): BookReview!
     updateBookReview(id: ID!,data: BookReviewUpdateInput!): BookReview!
@@ -306,9 +352,11 @@ type Mutation{
     createPublisher(data: PublisherCreateInput!): Publisher!
     updatePublisher(id: ID!,data: PublisherUpdateInput!): Publisher!
     createAuthor(data: AuthorCreateInput!): Author!
-    updateAuthor(id: ID!,data: AuthorCreateInput!): Author!
+    updateAuthor(id: ID!,data: AuthorUpdateInput!): Author!
+    deleteAuthor(id: ID!): Author!
     createOrder(data: OrderCreateInput!): Order!
     updateOrderStatus(orderId: ID!,orderStatus: OrderStatus!): Order!
+    updateOrderAddress(orderId: ID!,data: OrderAddressUpdateInput!): Order!
     createReviewReply(data: ReviewReplyCreateInput!): BookReviewReply!
     deleteUserAddress(id: ID!): UserAddress!
     addBookToWishList(bookId: ID!): AddBookToWishListPayload!
@@ -320,6 +368,34 @@ type Mutation{
     deleteCategories(id: [ID!]!): BatchPayload!
     deleteReviews(id: [ID!]!): BatchPayload!
     deleteCollections(id: [ID!]!): BatchPayload!
+
+    createDiscount(data: DiscountCreateInput!): Discount!
+    updateDiscount(id: ID!, data: DiscountUpdateInput!): Discount!
+    deleteDiscounts(id: [ID!]!): BatchPayload!
+    deleteAuthors(id: [ID!]!): BatchPayload!
+    deletePublishers(id: [ID!]!): BatchPayload!
+}
+
+input OrderAddressUpdateInput{
+    recipientAddress: String
+    recipientFullName: String
+    recipientProvince: ID
+    recipientWard: ID
+    recipientDistrict: ID
+    recipientPhone: String
+}
+
+type BestSellerListPayload{
+    entities: [BestSellerListResponse!]!
+    totalCount: Int
+}
+
+type BestSellerListResponse{
+    id: ID!
+    title: String!
+    sku: String!
+    totalPrice: Float!
+    totalQuantity: Int!
 }
 
 type CreatePasswordTokenPayload{
@@ -413,6 +489,7 @@ input PublisherUpdateInput{
     name: String
     description: String
     image: String
+    books: BookUpdateManyWithoutPublisherInput
 }
 
 input BookReviewCreateInput{
@@ -463,6 +540,19 @@ input CustomUserUpdateInput{
     password: String
     currentPassword: String
 }
+
+input CustomUserUpdateInputAdmin{
+    fullName: String
+    changePassword: Boolean
+    phone: String
+    gender: Boolean
+    birthdate: String
+    password: String
+    isActive: Boolean
+    role: UserRole
+    email: String
+}
+
 
 input BookUpdateInput{
     title: String

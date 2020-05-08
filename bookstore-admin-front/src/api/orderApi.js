@@ -13,32 +13,9 @@ export const GET_ORDERS = gql`
         getOrders(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection){
            orders{
                id
-               items{
-                   id
-                   price
-                   quantity
-                   item{
-                       id
-                       title
-                       thumbnail
-                   }
-               }
                grandTotal
                recipientFullName
                recipientPhone
-               recipientWard{
-                    id
-                    name
-               }
-                recipientDistrict{
-                    id
-                    name
-                }
-                recipientProvince{
-                    id
-                    name
-                }
-                recipientAddress
                paymentMethod{
                    id
                    name
@@ -46,6 +23,10 @@ export const GET_ORDERS = gql`
                shippingMethod{
                    id
                    name
+               }
+               customer{
+                   id
+                   email
                }
                orderStatus
                paymentStatus
@@ -63,12 +44,18 @@ export const GET_ORDER_BY_ID = gql`
             items{
                 id
                 price
+                totalItemPrice
                 quantity
+                discount
                 item{
                     id
                     title
                     thumbnail
                 }
+            }
+            customer{
+                id
+                email
             }
             grandTotal
             subTotal
@@ -105,6 +92,14 @@ export const GET_ORDER_BY_ID = gql`
 export const UPDATE_ORDER_STATUS = gql`
     mutation updateOrderStatus($orderId: ID!, $orderStatus: OrderStatus!){
         updateOrderStatus(orderId: $orderId, orderStatus: $orderStatus){
+            id
+        }
+    }
+`
+
+export const UPDATE_ORDER_ADDRESS = gql`
+    mutation updateOrderAddress($orderId: ID!, $data: OrderAddressUpdateInput!){
+        updateOrderAddress(orderId: $orderId, data: $data){
             id
         }
     }

@@ -51,27 +51,30 @@ function ProductDetail(props) {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
+        fetchPolicy: "cache-and-network",
         onCompleted(data) {
-            const { title, format, shortDescription, description, sku, isbn, categories,
-                publisher, authors, translator, dimensions, pages, publishedDate, availableCopies, basePrice, thumbnail } = data.getBook;
-            setInputs({
-                title,
-                format,
-                shortDescription,
-                description,
-                sku,
-                isbn,
-                categories: categories.map(item => item.id),
-                authors: authors.map(item => item.id),
-                publisher: publisher.id,
-                translator,
-                dimensions,
-                pages,
-                availableCopies,
-                basePrice,
-                thumbnail,
-                publishedDate: moment(publishedDate)
-            })
+            if (data.getBook) {
+                const { title, format, shortDescription, description, sku, isbn, categories,
+                    publisher, authors, translator, dimensions, pages, publishedDate, availableCopies, basePrice, thumbnail } = data.getBook;
+                setInputs({
+                    title,
+                    format,
+                    shortDescription,
+                    description,
+                    sku,
+                    isbn,
+                    categories: categories.map(item => item.id),
+                    authors: authors.map(item => item.id),
+                    publisher: publisher.id,
+                    translator,
+                    dimensions,
+                    pages,
+                    availableCopies,
+                    basePrice,
+                    thumbnail,
+                    publishedDate: moment(publishedDate)
+                });
+            }
         },
         variables: {
             id

@@ -36,6 +36,8 @@ function HomePage(props) {
                   from 
                   to 
                   discountRate
+                  discountAmount
+                  usePercentage
               }
                 publisher{
                   id
@@ -82,6 +84,8 @@ function HomePage(props) {
                   from 
                   to 
                   discountRate
+                  discountAmount
+                  usePercentage
               }
                 publisher{
                   id

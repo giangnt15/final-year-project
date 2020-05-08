@@ -50,9 +50,11 @@ function CategoryDetail(props) {
         },
         fetchPolicy: 'network-only',
         onCompleted(data) {
-            setInputs({
-                name: data.getCategory.name
-            })
+            if (data.getCategory) {
+                setInputs({
+                    name: data.getCategory.name
+                });
+            }
         },
         variables: {
             id
@@ -302,7 +304,7 @@ function CategoryDetail(props) {
                                         showTotal: (total) =>
                                             `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= dataGettingBooks.getBooks.totalCount ? currentPage * rowsPerPage : dataGettingBooks.getBooks.totalCount} trên ${dataGettingBooks.getBooks.totalCount} kết quả`,
                                         showSizeChanger: true,
-                                        onShowSizeChange: (current, size) => setRowsPerPage(size),
+                                        onShowSizeChange(current, size) { this.current = 1; setRowsPerPage(size) },
                                         total: dataGettingBooks.getBooks.totalCount,
                                         onChange: (page) => { setCurrentPage(page) }
                                     }}

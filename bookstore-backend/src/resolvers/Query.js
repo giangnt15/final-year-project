@@ -303,6 +303,7 @@ const Query = {
                     console.log(err);
                     rej(err);
                 }
+                console.log(JSON.stringify(res0,4))
                 books = res0[0];
                 mySqlConnection.query(`
                 CALL Proc_CountBestSeller(${dateFrom ? `'${dateFrom}'` : 'null'}, ${dateTo ? `'${dateTo}'` : 'null'});
@@ -323,7 +324,7 @@ const Query = {
         try {
            const result = await getBooks();
             if (result.books && result.books.length > 0) {
-                const books1 = prisma.query.books({
+                const books1 = await prisma.query.books({
                     where: {
                         id_in: result.books.map(item=>item.id)
                     }

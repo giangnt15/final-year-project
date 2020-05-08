@@ -16,13 +16,26 @@ function getOrderStatusText(status){
 
 function calculateDiscount(basePrice, discounts){
     let discountedPrice = basePrice;
+    let discountAmount = 0;
     let discountRate = 0;
     for (let discount of discounts) {
+
       if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
         discountedPrice = (discountedPrice - (discountedPrice * discount.discountRate));
         discountRate = discount.discountRate;
+        if (discount.usePercentage) {
+            discountedPrice = (discountedPrice - (discountedPrice * discount.discountRate));
+            discountRate = discount.discountRate;
+        } else {
+            if (discountedPrice>=discount.discountAmount) {
+                discountedPrice = (discountedPrice - discount.discountAmount)
+            }else{
+                discountedPrice = 0;
+            }
+        }
       }
     }
-    return [discountedPrice, discountRate];
+    discountAmount = basePrice - discountedPrice;
+    return [discountedPrice, discountRate, discountAmount];
 }
 export {getOrderStatusText,calculateDiscount};

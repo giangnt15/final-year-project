@@ -96,7 +96,8 @@ type OrderItem{
     id: ID!
     order: Order!
     item: Book!
-    price: Float!
+    totalItemPrice: Float! # giá 1 sp nhân số lượng
+    price: Float! #giá 1 sp sau khi tính km
     quantity: Int!
 }
 
@@ -194,11 +195,13 @@ type BookCategory{
 
 type Discount{
     id: ID!
-    reason: String
+    name: String
     discountRate: Float
     from: String
     to: String
-    appliedTo: Book!
+    appliedTo: [Book]!
+    usePercentage: Boolean
+    discountAmount: Float
 }
 
 type Publisher{
@@ -232,6 +235,7 @@ enum UserEventType{
 
 enum UserRole{
     User
+    Staff
     Admin
 }
 
@@ -291,12 +295,22 @@ type Mutation{
     updateAuthor(id: ID!,data: AuthorCreateInput!): Author!
     createOrder(data: OrderCreateInput!): Order!
     updateOrderStatus(orderId: ID!,orderStatus: OrderStatus!): Order!
+    updateOrderAddress(orderId: ID!,data: OrderAddressUpdateInput!): Order!
     createReviewReply(data: ReviewReplyCreateInput!): BookReviewReply!
     deleteUserAddress(id: ID!): UserAddress!
     addBookToWishList(bookId: ID!): AddBookToWishListPayload!
     removeBookFromWishList(bookId: ID!): AddBookToWishListPayload!
     createPasswordToken(email: String!): CreatePasswordTokenPayload!
     resetPassword(passwordToken: String!, password: String!): CreatePasswordTokenPayload!
+}
+
+input OrderAddressUpdateInput{
+    recipientAddress: String
+    recipientFullName: String
+    recipientProvince: ID
+    recipientWard: ID
+    recipientDistrict: ID
+    recipientPhone: String
 }
 
 type CreatePasswordTokenPayload{

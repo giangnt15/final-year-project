@@ -14,8 +14,8 @@ import _ from 'lodash';
 import { calculateDiscount } from '../../utils/common';
 
 function ProductItem(props) {
-  const { id, thumbnail, basePrice, title, authors, description, discounts = [] } = props.book;
-  const [discountedPrice, discountRate] = calculateDiscount(basePrice, discounts);
+  const { id, thumbnail, basePrice, availableCopies,title, authors, description, discounts = [] } = props.book;
+  const [discountedPrice, discountRate, discountAmount] = calculateDiscount(basePrice, discounts);
   const { width, thumbHeight, changeFilter, addSingleItemToCart, cart } = props;
   const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
     onError() {
@@ -57,12 +57,12 @@ function ProductItem(props) {
       <div className="p-view">
         <span className="real-price ng-binding"><NumberFormat value={discountedPrice} displayType={'text'}
           suffix="đ" thousandSeparator={true} /></span> &nbsp;&nbsp;
-      {discountRate>0&&<span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
+      {discountAmount>0&&<span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
           <NumberFormat value={basePrice} displayType={'text'}
             suffix="đ" thousandSeparator={true} /></span>}
-        {discountRate > 0 && <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
+        {discountAmount > 0 && <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
           <label> Giảm giá </label>
-          <span className="ng-binding">{discountRate*100} %</span>
+          <span className="ng-binding"><NumberFormat suffix="đ" thousandSeparator={true} value={discountAmount} /> </span>
         </div>}
         <div className="clearfix" />
       </div>
@@ -114,29 +114,36 @@ function ProductItem(props) {
         <div className="product__thumb" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: thumbHeight }}>
           <NavLink className="first__img" to={`/book/${id}`}><img src={thumbnail} alt="product image" /></NavLink>
           {/* <a className="second__img animation1" href="single-product.html"><img src={thumbnail} alt="product image" /></a> */}
-          {discountRate > 0 && <div className="hot__box">
-            <span className="hot-label">-{discountRate * 100}%</span>
+          {discountAmount > 0 && <div className="hot__box">
+            <span className="hot-label"><NumberFormat value={discountAmount} displayType={'text'}
+              suffix="VNĐ" prefix="-" thousandSeparator={true} /></span>
           </div>}
         </div>
         <div className="product__content content--center">
           <h4><NavLink to={`/book/${id}`}>{title}</NavLink></h4>
-          <ul className="prize d-flex">
+          {availableCopies>0&& <ul className="prize d-flex">
             <li><NumberFormat value={discountedPrice} displayType={'text'}
               suffix="đ" thousandSeparator={true} /></li>
-            {discountRate>0&&<li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
+            {discountAmount>0&&<li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
               suffix="đ" thousandSeparator={true} /></li>}
-          </ul>
+          </ul>}
+          {
+            availableCopies<=0 && <ul className="prize d-flex">
+            <li>Hết hàng</li></ul>
+          }
           <div className="action">
             <div className="actions_inner">
               <ul className="add_to_links">
-                <li><a className="cart" href="cart.html"><i className="bi bi-shopping-bag4" /></a></li>
-                <li><a className="wishlist" href="wishlist.html"><i className="bi bi-shopping-cart-full" /></a></li>
-                <li><a className="compare" href="#"><i className="bi bi-heart-beat" /></a></li>
-                <li><a data-toggle="modal" title="Quick View" className="quickview modal-view detail-link" href="#productmodal"><i className="bi bi-search" /></a></li>
+                <li><a className="cart" title="Thêm vào giỏ hàng" onClick={()=>  addSingleItemToCart(props.book, 1)}><i className="bi bi-shopping-cart-full" /></a></li>
+                <li><a className="wishlist" onClick={() => addBookToWishList({
+                  variables: {
+                    bookId: id
+                  }
+                })} title="Thêm vào yêu thích"><i className="bi bi-heart-beat" /></a></li>
               </ul>
             </div>
           </div>
-          <div className="product__hover--content">
+          {/* <div className="product__hover--content">
             <ul className="rating d-flex">
               <li className="on"><i className="fa fa-star-o" /></li>
               <li className="on"><i className="fa fa-star-o" /></li>
@@ -144,7 +151,7 @@ function ProductItem(props) {
               <li><i className="fa fa-star-o" /></li>
               <li><i className="fa fa-star-o" /></li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
     </div></Popover>)

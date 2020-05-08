@@ -106,7 +106,7 @@ function ReviewList(props) {
                 showTotal: (total) =>
                     `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= data.getBookReviews.totalCount ? currentPage * rowsPerPage : data.getBookReviews.totalCount} trên ${data.getBookReviews.totalCount} kết quả`,
                 showSizeChanger: true,
-                onShowSizeChange: (current, size) => setRowsPerPage(size),
+                onShowSizeChange(current, size){this.current = 1; setRowsPerPage(size)},
                 total: data.getBookReviews.totalCount,
                 onChange: (page) => { setCurrentPage(page) }
             }}

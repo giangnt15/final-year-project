@@ -1,5 +1,6 @@
 import React from 'react';
 import './footer.css';
+import { NavLink } from 'react-router-dom';
 
 function Footer(props){
 
@@ -13,23 +14,18 @@ function Footer(props){
                 <a href="index.html">
                   <img src="/images/logo/3.png" alt="logo" />
                 </a>
-                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered duskam alteration variations of passages</p>
+                <p>Hãy đến với chúng tôi - hệ thống bán sách trực tuyến uy tín. Nơi bạn có thể tìm được những giây phút giá trị bên những trang sách.</p>
               </div>
               <div className="footer__content">
                 <ul className="social__net social__net--2 d-flex justify-content-center">
-                  <li><a href="#"><i className="bi bi-facebook" /></a></li>
-                  <li><a href="#"><i className="bi bi-google" /></a></li>
-                  <li><a href="#"><i className="bi bi-twitter" /></a></li>
-                  <li><a href="#"><i className="bi bi-linkedin" /></a></li>
-                  <li><a href="#"><i className="bi bi-youtube" /></a></li>
+                  <li><a target="_blank" href="https://www.facebook.com/Bookstore_Fanpage-108050860802757"><i className="bi bi-facebook" /></a></li>
+                  <li><a target="_blank" href="https://twitter.com/home"><i className="bi bi-twitter" /></a></li>
+                  <li><a target="_blank" href="https://www.youtube.com/channel/UCDvi5T9FaC19M1piWpq65pw"><i className="bi bi-youtube" /></a></li>
                 </ul>
                 <ul className="mainmenu d-flex justify-content-center">
-                  <li><a href="index.html">Trending</a></li>
-                  <li><a href="index.html">Best Seller</a></li>
-                  <li><a href="index.html">All Product</a></li>
-                  <li><a href="index.html">Wishlist</a></li>
-                  <li><a href="index.html">Blog</a></li>
-                  <li><a href="index.html">Contact</a></li>
+                  <li><NavLink to="/best-seller">Bán chạy</NavLink></li>
+                  <li><NavLink to="/books">Tất cả sách</NavLink></li>
+                  <li><NavLink to="/auth/account/wish-list">Yêu thích</NavLink></li>
                 </ul>
               </div>
             </div>

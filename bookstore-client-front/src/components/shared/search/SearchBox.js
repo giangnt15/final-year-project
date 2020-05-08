@@ -4,7 +4,7 @@ import { GET_BOOKS } from '../../../api/bookApi';
 import { SORT_DIRECTION_LATEST } from '../../../constants';
 import ProductItem from '../../products/ProductItem';
 import { NavLink } from 'react-router-dom';
-import { Empty, Spin } from 'antd';
+import { Empty, Spin, message } from 'antd';
 
 let searchDelay = null;
 
@@ -18,12 +18,12 @@ function SearchBox(props) {
 
   const [books, setBooks] = useState([]);
 
-  const [spinning ,setSpinning] = useState(false);
+  const [spinning, setSpinning] = useState(false);
 
   const renderSearchPreview = (books) => {
     return books.length ? books.map(item => (
       <NavLink to={`/book/${item.id}`} key={item.id}>
-        <div style={{ margin: 6 }} onClick={()=>document.querySelector(".close__wrap").click()}>
+        <div style={{ margin: 6 }} onClick={() => document.querySelector(".close__wrap").click()}>
           <div style={{ backgroundColor: "#fff" }}>
             <img style={{ height: 200 }} src={item.thumbnail} />
           </div>
@@ -45,30 +45,31 @@ function SearchBox(props) {
       clearTimeout(searchDelay);
       searchDelay = setTimeout(async () => {
         setSpinning(true);
-        const res = await client.query({
-          query: GET_BOOKS,
-          variables: {
-            where: {
-              OR: [
-                {
-                  title_contains: value
-                },
-                {
-                  authors_some: {
-                    pseudonym_contains: value
+        try {
+          const res = await client.query({
+            query: GET_BOOKS,
+            variables: {
+              where: {
+                OR: [
+                  {
+                    title_contains: value
+                  },
+                  {
+                    authors_some: {
+                      pseudonym_contains: value
+                    }
+                  },
+                  {
+                    publisher: {
+                      name_contains: value
+                    }
                   }
-                },
-                {
-                  publisher: {
-                    name_contains: value
-                  }
-                }
-              ]
-            },
-            orderBy: SORT_DIRECTION_LATEST,
-            skip: 0,
-            first: 10,
-            selection: `{
+                ]
+              },
+              orderBy: SORT_DIRECTION_LATEST,
+              skip: 0,
+              first: 10,
+              selection: `{
             id
             title
             basePrice
@@ -87,6 +88,8 @@ function SearchBox(props) {
               from 
               to 
               discountRate
+              discountAmount
+              usePercentage
             }
             publisher{
               id
@@ -101,10 +104,14 @@ function SearchBox(props) {
               name
             }
           }`
-          }
-        })
-        setBooks(res.data.getBooks.books)
-        setSpinning(false);
+            }
+          })
+          setBooks(res.data.getBooks.books)
+          setSpinning(false);
+        } catch (err) {
+          message.error("Có lỗi xảy ra khi lấy dữ liệu");
+          setSpinning(false);
+        }
       }, 500);
     } else {
       setIsSearching(false);
@@ -124,7 +131,7 @@ function SearchBox(props) {
       </div>
     </form>
     <div className="search-result-preview">
-      {searchKeyWord && <h5 className="search-keyword" style={{color: '#fff'}}>Kết quả tìm kiếm cho: {searchKeyWord}</h5>}
+      {searchKeyWord && <h5 className="search-keyword" style={{ color: '#fff' }}>Kết quả tìm kiếm cho: {searchKeyWord}</h5>}
       <br />
       <Spin spinning={spinning}>
         <div className="items-grid">

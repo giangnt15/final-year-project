@@ -92,7 +92,7 @@ function ProductPage(props) {
 
   const avgScore = calculateReviewScore(dataBookReviews ? dataBookReviews.getBookReviewsByBook : undefined);
   const { id, title, basePrice, description, thumbnail, dimensions, translator, format, isbn, publishedDate, discounts, availableCopies, pages, publisher, authors, categories } = data.getBook;
-  const [discountedPrice, discountRate] = calculateDiscount(basePrice, discounts);
+  const [discountedPrice, discountRate, discountAmount] = calculateDiscount(basePrice, discounts);
   return (
     <Fragment>
       <div className="ht__bradcaump__area bg-image--5">
@@ -149,7 +149,7 @@ function ProductPage(props) {
                       <div className="price-box">
                         <span><NumberFormat value={discountedPrice} displayType={'text'}
                           suffix="đ" thousandSeparator={true} /></span>
-                       {discountRate>0&& <p style={{ textDecoration: 'line-through' }}>
+                       {(discountRate>0||discountAmount>0) && <p style={{ textDecoration: 'line-through' }}>
                           <NumberFormat style={{fontSize: 'inherit', color: 'inherit', fontWeight: 300}} value={basePrice} displayType={'text'}
                             suffix="đ" thousandSeparator={true} /></p>}
                       </div>
@@ -318,6 +318,8 @@ function ProductPage(props) {
                   from 
                   to 
                   discountRate
+                  discountAmount
+                  usePercentage
                 }
                 publisher{
                   id
@@ -364,6 +366,8 @@ function ProductPage(props) {
                   from 
                   to 
                   discountRate
+                  discountAmount
+                  usePercentage
                 }
                 publisher{
                   id

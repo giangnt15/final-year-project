@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
 
 const Mutation = {
-    async signUp(parent, { data }, { prisma, env ,sgMailer}, info) {
+    async signUp(parent, { data }, { prisma, env, sgMailer }, info) {
         const hashed = await bcrypt.hash(data.password, 10);
         const user = await prisma.mutation.createUser({
             data: {
@@ -41,7 +41,7 @@ const Mutation = {
                 html: emailTemplate.accountActivation(`${env.CLIENT_HOST}/account-activation/${token}`),
                 subject: "[Bookstore] Kích hoạt tài khoản",
             });
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
         return {
@@ -80,7 +80,7 @@ const Mutation = {
                 message: "Sai tên đăng nhập hoặc mật khẩu"
             }
         }
-        if (!user.isActive){
+        if (!user.isActive) {
             return {
                 statusCode: 405,
                 message: "Tài khoản chưa được kích hoạt",
@@ -378,27 +378,44 @@ const Mutation = {
             where: {
                 id_in: data.items.map(item => item.book)
             }
-        }, `{id basePrice discounts{id discountRate from to}}`);
+        }, `{id basePrice discounts{id discountRate from to usePercentage discountAmount}}`);
         let subTotal = 0;
         let orderItemsInOrder = []
         for (let i = 0; i < orderItems.length; i++) {
             if (orderItems[i].availableCopies < data.items[i].quantity) {
                 throw new Error("Không đủ hàng trong kho, vui lòng liên hệ người quản trị để biết thêm chi tiết");
             } else {
+                let totalItemPrice = 0;
                 let orderItemPrice = orderItems[i].basePrice;
-                for (let discount of orderItems[i].discounts) {
-                    if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
-                        orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate) * data.items[i].quantity)
+                if (orderItems[i].discounts.length > 0) {
+                    for (let discount of orderItems[i].discounts) {
+                        if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
+                            if (discount.usePercentage) {
+                                orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate))
+                            } else {
+                                if (orderItemPrice>=discount.discountAmount) {
+                                    orderItemPrice = (orderItemPrice - discount.discountAmount)
+                                }else{
+                                    orderItemPrice = 0;
+                                }
+                            }
+                        }
                     }
+                    totalItemPrice = orderItemPrice * data.items[i].quantity;
+                } else {
+                    totalItemPrice = orderItemPrice * data.items[i].quantity;
                 }
-                subTotal += orderItemPrice;
+                subTotal += totalItemPrice;
                 orderItemsInOrder.push({
                     item: {
                         connect: {
                             id: data.items[i].book
                         }
                     },
+                    basePrice: orderItems[i].basePrice * data.items[i].quantity,
+                    discount: orderItems[i].basePrice - orderItemPrice,
                     price: orderItemPrice,
+                    totalItemPrice,
                     quantity: data.items[i].quantity
                 })
             }
@@ -485,6 +502,36 @@ const Mutation = {
                 },
                 data: {
                     orderStatus
+                }
+            }, info);
+        }
+        throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");
+    },
+    async updateOrderAddress(parent, { orderId, data }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const role = await getUserRole(userId, prisma);
+        if (role === "Admin") {
+            return prisma.mutation.updateOrder({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    ...data,
+                    recipientProvince: {
+                        connect: {
+                            id: data.recipientProvince
+                        }
+                    },
+                    recipientDistrict: {
+                        connect: {
+                            id: data.recipientDistrict
+                        }
+                    },
+                    recipientWard: {
+                        connect: {
+                            id: data.recipientWard
+                        }
+                    }
                 }
             }, info);
         }

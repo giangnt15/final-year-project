@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Fri Mar 27 2020 20:47:33 GMT+0700 (Indochina Time)
+# timestamp: Fri May 08 2020 09:12:05 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -1296,7 +1296,7 @@ type Book implements Node {
   dimensions: String
   publishedDate: DateTime
   collections(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Collection!]
-  publisher: Publisher!
+  publisher: Publisher
   availableCopies: Int!
   basePrice: Float!
   pages: Int
@@ -1757,7 +1757,7 @@ input BookCreateInput {
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
   collections: CollectionCreateManyWithoutBooksInput
-  publisher: PublisherCreateOneWithoutBooksInput!
+  publisher: PublisherCreateOneWithoutBooksInput
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
 
@@ -1781,6 +1781,11 @@ input BookCreateManyWithoutCollectionsInput {
   connect: [BookWhereUniqueInput!]
 }
 
+input BookCreateManyWithoutDiscountsInput {
+  create: [BookCreateWithoutDiscountsInput!]
+  connect: [BookWhereUniqueInput!]
+}
+
 input BookCreateManyWithoutPublisherInput {
   create: [BookCreateWithoutPublisherInput!]
   connect: [BookWhereUniqueInput!]
@@ -1788,11 +1793,6 @@ input BookCreateManyWithoutPublisherInput {
 
 input BookCreateOneInput {
   create: BookCreateInput
-  connect: BookWhereUniqueInput
-}
-
-input BookCreateOneWithoutDiscountsInput {
-  create: BookCreateWithoutDiscountsInput
   connect: BookWhereUniqueInput
 }
 
@@ -1820,7 +1820,7 @@ input BookCreateWithoutAuthorsInput {
   categories: BookCategoryCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
   collections: CollectionCreateManyWithoutBooksInput
-  publisher: PublisherCreateOneWithoutBooksInput!
+  publisher: PublisherCreateOneWithoutBooksInput
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
 
@@ -1843,7 +1843,7 @@ input BookCreateWithoutCategoriesInput {
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
   collections: CollectionCreateManyWithoutBooksInput
-  publisher: PublisherCreateOneWithoutBooksInput!
+  publisher: PublisherCreateOneWithoutBooksInput
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
 
@@ -1866,7 +1866,7 @@ input BookCreateWithoutCollectionsInput {
   categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
-  publisher: PublisherCreateOneWithoutBooksInput!
+  publisher: PublisherCreateOneWithoutBooksInput
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
 
@@ -1890,7 +1890,7 @@ input BookCreateWithoutDiscountsInput {
   authors: AuthorCreateManyWithoutBooksInput
   reviews: BookReviewCreateManyWithoutBookInput
   collections: CollectionCreateManyWithoutBooksInput
-  publisher: PublisherCreateOneWithoutBooksInput!
+  publisher: PublisherCreateOneWithoutBooksInput
 }
 
 input BookCreateWithoutPublisherInput {
@@ -1935,7 +1935,7 @@ input BookCreateWithoutReviewsInput {
   categories: BookCategoryCreateManyWithoutBooksInput
   authors: AuthorCreateManyWithoutBooksInput
   collections: CollectionCreateManyWithoutBooksInput
-  publisher: PublisherCreateOneWithoutBooksInput!
+  publisher: PublisherCreateOneWithoutBooksInput
   discounts: DiscountCreateManyWithoutAppliedToInput
 }
 
@@ -3704,7 +3704,7 @@ input BookUpdateDataInput {
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
   collections: CollectionUpdateManyWithoutBooksInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -3727,7 +3727,7 @@ input BookUpdateInput {
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
   collections: CollectionUpdateManyWithoutBooksInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -3813,6 +3813,18 @@ input BookUpdateManyWithoutCollectionsInput {
   upsert: [BookUpsertWithWhereUniqueWithoutCollectionsInput!]
 }
 
+input BookUpdateManyWithoutDiscountsInput {
+  create: [BookCreateWithoutDiscountsInput!]
+  connect: [BookWhereUniqueInput!]
+  set: [BookWhereUniqueInput!]
+  disconnect: [BookWhereUniqueInput!]
+  delete: [BookWhereUniqueInput!]
+  update: [BookUpdateWithWhereUniqueWithoutDiscountsInput!]
+  updateMany: [BookUpdateManyWithWhereNestedInput!]
+  deleteMany: [BookScalarWhereInput!]
+  upsert: [BookUpsertWithWhereUniqueWithoutDiscountsInput!]
+}
+
 input BookUpdateManyWithoutPublisherInput {
   create: [BookCreateWithoutPublisherInput!]
   connect: [BookWhereUniqueInput!]
@@ -3830,18 +3842,20 @@ input BookUpdateManyWithWhereNestedInput {
   data: BookUpdateManyDataInput!
 }
 
+input BookUpdateOneInput {
+  create: BookCreateInput
+  connect: BookWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BookUpdateDataInput
+  upsert: BookUpsertNestedInput
+}
+
 input BookUpdateOneRequiredInput {
   create: BookCreateInput
   connect: BookWhereUniqueInput
   update: BookUpdateDataInput
   upsert: BookUpsertNestedInput
-}
-
-input BookUpdateOneRequiredWithoutDiscountsInput {
-  create: BookCreateWithoutDiscountsInput
-  connect: BookWhereUniqueInput
-  update: BookUpdateWithoutDiscountsDataInput
-  upsert: BookUpsertWithoutDiscountsInput
 }
 
 input BookUpdateOneRequiredWithoutReviewsInput {
@@ -3869,7 +3883,7 @@ input BookUpdateWithoutAuthorsDataInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
   collections: CollectionUpdateManyWithoutBooksInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -3891,7 +3905,7 @@ input BookUpdateWithoutCategoriesDataInput {
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
   collections: CollectionUpdateManyWithoutBooksInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -3913,7 +3927,7 @@ input BookUpdateWithoutCollectionsDataInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -3936,7 +3950,7 @@ input BookUpdateWithoutDiscountsDataInput {
   authors: AuthorUpdateManyWithoutBooksInput
   reviews: BookReviewUpdateManyWithoutBookInput
   collections: CollectionUpdateManyWithoutBooksInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
 }
 
 input BookUpdateWithoutPublisherDataInput {
@@ -3979,7 +3993,7 @@ input BookUpdateWithoutReviewsDataInput {
   categories: BookCategoryUpdateManyWithoutBooksInput
   authors: AuthorUpdateManyWithoutBooksInput
   collections: CollectionUpdateManyWithoutBooksInput
-  publisher: PublisherUpdateOneRequiredWithoutBooksInput
+  publisher: PublisherUpdateOneWithoutBooksInput
   discounts: DiscountUpdateManyWithoutAppliedToInput
 }
 
@@ -4003,6 +4017,11 @@ input BookUpdateWithWhereUniqueWithoutCollectionsInput {
   data: BookUpdateWithoutCollectionsDataInput!
 }
 
+input BookUpdateWithWhereUniqueWithoutDiscountsInput {
+  where: BookWhereUniqueInput!
+  data: BookUpdateWithoutDiscountsDataInput!
+}
+
 input BookUpdateWithWhereUniqueWithoutPublisherInput {
   where: BookWhereUniqueInput!
   data: BookUpdateWithoutPublisherDataInput!
@@ -4011,11 +4030,6 @@ input BookUpdateWithWhereUniqueWithoutPublisherInput {
 input BookUpsertNestedInput {
   update: BookUpdateDataInput!
   create: BookCreateInput!
-}
-
-input BookUpsertWithoutDiscountsInput {
-  update: BookUpdateWithoutDiscountsDataInput!
-  create: BookCreateWithoutDiscountsInput!
 }
 
 input BookUpsertWithoutReviewsInput {
@@ -4045,6 +4059,12 @@ input BookUpsertWithWhereUniqueWithoutCollectionsInput {
   where: BookWhereUniqueInput!
   update: BookUpdateWithoutCollectionsDataInput!
   create: BookCreateWithoutCollectionsInput!
+}
+
+input BookUpsertWithWhereUniqueWithoutDiscountsInput {
+  where: BookWhereUniqueInput!
+  update: BookUpdateWithoutDiscountsDataInput!
+  create: BookCreateWithoutDiscountsInput!
 }
 
 input BookUpsertWithWhereUniqueWithoutPublisherInput {
@@ -5230,13 +5250,15 @@ scalar DateTime
 
 type Discount implements Node {
   id: ID!
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
-  appliedTo: Book!
+  appliedTo(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  usePercentage: Boolean
+  discountAmount: Float
 }
 
 """A connection to a list of items."""
@@ -5251,11 +5273,13 @@ type DiscountConnection {
 
 input DiscountCreateInput {
   id: ID
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
-  appliedTo: BookCreateOneWithoutDiscountsInput!
+  usePercentage: Boolean
+  discountAmount: Float
+  appliedTo: BookCreateManyWithoutDiscountsInput
 }
 
 input DiscountCreateManyWithoutAppliedToInput {
@@ -5265,10 +5289,12 @@ input DiscountCreateManyWithoutAppliedToInput {
 
 input DiscountCreateWithoutAppliedToInput {
   id: ID
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
+  usePercentage: Boolean
+  discountAmount: Float
 }
 
 """An edge in a connection."""
@@ -5283,8 +5309,8 @@ type DiscountEdge {
 enum DiscountOrderByInput {
   id_ASC
   id_DESC
-  reason_ASC
-  reason_DESC
+  name_ASC
+  name_DESC
   discountRate_ASC
   discountRate_DESC
   from_ASC
@@ -5295,16 +5321,22 @@ enum DiscountOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  usePercentage_ASC
+  usePercentage_DESC
+  discountAmount_ASC
+  discountAmount_DESC
 }
 
 type DiscountPreviousValues {
   id: ID!
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+  usePercentage: Boolean
+  discountAmount: Float
 }
 
 input DiscountScalarWhereInput {
@@ -5356,46 +5388,46 @@ input DiscountScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  reason: String
+  name: String
 
   """All values that are not equal to given value."""
-  reason_not: String
+  name_not: String
 
   """All values that are contained in given list."""
-  reason_in: [String!]
+  name_in: [String!]
 
   """All values that are not contained in given list."""
-  reason_not_in: [String!]
+  name_not_in: [String!]
 
   """All values less than the given value."""
-  reason_lt: String
+  name_lt: String
 
   """All values less than or equal the given value."""
-  reason_lte: String
+  name_lte: String
 
   """All values greater than the given value."""
-  reason_gt: String
+  name_gt: String
 
   """All values greater than or equal the given value."""
-  reason_gte: String
+  name_gte: String
 
   """All values containing the given string."""
-  reason_contains: String
+  name_contains: String
 
   """All values not containing the given string."""
-  reason_not_contains: String
+  name_not_contains: String
 
   """All values starting with the given string."""
-  reason_starts_with: String
+  name_starts_with: String
 
   """All values not starting with the given string."""
-  reason_not_starts_with: String
+  name_not_starts_with: String
 
   """All values ending with the given string."""
-  reason_ends_with: String
+  name_ends_with: String
 
   """All values not ending with the given string."""
-  reason_not_ends_with: String
+  name_not_ends_with: String
   discountRate: Float
 
   """All values that are not equal to given value."""
@@ -5506,6 +5538,32 @@ input DiscountScalarWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  usePercentage: Boolean
+
+  """All values that are not equal to given value."""
+  usePercentage_not: Boolean
+  discountAmount: Float
+
+  """All values that are not equal to given value."""
+  discountAmount_not: Float
+
+  """All values that are contained in given list."""
+  discountAmount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  discountAmount_not_in: [Float!]
+
+  """All values less than the given value."""
+  discountAmount_lt: Float
+
+  """All values less than or equal the given value."""
+  discountAmount_lte: Float
+
+  """All values greater than the given value."""
+  discountAmount_gt: Float
+
+  """All values greater than or equal the given value."""
+  discountAmount_gte: Float
 }
 
 type DiscountSubscriptionPayload {
@@ -5546,25 +5604,31 @@ input DiscountSubscriptionWhereInput {
 }
 
 input DiscountUpdateInput {
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
-  appliedTo: BookUpdateOneRequiredWithoutDiscountsInput
+  usePercentage: Boolean
+  discountAmount: Float
+  appliedTo: BookUpdateManyWithoutDiscountsInput
 }
 
 input DiscountUpdateManyDataInput {
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
+  usePercentage: Boolean
+  discountAmount: Float
 }
 
 input DiscountUpdateManyMutationInput {
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
+  usePercentage: Boolean
+  discountAmount: Float
 }
 
 input DiscountUpdateManyWithoutAppliedToInput {
@@ -5585,10 +5649,12 @@ input DiscountUpdateManyWithWhereNestedInput {
 }
 
 input DiscountUpdateWithoutAppliedToDataInput {
-  reason: String
+  name: String
   discountRate: Float
   from: DateTime
   to: DateTime
+  usePercentage: Boolean
+  discountAmount: Float
 }
 
 input DiscountUpdateWithWhereUniqueWithoutAppliedToInput {
@@ -5651,46 +5717,46 @@ input DiscountWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  reason: String
+  name: String
 
   """All values that are not equal to given value."""
-  reason_not: String
+  name_not: String
 
   """All values that are contained in given list."""
-  reason_in: [String!]
+  name_in: [String!]
 
   """All values that are not contained in given list."""
-  reason_not_in: [String!]
+  name_not_in: [String!]
 
   """All values less than the given value."""
-  reason_lt: String
+  name_lt: String
 
   """All values less than or equal the given value."""
-  reason_lte: String
+  name_lte: String
 
   """All values greater than the given value."""
-  reason_gt: String
+  name_gt: String
 
   """All values greater than or equal the given value."""
-  reason_gte: String
+  name_gte: String
 
   """All values containing the given string."""
-  reason_contains: String
+  name_contains: String
 
   """All values not containing the given string."""
-  reason_not_contains: String
+  name_not_contains: String
 
   """All values starting with the given string."""
-  reason_starts_with: String
+  name_starts_with: String
 
   """All values not starting with the given string."""
-  reason_not_starts_with: String
+  name_not_starts_with: String
 
   """All values ending with the given string."""
-  reason_ends_with: String
+  name_ends_with: String
 
   """All values not ending with the given string."""
-  reason_not_ends_with: String
+  name_not_ends_with: String
   discountRate: Float
 
   """All values that are not equal to given value."""
@@ -5801,7 +5867,35 @@ input DiscountWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  appliedTo: BookWhereInput
+  usePercentage: Boolean
+
+  """All values that are not equal to given value."""
+  usePercentage_not: Boolean
+  discountAmount: Float
+
+  """All values that are not equal to given value."""
+  discountAmount_not: Float
+
+  """All values that are contained in given list."""
+  discountAmount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  discountAmount_not_in: [Float!]
+
+  """All values less than the given value."""
+  discountAmount_lt: Float
+
+  """All values less than or equal the given value."""
+  discountAmount_lte: Float
+
+  """All values greater than the given value."""
+  discountAmount_gt: Float
+
+  """All values greater than or equal the given value."""
+  discountAmount_gte: Float
+  appliedTo_every: BookWhereInput
+  appliedTo_some: BookWhereInput
+  appliedTo_none: BookWhereInput
 }
 
 input DiscountWhereUniqueInput {
@@ -6327,8 +6421,11 @@ type OrderEdge {
 type OrderItem implements Node {
   id: ID!
   order: Order!
-  item: Book!
+  item: Book
+  discount: Float
+  basePrice: Float
   price: Float!
+  totalItemPrice: Float!
   quantity: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -6346,10 +6443,13 @@ type OrderItemConnection {
 
 input OrderItemCreateInput {
   id: ID
+  discount: Float
+  basePrice: Float
   price: Float!
+  totalItemPrice: Float!
   quantity: Int!
   order: OrderCreateOneWithoutItemsInput!
-  item: BookCreateOneInput!
+  item: BookCreateOneInput
 }
 
 input OrderItemCreateManyWithoutOrderInput {
@@ -6359,9 +6459,12 @@ input OrderItemCreateManyWithoutOrderInput {
 
 input OrderItemCreateWithoutOrderInput {
   id: ID
+  discount: Float
+  basePrice: Float
   price: Float!
+  totalItemPrice: Float!
   quantity: Int!
-  item: BookCreateOneInput!
+  item: BookCreateOneInput
 }
 
 """An edge in a connection."""
@@ -6376,8 +6479,14 @@ type OrderItemEdge {
 enum OrderItemOrderByInput {
   id_ASC
   id_DESC
+  discount_ASC
+  discount_DESC
+  basePrice_ASC
+  basePrice_DESC
   price_ASC
   price_DESC
+  totalItemPrice_ASC
+  totalItemPrice_DESC
   quantity_ASC
   quantity_DESC
   createdAt_ASC
@@ -6388,7 +6497,10 @@ enum OrderItemOrderByInput {
 
 type OrderItemPreviousValues {
   id: ID!
+  discount: Float
+  basePrice: Float
   price: Float!
+  totalItemPrice: Float!
   quantity: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -6443,6 +6555,50 @@ input OrderItemScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  discount: Float
+
+  """All values that are not equal to given value."""
+  discount_not: Float
+
+  """All values that are contained in given list."""
+  discount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  discount_not_in: [Float!]
+
+  """All values less than the given value."""
+  discount_lt: Float
+
+  """All values less than or equal the given value."""
+  discount_lte: Float
+
+  """All values greater than the given value."""
+  discount_gt: Float
+
+  """All values greater than or equal the given value."""
+  discount_gte: Float
+  basePrice: Float
+
+  """All values that are not equal to given value."""
+  basePrice_not: Float
+
+  """All values that are contained in given list."""
+  basePrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  basePrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  basePrice_lt: Float
+
+  """All values less than or equal the given value."""
+  basePrice_lte: Float
+
+  """All values greater than the given value."""
+  basePrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  basePrice_gte: Float
   price: Float
 
   """All values that are not equal to given value."""
@@ -6465,6 +6621,28 @@ input OrderItemScalarWhereInput {
 
   """All values greater than or equal the given value."""
   price_gte: Float
+  totalItemPrice: Float
+
+  """All values that are not equal to given value."""
+  totalItemPrice_not: Float
+
+  """All values that are contained in given list."""
+  totalItemPrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  totalItemPrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  totalItemPrice_lt: Float
+
+  """All values less than or equal the given value."""
+  totalItemPrice_lte: Float
+
+  """All values greater than the given value."""
+  totalItemPrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  totalItemPrice_gte: Float
   quantity: Int
 
   """All values that are not equal to given value."""
@@ -6571,19 +6749,28 @@ input OrderItemSubscriptionWhereInput {
 }
 
 input OrderItemUpdateInput {
+  discount: Float
+  basePrice: Float
   price: Float
+  totalItemPrice: Float
   quantity: Int
   order: OrderUpdateOneRequiredWithoutItemsInput
-  item: BookUpdateOneRequiredInput
+  item: BookUpdateOneInput
 }
 
 input OrderItemUpdateManyDataInput {
+  discount: Float
+  basePrice: Float
   price: Float
+  totalItemPrice: Float
   quantity: Int
 }
 
 input OrderItemUpdateManyMutationInput {
+  discount: Float
+  basePrice: Float
   price: Float
+  totalItemPrice: Float
   quantity: Int
 }
 
@@ -6605,9 +6792,12 @@ input OrderItemUpdateManyWithWhereNestedInput {
 }
 
 input OrderItemUpdateWithoutOrderDataInput {
+  discount: Float
+  basePrice: Float
   price: Float
+  totalItemPrice: Float
   quantity: Int
-  item: BookUpdateOneRequiredInput
+  item: BookUpdateOneInput
 }
 
 input OrderItemUpdateWithWhereUniqueWithoutOrderInput {
@@ -6670,6 +6860,50 @@ input OrderItemWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  discount: Float
+
+  """All values that are not equal to given value."""
+  discount_not: Float
+
+  """All values that are contained in given list."""
+  discount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  discount_not_in: [Float!]
+
+  """All values less than the given value."""
+  discount_lt: Float
+
+  """All values less than or equal the given value."""
+  discount_lte: Float
+
+  """All values greater than the given value."""
+  discount_gt: Float
+
+  """All values greater than or equal the given value."""
+  discount_gte: Float
+  basePrice: Float
+
+  """All values that are not equal to given value."""
+  basePrice_not: Float
+
+  """All values that are contained in given list."""
+  basePrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  basePrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  basePrice_lt: Float
+
+  """All values less than or equal the given value."""
+  basePrice_lte: Float
+
+  """All values greater than the given value."""
+  basePrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  basePrice_gte: Float
   price: Float
 
   """All values that are not equal to given value."""
@@ -6692,6 +6926,28 @@ input OrderItemWhereInput {
 
   """All values greater than or equal the given value."""
   price_gte: Float
+  totalItemPrice: Float
+
+  """All values that are not equal to given value."""
+  totalItemPrice_not: Float
+
+  """All values that are contained in given list."""
+  totalItemPrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  totalItemPrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  totalItemPrice_lt: Float
+
+  """All values less than or equal the given value."""
+  totalItemPrice_lte: Float
+
+  """All values greater than the given value."""
+  totalItemPrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  totalItemPrice_gte: Float
   quantity: Int
 
   """All values that are not equal to given value."""
@@ -8316,9 +8572,11 @@ input PublisherUpdateManyMutationInput {
   image: String
 }
 
-input PublisherUpdateOneRequiredWithoutBooksInput {
+input PublisherUpdateOneWithoutBooksInput {
   create: PublisherCreateWithoutBooksInput
   connect: PublisherWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
   update: PublisherUpdateWithoutBooksDataInput
   upsert: PublisherUpsertWithoutBooksInput
 }

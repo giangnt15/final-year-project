@@ -8,7 +8,7 @@ import PriceFilter from '../filters/PriceFilter';
 import { NavLink } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BEST_SELLER } from '../../../api/bookApi';
-import { message } from 'antd';
+import { message, Empty } from 'antd';
 import moment from 'moment';
 
 const sortDirections = [
@@ -99,11 +99,15 @@ function BestSellerList(props) {
         if (listWrapper) {
             listWrapper.scrollIntoView();
         }
-        return data.getBestSeller.books.map((book, index) => {
-            return (
-                <div key={index}><ProductItem width={220} thumbHeight={240} book={book} /></div>
-            )
-        });
+        if (data.getBestSeller.books.length) {
+            return data.getBestSeller.books.map((book, index) => {
+                return (
+                    <div key={index}><ProductItem width={220} thumbHeight={240} book={book} /></div>
+                )
+            });
+        } else {
+            return <div className="d-flex justify-content-center w-100"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" /></div>;
+        }
     }
 
     const renderProductsList = () => {
@@ -111,11 +115,16 @@ function BestSellerList(props) {
         if (listWrapper) {
             listWrapper.scrollIntoView();
         }
-        return data.getBestSeller.books.map((book, index) => {
-            return (
-                <div key={index}><ListProductItem width={300} thumbHeight={360} book={book} /></div>
-            )
-        });
+        if (data.getBestSeller.books.length) {
+
+            return data.getBestSeller.books.map((book, index) => {
+                return (
+                    <div key={index}><ListProductItem width={300} thumbHeight={360} book={book} /></div>
+                )
+            });
+        } else {
+            return <div className="d-flex justify-content-center w-100"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" /></div>;
+        }
     }
 
     return (

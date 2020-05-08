@@ -95,8 +95,11 @@ type ShippingMethod{
 type OrderItem{
     id: ID! @id
     order: Order! @relation(name: "OrderItemToOrder", onDelete: SET_NULL)
-    item: Book! @relation(name: "OrderItemToBook")
-    price: Float!
+    item: Book @relation(name: "OrderItemToBook")
+    discount: Float @default(value: 0)
+    basePrice: Float
+    price: Float! #giá 1 sp
+    totalItemPrice: Float! # giá 1 sp nhân số lượng
     quantity: Int!
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
@@ -140,7 +143,7 @@ type Book{
     dimensions: String
     publishedDate: DateTime
     collections: [Collection!]! @relation(name: "BookToCollection")
-    publisher: Publisher! @relation(name: "BookToPublisher")
+    publisher: Publisher @relation(name: "BookToPublisher")
     availableCopies: Int!
     basePrice: Float!
     pages: Int
@@ -189,13 +192,15 @@ type BookCategory{
 
 type Discount{
     id: ID! @id
-    reason: String
-    discountRate: Float
+    name: String
+    discountRate: Float    
     from: DateTime
     to: DateTime
-    appliedTo: Book! @relation(name: "DiscountToBook")
+    appliedTo: [Book]! @relation(name: "DiscountToBook")
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
+    usePercentage: Boolean
+    discountAmount: Float
 }
 
 type Publisher{

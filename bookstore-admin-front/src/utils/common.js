@@ -14,6 +14,20 @@ function getOrderStatusText(status){
     }
 }
 
+function getOrderStatusColor(status){
+    switch(status){
+        case "Ordered": 
+            return "#4DC2F7"
+        case "Processing": 
+            return "#108ee9"
+        case "Completed": 
+            return "#87d068"
+        case "Canceled": 
+            return "#f50"
+        default: return "#4DC2F7"
+    }
+}
+
 function calculateDiscount(basePrice, discounts){
     let discountedPrice = basePrice;
     let discountRate = 0;
@@ -30,4 +44,4 @@ function convertErrString(errString){
     return errString.replace("GraphQL error: ",'').replace("Network error: ",'');
 }
 
-export {getOrderStatusText,calculateDiscount,convertErrString};
+export {getOrderStatusText,calculateDiscount,convertErrString,getOrderStatusColor};

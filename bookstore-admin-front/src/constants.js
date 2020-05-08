@@ -50,7 +50,9 @@ export const UPDATE_USER_FAILED = 'UPDATE_USER_FAILED';
 //datetime
 export const DATE_TIME_VN_24H = "HH:mm:ss DD-MM-YYYY"
 export const DATE_VN = "DD-MM-YYYY"
+export const MONTH_VN = "MM-YYYY"
 export const DATE_US = "YYYY-MM-DD"
+export const DATE_TIME_US_24H = "YYYY-MM-DD HH:mm:ss"
 
 //end datetime
 

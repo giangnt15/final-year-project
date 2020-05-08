@@ -8,6 +8,15 @@
                     "default": "http://localhost:4466/bookstore/dev"
                 }
             }
+        },
+         "prisma_prod": {
+            "schemaPath": "./src/generated/prisma.graphql",
+            "extensions": {
+                "prisma": "prisma/prisma.yml",
+                "endpoints": {
+                    "default": "http://3.15.176.44:4466/bookstore/prod"
+                }
+            }
         }
     }
 }

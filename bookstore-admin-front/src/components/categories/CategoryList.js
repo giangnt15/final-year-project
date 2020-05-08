@@ -96,7 +96,7 @@ function CategoryList(props) {
                 showTotal: (total) =>
                     `Hiển thị ${(currentPage - 1) * rowsPerPage + 1} - ${currentPage * rowsPerPage <= data.getCategoriesPaging.totalCount ? currentPage * rowsPerPage : data.getCategoriesPaging.totalCount} trên ${data.getCategoriesPaging.totalCount} kết quả`,
                 showSizeChanger: true,
-                onShowSizeChange: (current, size) => setRowsPerPage(size),
+                onShowSizeChange(current, size){ setRowsPerPage(size);console.log(current);this.current = 1; console.log(this.current)},
                 total: data.getCategoriesPaging.totalCount,
                 onChange: (page) => { setCurrentPage(page) }
             }}

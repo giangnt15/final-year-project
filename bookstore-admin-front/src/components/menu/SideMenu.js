@@ -42,7 +42,7 @@ function SideMenu(props) {
             icon: 'shopping-cart',
             children: [{
                 label: "Đơn hàng",
-                link: '/sales/orders'
+                link: '/sale/order/list'
             }]
         }, {
             label: "Người dùng",
