@@ -1,6 +1,8 @@
 import getUserId from '../utils/getUserId';
 import checkAdmin, { getUserRole } from '../utils/adminAuth';
 import prisma from '../prisma';
+import _ from 'lodash';
+import { calculateDiscount } from '../utils/common';
 
 const Query = {
     async getBooks(parent, args, { prisma }, info) {
@@ -13,6 +15,77 @@ const Query = {
         const books = await prisma.query.books(opArgs, selection);
         const count = await prisma.query.booksConnection({ where }, `{aggregate {count}}`);
         const totalCount = count.aggregate.count;
+        return {
+            books,
+            totalCount
+        }
+    },
+    async getBooksForBrowsing(parent, args, { prisma }, info) {
+        let opArgs = {}
+        const { where, orderBy, first, skip } = args;
+        opArgs.where = where;
+        opArgs.orderBy = orderBy;
+        opArgs.first = first;
+        opArgs.skip = skip;
+        const booksRaw = await prisma.query.books(opArgs, `{
+            id
+            title
+            basePrice
+            description
+            thumbnail
+            images
+            dimensions
+            translator
+            format
+            isbn
+            publishedDate
+            availableCopies
+            pages
+            discounts{
+              id
+              from
+              to
+              discountRate
+              usePercentage
+              discountAmount
+            }
+            reviews{
+                id
+                rating
+            }
+            publisher{
+              id
+              name
+            }
+            authors{
+              id
+              pseudonym
+            }
+            categories{
+              id
+              name
+            }
+          }`);
+        const count = await prisma.query.booksConnection({ where }, `{aggregate {count}}`);
+        const totalCount = count.aggregate.count;
+
+        const books = booksRaw.map(b => {
+            const [discountedPrice, discountRate, discountAmount] = calculateDiscount(b.basePrice, b.discounts);
+            const totalRating = _.sumBy(b.reviews, 'rating');
+            return {
+                ...b,
+                reviews: {
+                    avgRating: totalRating ? totalRating / b.reviews.length : 0,
+                    totalCount: b.reviews.length
+                },
+                discounts: {
+                    discountedPrice,
+                    discountAmount,
+                    discountRate
+                }
+            }
+        });
+        console.log("Line 87: ", JSON.stringify(books));
         return {
             books,
             totalCount
@@ -303,7 +376,7 @@ const Query = {
                     console.log(err);
                     rej(err);
                 }
-                console.log(JSON.stringify(res0,4))
+                console.log(JSON.stringify(res0, 4))
                 books = res0[0];
                 mySqlConnection.query(`
                 CALL Proc_CountBestSeller(${dateFrom ? `'${dateFrom}'` : 'null'}, ${dateTo ? `'${dateTo}'` : 'null'});
@@ -322,13 +395,13 @@ const Query = {
 
         });
         try {
-           const result = await getBooks();
+            const result = await getBooks();
             if (result.books && result.books.length > 0) {
                 const books1 = await prisma.query.books({
                     where: {
-                        id_in: result.books.map(item=>item.id)
+                        id_in: result.books.map(item => item.id)
                     }
-                },`{
+                }, `{
                     id
                     title
                     basePrice
@@ -363,6 +436,112 @@ const Query = {
                   }`)
                 return {
                     books: books1,
+                    totalCount
+                }
+            }
+            throw new Error();
+        } catch (ex) {
+            return {
+                books: [],
+                totalCount: 0
+            }
+        }
+
+    },
+    async getBestSellerForBrowsing(parent, { first, skip, dateFrom, dateTo }, { mySqlConnection }, info) {
+        let books = [];
+        let totalCount = 0;
+        const getBooks = () => new Promise((res, rej) => {
+            mySqlConnection.query(`
+            CALL Proc_GetBestSeller(${skip},${first}, ${dateFrom ? `'${dateFrom}'` : 'null'}, ${dateTo ? `'${dateTo}'` : 'null'} );
+            `, (err, res0, fields) => {
+                if (err) {
+                    console.log(err);
+                    rej(err);
+                }
+                console.log(JSON.stringify(res0, 4))
+                books = res0[0];
+                mySqlConnection.query(`
+                CALL Proc_CountBestSeller(${dateFrom ? `'${dateFrom}'` : 'null'}, ${dateTo ? `'${dateTo}'` : 'null'});
+                `, (err, res1, fields) => {
+                    if (err) {
+                        console.log(err);
+                        rej(err);
+                    }
+                    totalCount = res1[0][0].totalCount;
+                    res({
+                        books,
+                        totalCount
+                    });
+                });
+            });
+
+        });
+        try {
+            const result = await getBooks();
+            if (result.books && result.books.length > 0) {
+                const books1 = await prisma.query.books({
+                    where: {
+                        id_in: result.books.map(item => item.id)
+                    }
+                }, `{
+                    id
+                    title
+                    basePrice
+                    description
+                    thumbnail
+                    images
+                    dimensions
+                    translator
+                    format
+                    isbn
+                    publishedDate
+                    availableCopies
+                    pages
+                    reviews{
+                        id
+                        rating
+                    }
+                    discounts{
+                        id
+                        from
+                        to
+                        discountRate
+                        usePercentage
+                        discountAmount
+                    }
+                    publisher{
+                      id
+                      name
+                    }
+                    authors{
+                      id
+                      pseudonym
+                    }
+                    categories{
+                      id
+                      name
+                    }
+                  }`);
+                const processed = books1.map(b => {
+                    const [discountedPrice, discountRate, discountAmount] = calculateDiscount(b.basePrice, b.discounts);
+                    const totalRating = _.sumBy(b.reviews, 'rating');
+                    return {
+                        ...b,
+                        reviews: {
+                            avgRating: totalRating ? totalRating / b.reviews.length : 0,
+                            totalCount: b.reviews.length
+                        },
+                        discounts: {
+                            discountedPrice,
+                            discountAmount,
+                            discountRate
+                        }
+                    }
+                });
+                console.log("Line 540: ", JSON.stringify(processed));
+                return {
+                    books: processed,
                     totalCount
                 }
             }

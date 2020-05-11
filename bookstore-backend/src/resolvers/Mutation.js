@@ -350,12 +350,12 @@ const Mutation = {
             data
         }, info)
     },
-    async createBookReview(parent, { data }, { prisma, httpContext }, info) {
+    async createBookReview(parent, { data }, { prisma, httpContext ,mySqlConnection}, info) {
         const userId = getUserId(httpContext);
         if (data.rating > 5 || data.rating <= 0) {
             throw new Error("Rating score is invalid");
         }
-        return prisma.mutation.createBookReview({
+        const bookReview = await prisma.mutation.createBookReview({
             data: {
                 ...data,
                 book: {
@@ -369,7 +369,21 @@ const Mutation = {
                     }
                 }
             }
-        }, info);
+        }, `{id rating reviewHeader reviewText createdAt updatedAt author{id} book{id}}`);
+        const updateAvgRating = () => new Promise((res, rej) => {
+            mySqlConnection.query(`
+            CALL Proc_CalculateAvgRating('${bookReview.book.id}');
+            `, (err, res0, fields) => {
+                if (err) {
+                    console.log(err);
+                    rej(err);
+                }
+                res(true);
+            });
+
+        });
+        await updateAvgRating();
+        return bookReview;
     },
     async createOrder(parent, { data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);

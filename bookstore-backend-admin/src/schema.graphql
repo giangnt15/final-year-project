@@ -168,6 +168,8 @@ type Book{
     discounts: [Discount!]!
     createdAt: String!
     updatedAt: String!
+    avgRating: Float
+
 }
 
 type BookReview{

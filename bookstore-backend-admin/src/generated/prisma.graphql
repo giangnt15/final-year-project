@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Thu May 07 2020 18:10:15 GMT+0700 (Indochina Time)
+# timestamp: Mon May 11 2020 23:19:52 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -1291,6 +1291,7 @@ type Book implements Node {
   reviews(where: BookReviewWhereInput, orderBy: BookReviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookReview!]
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1744,6 +1745,7 @@ input BookCreateInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1808,6 +1810,7 @@ input BookCreateWithoutAuthorsInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1831,6 +1834,7 @@ input BookCreateWithoutCategoriesInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1854,6 +1858,7 @@ input BookCreateWithoutCollectionsInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1877,6 +1882,7 @@ input BookCreateWithoutDiscountsInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1900,6 +1906,7 @@ input BookCreateWithoutPublisherInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1923,6 +1930,7 @@ input BookCreateWithoutReviewsInput {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -1966,6 +1974,8 @@ enum BookOrderByInput {
   isbn_DESC
   sku_ASC
   sku_DESC
+  avgRating_ASC
+  avgRating_DESC
   translator_ASC
   translator_DESC
   format_ASC
@@ -1997,6 +2007,7 @@ type BookPreviousValues {
   shortDescription: String
   isbn: String!
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat!
   dimensions: String
@@ -3344,6 +3355,28 @@ input BookScalarWhereInput {
 
   """All values not ending with the given string."""
   sku_not_ends_with: String
+  avgRating: Float
+
+  """All values that are not equal to given value."""
+  avgRating_not: Float
+
+  """All values that are contained in given list."""
+  avgRating_in: [Float!]
+
+  """All values that are not contained in given list."""
+  avgRating_not_in: [Float!]
+
+  """All values less than the given value."""
+  avgRating_lt: Float
+
+  """All values less than or equal the given value."""
+  avgRating_lte: Float
+
+  """All values greater than the given value."""
+  avgRating_gt: Float
+
+  """All values greater than or equal the given value."""
+  avgRating_gte: Float
   translator: String
 
   """All values that are not equal to given value."""
@@ -3691,6 +3724,7 @@ input BookUpdateDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3714,6 +3748,7 @@ input BookUpdateInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3737,6 +3772,7 @@ input BookUpdateManyDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3766,6 +3802,7 @@ input BookUpdateManyMutationInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3871,6 +3908,7 @@ input BookUpdateWithoutAuthorsDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3893,6 +3931,7 @@ input BookUpdateWithoutCategoriesDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3915,6 +3954,7 @@ input BookUpdateWithoutCollectionsDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3937,6 +3977,7 @@ input BookUpdateWithoutDiscountsDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3959,6 +4000,7 @@ input BookUpdateWithoutPublisherDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -3981,6 +4023,7 @@ input BookUpdateWithoutReviewsDataInput {
   shortDescription: String
   isbn: String
   sku: String
+  avgRating: Float
   translator: String
   format: BookFormat
   dimensions: String
@@ -4322,6 +4365,28 @@ input BookWhereInput {
 
   """All values not ending with the given string."""
   sku_not_ends_with: String
+  avgRating: Float
+
+  """All values that are not equal to given value."""
+  avgRating_not: Float
+
+  """All values that are contained in given list."""
+  avgRating_in: [Float!]
+
+  """All values that are not contained in given list."""
+  avgRating_not_in: [Float!]
+
+  """All values less than the given value."""
+  avgRating_lt: Float
+
+  """All values less than or equal the given value."""
+  avgRating_lte: Float
+
+  """All values greater than the given value."""
+  avgRating_gt: Float
+
+  """All values greater than or equal the given value."""
+  avgRating_gte: Float
   translator: String
 
   """All values that are not equal to given value."""

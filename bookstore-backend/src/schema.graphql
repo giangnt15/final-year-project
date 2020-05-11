@@ -163,6 +163,7 @@ type Book{
     thumbnail: String!
     images: String
     discounts: [Discount!]!
+    avgRating: Float
 }
 
 type BookReview{
@@ -248,6 +249,7 @@ enum OrderStatus{
 
 type Query{
     getBooks(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int, selection: String): BooksPayload!
+    getBooksForBrowsing(where: BookWhereInput,orderBy: BookOrderByInput, first: Int, skip:Int): BooksForBrowsingPayload!
     getBook(id: ID!): Book!
     getCategories(where: BookCategoryWhereInput, orderBy: BookCategoryOrderByInput, first: Int, skip: Int): [BookCategory!]!
     getCategory(id: ID!): BookCategory!
@@ -268,6 +270,47 @@ type Query{
     getReviewRepliesByReview(reviewId: ID!): [BookReviewReply!]!
     getWishList: GetWishListPayload!
     getBestSeller(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksPayload!
+    getBestSellerForBrowsing(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksForBrowsingPayload!
+
+}
+
+type BooksForBrowsingPayload{
+    books: [ProcessedBook!]!
+    totalCount: Int
+}
+
+type ProcessedBook{
+    id: ID!
+    title: String!
+    description: String
+    categories: [BookCategory!]!
+    authors: [Author!]!
+    reviews: ProcessedReview!
+    isbn: String!
+    sku: String
+    format: BookFormat!
+    dimensions: String
+    translator: String
+    publishedDate: String
+    collections: [Collection!]!
+    publisher: Publisher!
+    availableCopies: Int!
+    basePrice: Float!
+    pages: Int
+    thumbnail: String!
+    images: String
+    discounts: ProcessedDiscount!
+}
+
+type ProcessedDiscount{
+    discountAmount: Float!
+    discountRate: Float!
+    discountedPrice: Float!
+}
+
+type ProcessedReview{
+    avgRating: Float!
+    totalCount: Int
 }
 
 type GetCollectionsPayload{

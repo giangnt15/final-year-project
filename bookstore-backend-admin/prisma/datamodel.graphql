@@ -138,6 +138,7 @@ type Book{
     isbn: String!
     sku: String
     # photos: [StaticResource!]!
+    avgRating: Float @default(value: 0)
     translator: String
     format: BookFormat!
     dimensions: String

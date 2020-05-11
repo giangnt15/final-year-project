@@ -1,0 +1,73 @@
+import React, { useRef } from 'react';
+import { Image, Icon, Rating } from 'react-native-elements';
+import { Text, View, StyleSheet } from 'react-native';
+import NumberFormat from 'react-number-format';
+
+const styles = StyleSheet.create({
+    container: {
+        width: '50%',
+        padding: 12,
+        display: 'flex',
+        borderColor: "#e1e5eb",
+        borderBottomWidth: 1,
+        flexDirection: 'column',
+    },
+    imgCtn: {
+        paddingVertical: 4,
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    ratingCtn: {
+        marginVertical: 4,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    ratingScore: {
+        marginRight: 4
+    },
+    ratingCount: {
+        fontSize: 11,
+        color: "#ccc",
+    },
+    discountRate: {
+        fontSize: 11,
+        marginLeft: 8,
+        color: "#ccc",
+    },
+    title: {
+        fontSize: 12,
+        height: 30
+    }
+})
+
+function BookItem(props) {
+
+    const { book, index } = props;
+    const { thumbnail, title, basePrice, discounts, reviews } = book;
+    const { discountedPrice,discountRate} = discounts;
+    return (
+        <View style={{ ...styles.container, borderRightWidth: index % 2 === 0 ? 1 : 0 }}>
+            <Image containerStyle={styles.imgCtn} style={{
+                height: 135,
+                resizeMode: 'contain'
+            }} source={{ uri: thumbnail }} PlaceholderContent={<Icon type="antdesign" name="picture" />} />
+
+            <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>{title}</Text>
+            <View style={styles.ratingCtn}>
+                <Rating style={styles.ratingScore}
+                    readonly startingValue={reviews.avgRating}
+                    ratingBackgroundColor="#ccc"
+                    imageSize={12} ratingCount={reviews.totalCount > 0 ? 5 : 0} />
+                {reviews.totalCount > 0 && <NumberFormat value={reviews.totalCount}
+                    renderText={value => <Text style={styles.ratingCount}>({value})</Text>} displayType={'text'} thousandSeparator={true} />}
+            </View>
+            <View style={styles.ratingCtn}>
+                <NumberFormat value={discountedPrice} suffix={` đ`} renderText={value => <Text >{value}</Text>} displayType={'text'} thousandSeparator={true} />
+                {discountRate>0&&<Text style={styles.discountRate}>-{discountRate*100}%</Text>}
+            </View>
+        </View>
+    )
+}
+
+export default BookItem;
