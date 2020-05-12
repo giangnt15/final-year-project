@@ -46,6 +46,7 @@ console.log(filters)
                             value={{
                                 range: item.range,
                                 operator: item.operator, 
+                                name: item.name,
                                 id: item.id
                             }}
                             name={item.name}></FilterItem>

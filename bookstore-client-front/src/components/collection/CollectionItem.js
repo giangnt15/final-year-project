@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 function CollectionItem(props) {
 
-    const { id, thumbnail, collectionName } = props.collection;
+    const { id, thumbnail, name } = props.collection;
 
     return (
         <div style={{maxWidth: 200}}>
@@ -12,7 +12,7 @@ function CollectionItem(props) {
                     <img height={150} src={thumbnail} />
                 </NavLink>
                 <NavLink className="m-t-12" style={{textAlign: 'center', wordBreak: 'break-word'}} to={`/collection/${id}`}>
-                    {collectionName}
+                    {name}
                 </NavLink>
             </div>
         </div>

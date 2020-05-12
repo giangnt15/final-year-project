@@ -130,13 +130,13 @@ function CollectionPage(props) {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="bradcaump__inner text-center">
-                                <h2 className="bradcaump-title">{collectionInfo.collectionName}</h2>
+                                <h2 className="bradcaump-title">{collectionInfo.name}</h2>
                                 <nav className="bradcaump-content">
                                     <NavLink className="breadcrumb_item" to="/">Trang chủ</NavLink>
                                     <span className="brd-separetor">/</span>
                                     <NavLink className="breadcrumb_item" to="/collections">Tuyển tập</NavLink>
                                     <span className="brd-separetor">/</span>
-                                    <span className="breadcrumb_item active">{collectionInfo.collectionName}</span>
+                                    <span className="breadcrumb_item active">{collectionInfo.name}</span>
                                 </nav>
                             </div>
                         </div>
@@ -160,13 +160,13 @@ function CollectionPage(props) {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="bradcaump__inner text-center">
-                                <h2 className="bradcaump-title">{collectionInfo.getCollection.collectionName}</h2>
+                                <h2 className="bradcaump-title">{collectionInfo.getCollection.name}</h2>
                                 <nav className="bradcaump-content">
                                     <NavLink className="breadcrumb_item" to="/">Trang chủ</NavLink>
                                     <span className="brd-separetor">/</span>
                                     <NavLink className="breadcrumb_item" to="/collections">Tuyển tập</NavLink>
                                     <span className="brd-separetor">/</span>
-                                    <span className="breadcrumb_item active">{collectionInfo.getCollection.collectionName}</span>
+                                    <span className="breadcrumb_item active">{collectionInfo.getCollection.name}</span>
                                 </nav>
                             </div>
                         </div>

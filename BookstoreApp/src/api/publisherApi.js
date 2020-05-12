@@ -11,3 +11,12 @@ export const GET_PUBLISHERS = gql`
         }
     }
 `
+
+export const GET_PUBLISHERS_BASIC = gql`
+    query getPublishers($where: PublisherWhereInput, $orderBy: PublisherOrderByInput, $first: Int, $skip: Int){
+        getPublishers(where: $where, orderBy: $orderBy, first: $first, skip: $skip){
+            id
+            name
+        }
+    }
+`

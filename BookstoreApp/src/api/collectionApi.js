@@ -5,7 +5,7 @@ export const GET_COLLECTIONS = gql`
         getCollections(name: $name,orderBy: $orderBy, first: $first, skip: $skip){
             collections{
                 id
-                collectionName
+                name
                 thumbnail
             }
             totalCount
@@ -13,11 +13,24 @@ export const GET_COLLECTIONS = gql`
     }
 `
 
+export const GET_COLLECTIONS_BASIC = gql`
+    query getCollections($name: String, $orderBy: CollectionOrderByInput, $first: Int, $skip: Int){
+        getCollections(name: $name,orderBy: $orderBy, first: $first, skip: $skip){
+            collections{
+                id
+                name
+            }
+            totalCount
+        }
+    }
+`
+
+
 export const GET_COLLECTION = gql`
     query getCollection($id: ID!){
         getCollection(id: $id){
             id
-            collectionName
+            name
             thumbnail
             description
         }

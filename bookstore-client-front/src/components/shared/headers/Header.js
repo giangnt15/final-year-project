@@ -139,7 +139,7 @@ function Header(props) {
                       {!loadingCollection &&dataCollections.getCollections&&dataCollections.getCollections.collections && dataCollections.getCollections.collections.map(item => (
                         <li key={item.id} onClick={() => {
                           history.push("/collection/"+item.id);
-                        }}><a>{item.collectionName} </a></li>
+                        }}><a>{item.name} </a></li>
                       ))}
                       <li><NavLink to="/collections" style={{ fontWeight: 600 }}>Tất cả tuyển tập <i className="fs-13 fa fa-angle-right"></i></NavLink></li>
                     </ul>

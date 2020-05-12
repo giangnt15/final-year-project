@@ -33,7 +33,7 @@ function CollectionEdit(props) {
     const { id } = useParams();
 
     const [inputs, setInputs] = useState({
-        collectionName: '',
+        name: '',
         description: '',
         thumbnail: ''
     });
@@ -61,7 +61,7 @@ function CollectionEdit(props) {
             if (data.getCollection) {
                 setInputs(prev => ({
                     ...prev,
-                    collectionName: data.getCollection.collectionName,
+                    name: data.getCollection.name,
                     thumbnail: data.getCollection.thumbnail,
                     description: data.getCollection.description,
 
@@ -227,7 +227,7 @@ function CollectionEdit(props) {
                                 variables: {
                                     id,
                                     data: {
-                                        collectionName: inputs.collectionName,
+                                        name: inputs.name,
                                         thumbnail: inputs.thumbnail,
                                         description: inputs.description
                                     }
@@ -243,12 +243,12 @@ function CollectionEdit(props) {
                             <div className="p-r-8">
                                 <Form.Item
                                     label="Tên tuyển tập"
-                                    name="collectionName"
+                                    name="name"
                                     labelAlign="right"
                                     className="p-r-8"
                                     rules={[{ required: true, message: 'Please input your username!' }]}
                                 >
-                                    <Input name="collectionName" value={inputs.collectionName} onChange={onInputChange} />
+                                    <Input name="name" value={inputs.name} onChange={onInputChange} />
                                 </Form.Item>
                             </div>
                             <Form.Item

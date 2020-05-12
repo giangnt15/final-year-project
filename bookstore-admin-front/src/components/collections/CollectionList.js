@@ -18,7 +18,7 @@ function CollectionList(props) {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
         variables: {
-            name: searchValues.collectionName ? searchValues.collectionName : undefined,
+            name: searchValues.name ? searchValues.name : undefined,
             orderBy,
             skip: (currentPage - 1) * rowsPerPage,
             first: rowsPerPage
@@ -38,8 +38,8 @@ function CollectionList(props) {
         key: 'thumbnail',
     }, {
         title: 'Tên',
-        dataIndex: 'collectionName',
-        key: 'collectionName',
+        dataIndex: 'name',
+        key: 'name',
         colSpan: 2,
         render: (name) => {
             return {
@@ -49,8 +49,8 @@ function CollectionList(props) {
                 }
             }
         },
-        ...getColumnSearchProps('collectionName'),
-        ...renderSort('collectionName'),
+        ...getColumnSearchProps('name'),
+        ...renderSort('name'),
     }, {
         title: 'Ngày tạo',
         dataIndex: 'createdAt',
@@ -79,7 +79,7 @@ function CollectionList(props) {
             return {
                 ...item,
                 key: item.id,
-                collectionName: <NavLink to={`/catalog/collection/edit/${item.id}`}>{item.collectionName}</NavLink>,
+                name: <NavLink to={`/catalog/collection/edit/${item.id}`}>{item.name}</NavLink>,
                 thumbnail: <img width="50" src={item.thumbnail} />
             }
         })

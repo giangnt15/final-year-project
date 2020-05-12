@@ -34,7 +34,7 @@ type AuthToken{
 
 type Collection{
     id: ID! @id
-    collectionName: String!
+    name: String!
     description: String
     thumbnail: String!
     books: [Book!]! @relation(name: "BookToCollection")

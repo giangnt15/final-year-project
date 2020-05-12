@@ -143,12 +143,12 @@ const Query = {
         }
         if (name) {
             opArgs.where = {
-                collectionName_contains: name
+                name_contains: name
             }
         }
         const totalCount = await prisma.query.collectionsConnection({
             where: {
-                collectionName_contains: name
+                name_contains: name
             }
         }, `{aggregate{count}}`);
         const collections = await prisma.query.collections(opArgs);
@@ -175,7 +175,7 @@ const Query = {
             orderBy,
             first,
             skip
-        }, `{id reviewHeader reviewText rating createdAt updatedAt author{id username avatar} replies(orderBy: updatedAt_ASC){id text author{id fullName username avatar} updatedAt}}`);
+        }, `{id reviewHeader reviewText rating createdAt updatedAt author{id username fullName avatar} replies(orderBy: updatedAt_ASC){id text author{id fullName username avatar} updatedAt}}`);
         const totalCount = await prisma.query.bookReviewsConnection({
             where: {
                 book: {

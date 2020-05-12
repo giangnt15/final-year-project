@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         marginBottom: 8
     },
     sectionName: {
+        fontSize: 16,
         fontWeight: "700"
     }
 });

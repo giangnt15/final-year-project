@@ -38,7 +38,7 @@ type AuthToken{
 
 type Collection{
     id: ID! 
-    collectionName: String!
+    name: String!
     description: String
     thumbnail: String!
     books: [Book!]!
@@ -528,7 +528,7 @@ input UserAddressUpdateInput{
 
 
 input CollectionCreateInput{
-    collectionName: String!
+    name: String!
     description: String
     thumbnail: String!
 }

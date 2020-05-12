@@ -28,6 +28,7 @@ export const FILTER_TYPE_CAT = 'poroduct--cat';
 export const FILTER_TYPE_PRICE = 'pro--range';
 export const FILTER_TYPE_TAG = 'poroduct--tag poroduct--cat';
 export const FILTER_TYPE_AUTHOR = 'poroduct--auth poroduct--cat';
+export const FILTER_TYPE_COLLECTION = 'poroduct--collection poroduct--cat';
 export const FILTER_TYPE_RATING = 'poroduct--rating poroduct--cat';
 export const FILTER_TYPE_PUBLISHER = 'poroduct--pub poroduct--cat';
 export const RESET_FILTERS = 'RESET_FILTERS';
@@ -77,4 +78,5 @@ export const ADD_ITEM_TO_CART_SUCCEEDED = 'Đã thêm vào giỏ hàng của b�
 
 
 //color
-export const COLOR_PRIMARY = "#3e1b9e"
+export const COLOR_PRIMARY = "#3e1b9e";
+export const COLOR_BUTTON_PRIMARY = "#e81e4d";

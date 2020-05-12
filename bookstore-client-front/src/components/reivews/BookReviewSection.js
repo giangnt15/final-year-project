@@ -5,6 +5,7 @@ import { CREATE_BOOK_REVIEW } from '../../api/reviewApi';
 import { useParams, useHistory } from 'react-router-dom';
 import BookReviewItem from './BookReviewItem';
 import { Button } from '@material-ui/core';
+import { roundHalf } from '../../utils/common';
 
 function BookReviewSection(props) {
 
@@ -47,11 +48,11 @@ function BookReviewSection(props) {
 
     const renderPercentage = (data) => {
         const { fiveStar, fourStar, threeStar, twoStar, oneStar, totalCount } = data;
-        const fourStarPercent = fourStar / totalCount * 100
-        const threeStarPercent = threeStar / totalCount * 100
-        const twoStarPercent = twoStar / totalCount * 100
-        const fiveStarPercent = fiveStar / totalCount * 100
-        const oneStarPercent = oneStar / totalCount * 100
+        const fourStarPercent = roundHalf(fourStar / totalCount * 100)
+        const threeStarPercent = roundHalf(threeStar / totalCount * 100)
+        const twoStarPercent = roundHalf(twoStar / totalCount * 100)
+        const fiveStarPercent = roundHalf(fiveStar / totalCount * 100)
+        const oneStarPercent = roundHalf(oneStar / totalCount * 100)
 
         return (<Fragment>
             <div className="d-flex align-items-center">5&nbsp;<Icon type="star" style={{ color: '#52C41A' }} theme="filled" />&nbsp;<Progress percent={fiveStarPercent} strokeColor="#52C41A" status="normal" /></div>

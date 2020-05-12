@@ -5,7 +5,7 @@ export const GET_COLLECTIONS = gql`
         getCollections(name: $name,orderBy: $orderBy, first: $first, skip: $skip){
             collections{
                 id
-                collectionName
+                name
                 description
                 thumbnail
                 createdAt
@@ -20,7 +20,7 @@ export const GET_COLLECTION = gql`
     query getCollection($id: ID!){
         getCollection(id: $id){
             id
-            collectionName
+            name
             thumbnail
             description
         }

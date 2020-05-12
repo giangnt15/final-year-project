@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import { COLOR_PRIMARY, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER, FILTER_TYPE_AUTHOR, FILTER_TYPE_PRICE, FILTER_TYPE_RATING } from '../../constants';
+import { COLOR_PRIMARY, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER, FILTER_TYPE_AUTHOR, FILTER_TYPE_PRICE, FILTER_TYPE_RATING, FILTER_TYPE_COLLECTION } from '../../constants';
 import { Icon } from 'react-native-elements';
 import { useSelector, useDispatch, connect } from 'react-redux';
 import { changeFilter } from '../../redux/actions/filtersActions';
@@ -54,13 +54,13 @@ const styles = StyleSheet.create({
 function isFilterSelected(type, value, filters) {
     switch (type) {
         case FILTER_TYPE_CAT:
-            if (filters.categoryTemporary === value) return true;
+            if (filters.categoryTemporary?.id === value.id) return true;
             break;
         case FILTER_TYPE_PUBLISHER:
-            if (filters.publisherTemporary === value) return true;
+            if (filters.publisherTemporary?.id === value.id) return true;
             break;
         case FILTER_TYPE_AUTHOR:
-            if (filters.authorTemporary === value) return true;
+            if (filters.authorTemporary?.id === value.id) return true;
             break;
         case FILTER_TYPE_PRICE:
             if (filters.priceTemporary?.id === value.id) {
@@ -68,7 +68,10 @@ function isFilterSelected(type, value, filters) {
             }
             break;
         case FILTER_TYPE_RATING:
-            if (value === filters.ratingTemporary) return true;
+            if (value.id === filters.ratingTemporary?.id) return true;
+            break;
+        case FILTER_TYPE_COLLECTION:
+            if (value.id === filters.collectionTemporary?.id) return true;
             break;
         default: return false;
     }

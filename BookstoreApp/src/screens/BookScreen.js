@@ -14,12 +14,14 @@ import Filters from '../components/organisms/shared/Filters';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeSortDirection } from '../redux/actions/userSettingsActions';
 import { withApollo } from '@apollo/react-hoc'
-import { GET_CATEGORIES } from '../api/categoryApi';
-import { GET_AUTHORS } from '../api/authorApi';
-import { GET_PUBLISHERS } from '../api/publisherApi';
+import { GET_CATEGORIES_BASIC } from '../api/categoryApi';
+import { GET_AUTHORS_BASIC } from '../api/authorApi';
+import { GET_PUBLISHERS_BASIC } from '../api/publisherApi';
 import SelectedFilter from '../components/atomics/SelectedFilter';
-import { FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER, COLOR_PRIMARY, FILTER_TYPE_PRICE, FILTER_TYPE_RATING } from '../constants';
-
+import { FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER, COLOR_PRIMARY, FILTER_TYPE_PRICE, FILTER_TYPE_RATING, FILTER_TYPE_COLLECTION } from '../constants';
+import { GET_COLLECTIONS_BASIC } from '../api/collectionApi';
+import _ from 'lodash';
+import { useRoute, useNavigation } from '@react-navigation/native';
 const width = Dimensions.get('window').width
 
 const filterItemsPrice = [{
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     picker: {
-        width: 100,
+        width: 135,
         padding: 0,
         margin: 0,
         transform: [
@@ -153,14 +155,15 @@ function BookScreen(props) {
     const [orderBy, setOrderBy] = useState('createdAt_DESC');
     const drawerRef = useRef();
     const hasMore = bookData.books.length < bookData.totalCount;
-
     const [getBooks, { loading: gettingBooks }] = useLazyQuery(GET_BOOKS_FOR_BROWSING, {
         onError() {
             showToast("Có lỗi xảy ra khi lấy dữ liệu");
         },
         onCompleted(data) {
             if (data.getBooksForBrowsing && data.getBooksForBrowsing.books) {
-                showToast(Intl.NumberFormat().format(data.getBooksForBrowsing.totalCount) + " sản phẩm");
+                // if (route.name === "BookScreen") {
+                //     showToast(Intl.NumberFormat().format(data.getBooksForBrowsing.totalCount) + " sản phẩm");
+                // }
                 setBookData({
                     books: data.getBooksForBrowsing.books,
                     totalCount: data.getBooksForBrowsing.totalCount
@@ -222,203 +225,46 @@ function BookScreen(props) {
     const [categories, setCategories] = useState([]);
     const [authors, setAuthors] = useState([]);
     const [publishers, setPublishers] = useState([]);
+    const [collections, setCollections] = useState([]);
 
     useEffect(() => {
-        let authBookWhere = {};
-        let catBookWhere = {};
-        let pubBookWhere = {};
-
-        if (filters.price) {
-            if (filters.price.operator === 'gt') {
-                catBookWhere = {
-                    authors_some: {
-                        id: filters.author
-                    },
-                    publisher: {
-                        id: filters.publisher
-                    },
-                    basePrice_gt: filters.price.range[0]
-                };
-                authBookWhere = {
-                    categories_some: {
-                        id: filters.category
-                    },
-                    publisher: {
-                        id: filters.publisher
-                    },
-                    basePrice_gt: filters.price.range[0]
-                };
-                pubBookWhere = {
-                    authors_some: {
-                        id: filters.author
-                    },
-                    publisher: {
-                        id: filters.publisher
-                    },
-                    basePrice_gt: filters.price.range[0]
-                };
-            } else if (filters.price.operator === 'lt') {
-                catBookWhere = {
-                    authors_some: {
-                        id: filters.author
-                    },
-                    publisher: {
-                        id: filters.publisher
-                    },
-                    basePrice_lt: filters.price.range[0]
-                };
-                authBookWhere = {
-                    categories_some: {
-                        id: filters.category
-                    },
-                    publisher: {
-                        id: filters.publisher
-                    },
-                    basePrice_lt: filters.price.range[0]
-                };
-                pubBookWhere = {
-                    authors_some: {
-                        id: filters.author
-                    },
-                    publisher: {
-                        id: filters.publisher
-                    },
-                    basePrice_lt: filters.price.range[0]
-                };
-            } else if (filters.price.operator === 'between') {
-                catBookWhere = {
-                    AND: [{
-                        authors_some: {
-                            id: filters.author
-                        },
-                        publisher: {
-                            id: filters.publisher
-                        },
-                        basePrice_gt: filters.price.range[0]
-                    }, {
-                        authors_some: {
-                            id: filters.author
-                        },
-                        publisher: {
-                            id: filters.publisher
-                        },
-                        basePrice_lt: filters.price.range[1]
-                    }]
-                };
-                authBookWhere = {
-                    AND: [{
-                        categories_some: {
-                            id: filters.category
-                        },
-                        publisher: {
-                            id: filters.publisher
-                        },
-                        basePrice_gt: filters.price.range[0]
-                    }, {
-                        categories_some: {
-                            id: filters.category
-                        },
-                        publisher: {
-                            id: filters.publisher
-                        },
-                        basePrice_lt: filters.price.range[1]
-                    }]
-                };
-                pubBookWhere = {
-                    AND: [{
-                        authors_some: {
-                            id: filters.author
-                        },
-                        publisher: {
-                            id: filters.publisher
-                        },
-                        basePrice_gt: filters.price.range[0]
-                    }, {
-                        authors_some: {
-                            id: filters.author
-                        },
-                        publisher: {
-                            id: filters.publisher
-                        },
-                        basePrice_lt: filters.price.range[1]
-                    }]
-                };
-            }
-        } else {
-            catBookWhere = {
-                authors_some: {
-                    id: filters.author
-                },
-                publisher: {
-                    id: filters.publisher
-                }
-            };
-            pubBookWhere = {
-                authors_some: {
-                    id: filters.author
-                },
-                categories_some: {
-                    id: filters.category
-                },
-            };
-            authBookWhere = {
-                categories_some: {
-                    id: filters.category
-                },
-                publisher: {
-                    id: filters.publisher
-                }
-            }
-        }
         (async function getFilters() {
             try {
                 const resCat = await client.query({
-                    query: GET_CATEGORIES,
+                    query: GET_CATEGORIES_BASIC,
                     variables: {
-                        bookWhere: catBookWhere,
                         where: {
                             books_some: {
-                                // authors_some: {
-                                //     id: filters.author
-                                // },
-                                // publisher: {
-                                //     id: filters.publisher
-                                // }
                             }
                         },
                         orderBy: "name_ASC"
                     },
                 });
                 const resAuth = await client.query({
-                    query: GET_AUTHORS,
+                    query: GET_AUTHORS_BASIC,
                     variables: {
-                        bookWhere: authBookWhere,
                         where: {
                             books_some: {
-                                // categories_some: {
-                                //     id: filters.category
-                                // },
-                                // publisher: {
-                                //     id: filters.publisher
-                                // }
                             }
                         },
                         orderBy: "pseudonym_ASC"
                     }
                 });
                 const resPub = await client.query({
-                    query: GET_PUBLISHERS,
+                    query: GET_PUBLISHERS_BASIC,
                     variables: {
-                        bookWhere: pubBookWhere,
                         where: {
                             books_some: {
-                                // authors_some: {
-                                //     id: filters.author
-                                // },
-                                // categories_some: {
-                                //     id: filters.category
-                                // },
                             }
+                        },
+                        orderBy: "name_ASC"
+                    }
+                });
+                const resCol = await client.query({
+                    query: GET_COLLECTIONS_BASIC,
+                    variables: {
+                        where: {
+
                         },
                         orderBy: "name_ASC"
                     }
@@ -426,12 +272,14 @@ function BookScreen(props) {
                 setAuthors(resAuth.data.getAuthors);
                 setCategories(resCat.data.getCategories);
                 setPublishers(resPub.data.getPublishers);
+                setCollections(resCol.data.getCollections?.collections);
+
             } catch (err) {
                 showToast("Có lỗi xảy ra khi lấy dữ liệu");
             }
         })()
 
-    }, [filters.category, filters.rating,filters.author, filters.publisher, filters.price ? filters.price.id : undefined])
+    }, [/*filters.category, filters.rating,filters.author, filters.publisher, filters.price ? filters.price.id : undefined*/])
 
     useEffect(() => {
         let where = {};
@@ -439,56 +287,68 @@ function BookScreen(props) {
             if (filters.price.operator === 'gt') {
                 where = {
                     categories_some: {
-                        id: filters.category
+                        id: filters.category?.id
                     },
                     authors_some: {
-                        id: filters.author
+                        id: filters.author?.id
                     },
                     basePrice_gt: filters.price.range[0],
-                    avgRating_gte: filters.rating,
+                    collections_some: filters.collection ? {
+                        id: filters.collection.id
+                    } : undefined,
+                    avgRating_gte: filters.rating?.id,
                     publisher: {
-                        id: filters.publisher
+                        id: filters.publisher?.id
                     }
                 }
             } else if (filters.price.operator === 'lt') {
                 where = {
                     categories_some: {
-                        id: filters.category
+                        id: filters.category?.id
                     },
                     authors_some: {
-                        id: filters.author
+                        id: filters.author?.id
                     },
-                    avgRating_gte: filters.rating,
+                    collections_some: filters.collection ? {
+                        id: filters.collection.id
+                    } : undefined,
+                    avgRating_gte: filters.rating?.id,
                     basePrice_lt: filters.price.range[0],
                     publisher: {
-                        id: filters.publisher
+                        id: filters.publisher?.id
                     }
                 }
             } else if (filters.price.operator === 'between') {
                 where = {
                     AND: [{
                         categories_some: {
-                            id: filters.category
+                            id: filters.category?.id
                         },
                         authors_some: {
-                            id: filters.author
+                            id: filters.author?.id
                         },
+                        collections_some: filters.collection ? {
+                            id: filters.collection.id
+                        } : undefined,
                         basePrice_gt: filters.price.range[0],
-                        avgRating_gte: filters.rating,
+                        avgRating_gte: filters.rating?.id,
                         publisher: {
-                            id: filters.publisher
+                            id: filters.publisher?.id
                         }
                     }, {
                         categories_some: {
-                            id: filters.category
+                            id: filters.category?.id
                         },
                         authors_some: {
-                            id: filters.author
+                            id: filters.author?.id
                         },
-                        avgRating_gte: filters.rating,
+                        collections_some: filters.collection ? {
+                            id: filters.collection.id
+                        } : undefined,
+                        avgRating_gte: filters.rating?.id,
                         basePrice_lt: filters.price.range[1],
                         publisher: {
-                            id: filters.publisher
+                            id: filters.publisher?.id
                         }
                     }]
                 }
@@ -496,15 +356,18 @@ function BookScreen(props) {
         } else {
             where = {
                 categories_some: {
-                    id: filters.category
+                    id: filters.category?.id
                 },
                 authors_some: {
-                    id: filters.author
+                    id: filters.author?.id
                 },
-                basePrice: filters.price,
-                avgRating_gte: filters.rating,
+                // basePrice: filters.price,
+                collections_some: filters.collection ? {
+                    id: filters.collection.id
+                } : undefined,
+                avgRating_gte: filters.rating?.id,
                 publisher: {
-                    id: filters.publisher
+                    id: filters.publisher?.id
                 }
             }
         }
@@ -519,24 +382,42 @@ function BookScreen(props) {
 
     }, [
         userSettings.sortDirection,
-        filters.price ? filters.price.id : undefined, filters.publisher,
-        filters.category,
-        filters.rating,
-        filters.author])//effect này chỉ chạy khi một trong những giá trị trong array thay đổi với lần render trước đó
+        filters.price ? filters.price.id : undefined,
+        filters.publisher?.id ?? undefined,
+        filters.collection?.id ?? undefined,
+        filters.category?.id ?? undefined,
+        filters.rating?.id ?? undefined,
+        filters.author?.id ?? undefined])//effect này chỉ chạy khi một trong những giá trị trong array thay đổi với lần render trước đó
 
-    const selectedAuthor = authors?.find(a => a.id === filters.author);
-    const selectedCat = categories?.find(c => c.id === filters.category);
-    const selectedPublisher = publishers?.find(p => p.id === filters.publisher);
+    const selectedAuthor = authors?.find(a => a.id === filters.author?.id);
+    const selectedCat = categories?.find(c => c.id === filters.category?.id);
+    const selectedPublisher = publishers?.find(p => p.id === filters.publisher?.id);
     const selectedPrice = filterItemsPrice?.find(p => p.id === filters.price?.id);
-    const selectedRating = filterItemsRating?.find(r => r.id === filters.rating);
+    const selectedRating = filterItemsRating?.find(r => r.id === filters.rating?.id);
+    const selectedCollection = collections?.find(c => c.id === filters.collection?.id);
 
-    const isFiltered = filters.author || filters.category || filters.publisher || filters.price||filters.rating;
+    const authorsPassedDown = filters.authorTemporary ? _.sortBy(authors, function (item) {
+        return item.id === filters.authorTemporary.id ? 0 : 1;
+    }) : authors;
+    const catPassedDown = filters.categoryTemporary ? _.sortBy(categories, function (item) {
+        return item.id === filters.categoryTemporary.id ? 0 : 1;
+    }) : categories;
+    const pubPassedDown = filters.publisherTemporary ? _.sortBy(publishers, function (item) {
+        return item.id === filters.publisherTemporary.id ? 0 : 1;
+    }) : publishers;
+    const colPassedDown = filters.collectionTemporary ? _.sortBy(collections, function (item) {
+        return item.id === filters.collectionTemporary.id ? 0 : 1;
+    }) : collections;
+
+
+    const isFiltered = filters.author || filters.category || filters.publisher || filters.price || filters.rating || filters.collection;
     return (
         <Drawer renderNavigationView={() =>
-            <Filters categories={categories}
-                authors={authors}
-                publishers={publishers}
+            <Filters categories={catPassedDown}
+                authors={authorsPassedDown}
+                publishers={pubPassedDown}
                 loading={gettingBooks}
+                collections={colPassedDown}
                 ratings={filterItemsRating}
                 prices={filterItemsPrice}
                 closeDrawer={onChangeDrawer} />}
@@ -577,15 +458,17 @@ function BookScreen(props) {
                 </View>
                 {isFiltered && <View style={styles.selectedFiltersCtn}>
                     {selectedAuthor && <SelectedFilter text={selectedAuthor.pseudonym}
-                        value={selectedAuthor.id} type={FILTER_TYPE_AUTHOR} />}
+                        value={selectedAuthor} type={FILTER_TYPE_AUTHOR} />}
                     {selectedCat && <SelectedFilter text={selectedCat.name}
-                        value={selectedCat.id} type={FILTER_TYPE_CAT} />}
+                        value={selectedCat} type={FILTER_TYPE_CAT} />}
                     {selectedPublisher && <SelectedFilter text={selectedPublisher.name}
-                        value={selectedPublisher.id} type={FILTER_TYPE_PUBLISHER} />}
+                        value={selectedPublisher} type={FILTER_TYPE_PUBLISHER} />}
                     {selectedPrice && <SelectedFilter text={selectedPrice.name}
                         value={selectedPrice} type={FILTER_TYPE_PRICE} />}
                     {selectedRating && <SelectedFilter text={selectedRating.name}
-                        value={selectedRating.id} type={FILTER_TYPE_RATING} />}
+                        value={selectedRating} type={FILTER_TYPE_RATING} />}
+                    {selectedCollection && <SelectedFilter text={selectedCollection.name}
+                        value={selectedCollection} type={FILTER_TYPE_COLLECTION} />}
                 </View>}
                 {gettingBooks ? <ActivityIndicator style={{ marginTop: '45%' }} /> : <BookGrid books={bookData.books} loading={gettingBooks || gettingMoreBooks} fetchMore={fetchMore} />}
             </View>

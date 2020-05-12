@@ -7,7 +7,7 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 
 const httpLink = createHttpLink({
-  uri: 'http://3.15.176.44:30306',
+  uri: 'http://18.191.134.82:30306',
 
   // uri: 'http://localhost:4000',
 });

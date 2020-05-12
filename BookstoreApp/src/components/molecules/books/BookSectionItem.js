@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { Image, Icon } from 'react-native-elements';
-import { ActivityIndicator, Text, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import NumberFormat from 'react-number-format';
 import { calculateDiscount } from '../../../utils/common';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
     container: {
@@ -26,18 +27,30 @@ const styles = StyleSheet.create({
 function BookSectionItem(props) {
 
     const { book } = props;
-    const { thumbnail, title, basePrice,discounts,reiviews } = book;
-    const {discountedPrice} = discounts;
-    return (
-        <View style={styles.container}>
-            <Image containerStyle={styles.imgCtn} style={{
-                height: 100,
-                resizeMode: 'contain'
-            }} source={{ uri: thumbnail }} PlaceholderContent={<Icon type="antdesign" name="picture" />} />
+    const { id, thumbnail, title, basePrice, discounts, reiviews } = book;
+    const { discountedPrice } = discounts;
+    const navigation = useNavigation();
 
-            <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>{title}</Text>
-            <Text><NumberFormat value={discountedPrice} suffix=" đ"  renderText={value => <Text>{value}</Text>}  displayType={'text'} thousandSeparator={true} /></Text>
-        </View>
+    return (
+        <TouchableHighlight underlayColor="rgba(0,0,0,0)"
+            onPress={() => navigation.navigate('Sách', {
+                screen: 'BookDetailScreen',
+                initial: false,
+                params: {
+                    id
+                }
+            })}
+            style={styles.container}>
+            <View >
+                <Image containerStyle={styles.imgCtn} style={{
+                    height: 100,
+                    resizeMode: 'contain'
+                }} source={{ uri: thumbnail }} PlaceholderContent={<Icon type="antdesign" name="picture" />} />
+
+                <Text style={styles.title} ellipsizeMode="tail" numberOfLines={2}>{title}</Text>
+                <Text><NumberFormat value={discountedPrice} suffix=" đ" renderText={value => <Text>{value}</Text>} displayType={'text'} thousandSeparator={true} /></Text>
+            </View>
+        </TouchableHighlight>
     )
 }
 

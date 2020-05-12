@@ -1,4 +1,4 @@
-import { FILTER_TYPE_CAT, FILTER_TYPE_PRICE, FILTER_TYPE_AUTHOR, FILTER_TYPE_PUBLISHER, RESET_FILTERS, APPLY_FILTERS, RESET_FILTERS_TEMP, FILTER_TYPE_RATING } from "../../constants"
+import { FILTER_TYPE_CAT, FILTER_TYPE_PRICE, FILTER_TYPE_AUTHOR, FILTER_TYPE_PUBLISHER, RESET_FILTERS, APPLY_FILTERS, RESET_FILTERS_TEMP, FILTER_TYPE_RATING, FILTER_TYPE_COLLECTION } from "../../constants"
 import _ from 'lodash';
 
 const initialState = {
@@ -11,7 +11,9 @@ const initialState = {
     publisher: undefined,
     publisherTemporary: undefined,
     rating: undefined,
-    ratingTemporary: undefined
+    ratingTemporary: undefined,
+    collection: undefined,
+    collectionTemporary: undefined
 }
 
 export default function filtersReducer(state = initialState, action) {
@@ -20,13 +22,13 @@ export default function filtersReducer(state = initialState, action) {
             if (action.isTemporary) {
                 return {
                     ...state,
-                    categoryTemporary: action.value !== state.categoryTemporary ? action.value : undefined
+                    categoryTemporary: action.value?.id !== state.categoryTemporary?.id ? action.value : undefined
                 }
             }
             return {
                 ...state,
-                category: action.value !== state.category ? action.value : undefined,
-                categoryTemporary: action.value !== state.categoryTemporary ? action.value : undefined
+                category: action.value?.id !== state.category?.id ? action.value : undefined,
+                categoryTemporary: action.value?.id !== state.categoryTemporary?.id ? action.value : undefined
             }
         case FILTER_TYPE_PRICE:
             if (action.isTemporary) {
@@ -44,37 +46,49 @@ export default function filtersReducer(state = initialState, action) {
             if (action.isTemporary) {
                 return {
                     ...state,
-                    authorTemporary: action.value !== state.authorTemporary ? action.value : undefined
+                    authorTemporary: action.value?.id !== state.authorTemporary?.id ? action.value : undefined
                 }
             }
             return {
                 ...state,
-                author: action.value !== state.author ? action.value : undefined,
-                authorTemporary: action.value !== state.authorTemporary ? action.value : undefined
+                author: action.value?.id !== state.author?.id ? action.value : undefined,
+                authorTemporary: action.value?.id !== state.authorTemporary?.id ? action.value : undefined
             }
         case FILTER_TYPE_PUBLISHER:
             if (action.isTemporary) {
                 return {
                     ...state,
-                    publisherTemporary: action.value !== state.publisherTemporary ? action.value : undefined
+                    publisherTemporary: action.value?.id !== state.publisherTemporary?.id ? action.value : undefined
                 }
             }
             return {
                 ...state,
-                publisher: action.value !== state.publisher ? action.value : undefined,
-                publisherTemporary: action.value !== state.publisherTemporary ? action.value : undefined
+                publisher: action.value?.id !== state.publisher.id ? action.value : undefined,
+                publisherTemporary: action.value?.id !== state.publisherTemporary?.id ? action.value : undefined
             }
         case FILTER_TYPE_RATING:
             if (action.isTemporary) {
                 return {
                     ...state,
-                    ratingTemporary: action.value !== state.ratingTemporary ? action.value : undefined
+                    ratingTemporary: action.value?.id !== state.ratingTemporary?.id ? action.value : undefined
                 }
             }
             return {
                 ...state,
-                rating: action.value !== state.rating ? action.value : undefined,
-                ratingTemporary: action.value !== state.ratingTemporary ? action.value : undefined
+                rating: action.value?.id !== state.rating.id ? action.value : undefined,
+                ratingTemporary: action.value?.id !== state.ratingTemporary?.id ? action.value : undefined
+            }
+        case FILTER_TYPE_COLLECTION:
+            if (action.isTemporary) {
+                return {
+                    ...state,
+                    collectionTemporary: action.value?.id !== state.collectionTemporary?.id ? action.value : undefined
+                }
+            }
+            return {
+                ...state,
+                collection: action.value?.id !== state.collection.id ? action.value : undefined,
+                collectionTemporary: action.value?.id !== state.collectionTemporary?.id ? action.value : undefined
             }
         case RESET_FILTERS:
             return initialState;
@@ -85,7 +99,8 @@ export default function filtersReducer(state = initialState, action) {
                 priceTemporary: undefined,
                 authorTemporary: undefined,
                 publisherTemporary: undefined,
-                ratingTemporary: undefined
+                ratingTemporary: undefined,
+                collectionTemporary: undefined
             };
         case APPLY_FILTERS:
             return {
@@ -94,7 +109,8 @@ export default function filtersReducer(state = initialState, action) {
                 price: state.priceTemporary,
                 author: state.authorTemporary,
                 publisher: state.publisherTemporary,
-                rating: state.ratingTemporary
+                rating: state.ratingTemporary,
+                collection: state.collectionTemporary
             };
         default:
             return state;

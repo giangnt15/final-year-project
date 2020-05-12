@@ -100,12 +100,12 @@ const Query = {
         }
         if (name) {
             opArgs.where = {
-                collectionName_contains: name
+                name_contains: name
             }
         }
         const totalCount = await prisma.query.collectionsConnection({
             where: {
-                collectionName_contains: name
+                name_contains: name
             }
         }, `{aggregate{count}}`);
         const collections = await prisma.query.collections(opArgs);

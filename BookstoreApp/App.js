@@ -7,7 +7,6 @@ import { Header, Icon } from 'react-native-elements';
 import HomeScreen from './src/screens/HomeScreen';
 import client from './src/apollo-client/index';
 import { ApolloProvider } from '@apollo/react-hooks';
-import BookScreen from './src/screens/BookScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import thunk from 'redux-thunk';
 import rootReducer from './src/redux/reducers/index';
@@ -16,6 +15,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import moment from 'moment';
 import 'moment/locale/vi';
+import BookStackScreen from './src/navigation/BookStack';
 
 function SettingsScreen() {
   return (
@@ -67,7 +67,7 @@ export default function App() {
           })}
           >
             <Tab.Screen name="Trang chủ" component={HomeScreen} />
-            <Tab.Screen name="Sách" component={BookScreen} />
+            <Tab.Screen name="Sách" component={BookStackScreen}  />
             <Tab.Screen name="Tìm kiếm" component={SearchScreen} initialParams={{ focusInput: true }} />
             <Tab.Screen name="Bán chạy" component={SettingsScreen} />
             <Tab.Screen name="Cá nhân" component={SettingsScreen} />

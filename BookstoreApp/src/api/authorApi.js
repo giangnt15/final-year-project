@@ -12,3 +12,13 @@ export const GET_AUTHORS = gql`
         }
     }
 `
+
+export const GET_AUTHORS_BASIC = gql`
+    query getAuthors($where: AuthorWhereInput,$orderBy: AuthorOrderByInput, $first: Int, $skip: Int){
+        getAuthors(where: $where, orderBy: $orderBy, first: $first, skip: $skip){
+            id
+            realName
+            pseudonym
+        }
+    }
+`

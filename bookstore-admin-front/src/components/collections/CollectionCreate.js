@@ -18,7 +18,7 @@ const ckEditorConfig = {
 function CollectionCreate(props) {
 
     const [inputs, setInputs] = useState({
-        collectionName: '',
+        name: '',
         description: '',
         thumbnail: ''
     });
@@ -55,7 +55,7 @@ function CollectionCreate(props) {
                             createCollection({
                                 variables: {
                                     data: {
-                                        collectionName: inputs.collectionName,
+                                        name: inputs.name,
                                         thumbnail: inputs.thumbnail,
                                         description: inputs.description
                                     }
@@ -71,12 +71,12 @@ function CollectionCreate(props) {
                             <div className="p-r-8">
                                 <Form.Item
                                     label="Tên tuyển tập"
-                                    name="collectionName"
+                                    name="name"
                                     labelAlign="right"
                                     className="p-r-8"
                                     rules={[{ required: true, message: 'Please input your username!' }]}
                                 >
-                                    <Input name="collectionName" value={inputs.collectionName} onChange={onInputChange} />
+                                    <Input name="name" value={inputs.name} onChange={onInputChange} />
                                 </Form.Item>
                             </div>
                             <Form.Item

@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Mon May 11 2020 23:19:52 GMT+0700 (Indochina Time)
+# timestamp: Tue May 12 2020 08:44:32 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -4713,7 +4713,7 @@ input BookWhereUniqueInput {
 
 type Collection implements Node {
   id: ID!
-  collectionName: String!
+  name: String!
   description: String
   thumbnail: String!
   books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book!]
@@ -4733,7 +4733,7 @@ type CollectionConnection {
 
 input CollectionCreateInput {
   id: ID
-  collectionName: String!
+  name: String!
   description: String
   thumbnail: String!
   books: BookCreateManyWithoutCollectionsInput
@@ -4746,7 +4746,7 @@ input CollectionCreateManyWithoutBooksInput {
 
 input CollectionCreateWithoutBooksInput {
   id: ID
-  collectionName: String!
+  name: String!
   description: String
   thumbnail: String!
 }
@@ -4763,8 +4763,8 @@ type CollectionEdge {
 enum CollectionOrderByInput {
   id_ASC
   id_DESC
-  collectionName_ASC
-  collectionName_DESC
+  name_ASC
+  name_DESC
   description_ASC
   description_DESC
   thumbnail_ASC
@@ -4777,7 +4777,7 @@ enum CollectionOrderByInput {
 
 type CollectionPreviousValues {
   id: ID!
-  collectionName: String!
+  name: String!
   description: String
   thumbnail: String!
   createdAt: DateTime!
@@ -4833,46 +4833,46 @@ input CollectionScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  collectionName: String
+  name: String
 
   """All values that are not equal to given value."""
-  collectionName_not: String
+  name_not: String
 
   """All values that are contained in given list."""
-  collectionName_in: [String!]
+  name_in: [String!]
 
   """All values that are not contained in given list."""
-  collectionName_not_in: [String!]
+  name_not_in: [String!]
 
   """All values less than the given value."""
-  collectionName_lt: String
+  name_lt: String
 
   """All values less than or equal the given value."""
-  collectionName_lte: String
+  name_lte: String
 
   """All values greater than the given value."""
-  collectionName_gt: String
+  name_gt: String
 
   """All values greater than or equal the given value."""
-  collectionName_gte: String
+  name_gte: String
 
   """All values containing the given string."""
-  collectionName_contains: String
+  name_contains: String
 
   """All values not containing the given string."""
-  collectionName_not_contains: String
+  name_not_contains: String
 
   """All values starting with the given string."""
-  collectionName_starts_with: String
+  name_starts_with: String
 
   """All values not starting with the given string."""
-  collectionName_not_starts_with: String
+  name_not_starts_with: String
 
   """All values ending with the given string."""
-  collectionName_ends_with: String
+  name_ends_with: String
 
   """All values not ending with the given string."""
-  collectionName_not_ends_with: String
+  name_not_ends_with: String
   description: String
 
   """All values that are not equal to given value."""
@@ -5037,20 +5037,20 @@ input CollectionSubscriptionWhereInput {
 }
 
 input CollectionUpdateInput {
-  collectionName: String
+  name: String
   description: String
   thumbnail: String
   books: BookUpdateManyWithoutCollectionsInput
 }
 
 input CollectionUpdateManyDataInput {
-  collectionName: String
+  name: String
   description: String
   thumbnail: String
 }
 
 input CollectionUpdateManyMutationInput {
-  collectionName: String
+  name: String
   description: String
   thumbnail: String
 }
@@ -5073,7 +5073,7 @@ input CollectionUpdateManyWithWhereNestedInput {
 }
 
 input CollectionUpdateWithoutBooksDataInput {
-  collectionName: String
+  name: String
   description: String
   thumbnail: String
 }
@@ -5138,46 +5138,46 @@ input CollectionWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  collectionName: String
+  name: String
 
   """All values that are not equal to given value."""
-  collectionName_not: String
+  name_not: String
 
   """All values that are contained in given list."""
-  collectionName_in: [String!]
+  name_in: [String!]
 
   """All values that are not contained in given list."""
-  collectionName_not_in: [String!]
+  name_not_in: [String!]
 
   """All values less than the given value."""
-  collectionName_lt: String
+  name_lt: String
 
   """All values less than or equal the given value."""
-  collectionName_lte: String
+  name_lte: String
 
   """All values greater than the given value."""
-  collectionName_gt: String
+  name_gt: String
 
   """All values greater than or equal the given value."""
-  collectionName_gte: String
+  name_gte: String
 
   """All values containing the given string."""
-  collectionName_contains: String
+  name_contains: String
 
   """All values not containing the given string."""
-  collectionName_not_contains: String
+  name_not_contains: String
 
   """All values starting with the given string."""
-  collectionName_starts_with: String
+  name_starts_with: String
 
   """All values not starting with the given string."""
-  collectionName_not_starts_with: String
+  name_not_starts_with: String
 
   """All values ending with the given string."""
-  collectionName_ends_with: String
+  name_ends_with: String
 
   """All values not ending with the given string."""
-  collectionName_not_ends_with: String
+  name_not_ends_with: String
   description: String
 
   """All values that are not equal to given value."""
