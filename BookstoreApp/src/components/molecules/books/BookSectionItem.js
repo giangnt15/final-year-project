@@ -33,13 +33,7 @@ function BookSectionItem(props) {
 
     return (
         <TouchableHighlight underlayColor="rgba(0,0,0,0)"
-            onPress={() => navigation.navigate('Sách', {
-                screen: 'BookDetailScreen',
-                initial: false,
-                params: {
-                    id
-                }
-            })}
+            onPress={() => navigation.navigate('BookDetailScreen', { id })}
             style={styles.container}>
             <View >
                 <Image containerStyle={styles.imgCtn} style={{

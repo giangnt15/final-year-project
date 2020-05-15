@@ -2,6 +2,7 @@
 #import BookOrderByInput, BookReviewOrderByInput, BookCategoryOrderByInput,BookCategoryWhereInput  from './generated/prisma.graphql'
 #import BookWhereInput, PublisherWhereInput, PublisherOrderByInput, AuthorWhereInput, ProvinceOrderByInput from './generated/prisma.graphql';
 #import OrderWhereInput, OrderOrderbyInput, BookReviewWhereInput, AuthTokenType from './generated/prisma.graphql';
+#import BookReviewReplyOrderByInput,BookReviewSubscriptionWhereInput,BookReviewSubscriptionPayload from './generated/prisma.graphql';
 
 type User{
     id: ID!
@@ -272,6 +273,7 @@ type Query{
     getBestSeller(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksPayload!
     getBestSellerForBrowsing(first: Int! ,skip: Int, dateFrom: String, dateTo: String): BooksForBrowsingPayload!
 
+    getReviewById(id: ID!): BookReview!
 }
 
 type BooksForBrowsingPayload{
@@ -400,6 +402,7 @@ input OrderItemCreateInput{
 
 type Subscription{
     user: User!
+    bookReview(where: BookReviewSubscriptionWhereInput!): BookReviewSubscriptionPayload!
 }
 
 type GetBookReviewsByBookPayload{

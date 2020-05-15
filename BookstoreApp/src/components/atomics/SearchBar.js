@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import {SearchBar as RNSearchBar} from 'react-native-elements'
-import { useNavigation } from '@react-navigation/native';
+import { SearchBar as RNSearchBar } from 'react-native-elements'
+import { useNavigation, useRoute } from '@react-navigation/native';
 const styles = StyleSheet.create({
     searchBarCtn: {
         height: 54,
@@ -26,15 +26,37 @@ const styles = StyleSheet.create({
 
 function SearchBar(props) {
     const navigation = useNavigation();
-    const {searchBarRef} = props;
+    const { searchBarRef, searchKeyword, setSearchKeyWord, showCancel } = props;
+    const route = useRoute();
+    const [text, setText] = useState("")
     return (
         <RNSearchBar placeholder="Tìm sách qua tên sách, tác giả, NXB..."
             containerStyle={styles.searchBarCtn}
             inputStyle={styles.inputSearchStyle}
             ref={searchBarRef}
-            onFocus={()=>navigation.navigate("Tìm kiếm",{
-                focusInput: true
-            })}
+            value={searchKeyword ?? text}
+            onChangeText={(val) => {
+                setText(val);
+            }}
+            clearIcon={showCancel}
+            onSubmitEditing={(e) => {
+                navigation.navigate('TabScreen', {
+                    screen: "Sách",
+                    params: {
+                        searchKeyword: e.nativeEvent.text
+                    }
+                })
+            }}
+            onTouchEnd={() => {
+                navigation.navigate("TabScreen", {
+                    screen: 'Tìm kiếm'
+                })
+            }}
+            // onFocus={() => {
+            //     navigation.navigate("TabScreen", {
+            //         screen: 'Tìm kiếm'
+            //     })
+            // }}
             searchIcon={{ size: 22 }}
             inputContainerStyle={styles.inputCtnStyle} />
     )

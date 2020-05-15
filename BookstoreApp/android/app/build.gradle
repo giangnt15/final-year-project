@@ -150,6 +150,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('bookstoreapp.keystore')
+            storePassword 'giang1998'
+            keyAlias 'bookstorekey'
+            keyPassword 'giang1998'
+        }
     }
     buildTypes {
         debug {

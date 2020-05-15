@@ -259,69 +259,69 @@ function ShopGrid(props) {
     if (filters.price) {
       if (filters.price.operator === 'gt') {
         where = {
-          categories_some: {
+          categories_some: filters.category?{
             id: filters.category
-          },
-          authors_some: {
+          }:undefined,
+          authors_some: filters.author?{
             id: filters.author
-          },
-          basePrice_gt: filters.price.range[0],
-          publisher: {
+          }:undefined,
+          publisher: filters.publisher?{
             id: filters.publisher
-          }
+          }:undefined,
+          basePrice_gt: filters.price.range[0],
         }
       } else if (filters.price.operator === 'lt') {
         where = {
-          categories_some: {
+          categories_some: filters.category?{
             id: filters.category
-          },
-          authors_some: {
+          }:undefined,
+          authors_some: filters.author?{
             id: filters.author
-          },
-          basePrice_lt: filters.price.range[0],
-          publisher: {
+          }:undefined,
+          publisher: filters.publisher?{
             id: filters.publisher
-          }
+          }:undefined,
+          basePrice_lt: filters.price.range[0],
         }
       } else if (filters.price.operator === 'between') {
         where = {
           AND: [{
-            categories_some: {
+            categories_some: filters.category?{
               id: filters.category
-            },
-            authors_some: {
+            }:undefined,
+            authors_some: filters.author?{
               id: filters.author
-            },
+            }:undefined,
+            publisher: filters.publisher?{
+              id: filters.publisher
+            }:undefined,
             basePrice_gt: filters.price.range[0],
-            publisher: {
-              id: filters.publisher
-            }
           }, {
-            categories_some: {
+            categories_some: filters.category?{
               id: filters.category
-            },
-            authors_some: {
+            }:undefined,
+            authors_some: filters.author?{
               id: filters.author
-            },
-            basePrice_lt: filters.price.range[1],
-            publisher: {
+            }:undefined,
+            publisher: filters.publisher?{
               id: filters.publisher
-            }
+            }:undefined,
+            basePrice_lt: filters.price.range[1],
           }]
         }
       }
     } else {
       where = {
-        categories_some: {
+        categories_some: filters.category?{
           id: filters.category
-        },
-        authors_some: {
+        }:undefined,
+        authors_some: filters.author?{
           id: filters.author
-        },
-        basePrice: filters.price,
-        publisher: {
+        }:undefined,
+        publisher: filters.publisher?{
           id: filters.publisher
-        }
+        }:undefined,
+        basePrice: filters.price,
       }
     }
     props.getBooks({
@@ -375,9 +375,9 @@ function ShopGrid(props) {
 
   const renderProducts = () => {
     const listWrapper = document.querySelector(".shop__list__wrapper");
-    if (listWrapper) {
-      listWrapper.scrollIntoView();
-    }
+    // if (listWrapper) {
+    //   listWrapper.scrollIntoView();
+    // }
     if (books && books.books && books.books.length) {
       return books.books.map((book, index) => {
         return (

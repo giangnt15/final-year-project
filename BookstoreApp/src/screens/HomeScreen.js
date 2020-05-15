@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import { Dimensions, useWindowDimensions, StyleSheet, View, Text, Image } from 'react-native';
 import HomeScreenContent from '../components/organisms/HomeScreenContent';
 import NavBar from '../components/molecules/shared/NavBar';
 import { COLOR_PRIMARY } from '../constants';
+import { useDispatch } from 'react-redux';
+import {initCart} from '../redux/actions/cartAction';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const images = {
     logo: require('../assets/images/logo.png'),
     background: require('../assets/images/header_bg_2.jpg'), // Put your own image here
 };
 
-const {width,height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const IS_IPHONE_X = height === 812 || height === 896;
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
@@ -37,6 +40,25 @@ const styles = StyleSheet.create({
 
 const HomeScreen = () => {
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        async function getCartData() {
+            const bsCartJSON = await AsyncStorage.getItem('bs_cart');
+            let cartItems = [];
+            try {
+                cartItems = JSON.parse(bsCartJSON);
+                if (!Array.isArray(cartItems)) {
+                    cartItems = [];
+                }
+            } catch{
+                cartItems = [];
+            }
+            dispatch(initCart(cartItems));
+        }
+        getCartData();
+    });
+
     return (
         <View style={styles.container}>
             <ReactNativeParallaxHeader
@@ -47,7 +69,7 @@ const HomeScreen = () => {
                 title={<View style={{ marginTop: 45 }}><Image source={images.logo} style={styles.logo} /></View>}
                 backgroundImage={images.background}
                 backgroundImageScale={1.2}
-                renderNavBar={()=> <NavBar />}
+                renderNavBar={() => <NavBar />}
                 renderContent={() => <HomeScreenContent />}
                 alwaysShowTitle={false}
                 containerStyle={styles.container}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_BOOKS_FOR_BROWSING } from '../api/bookApi';
 import { showToast } from '../utils/common';
@@ -21,7 +21,8 @@ import SelectedFilter from '../components/atomics/SelectedFilter';
 import { FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISHER, COLOR_PRIMARY, FILTER_TYPE_PRICE, FILTER_TYPE_RATING, FILTER_TYPE_COLLECTION } from '../constants';
 import { GET_COLLECTIONS_BASIC } from '../api/collectionApi';
 import _ from 'lodash';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
+import DropDownHeader from '../components/atomics/DropdownHeader';
 const width = Dimensions.get('window').width
 
 const filterItemsPrice = [{
@@ -152,18 +153,26 @@ function BookScreen(props) {
         books: [],
         totalCount: 0
     });
-    const [orderBy, setOrderBy] = useState('createdAt_DESC');
     const drawerRef = useRef();
     const hasMore = bookData.books.length < bookData.totalCount;
+    const searchBarRef = useRef();
+    const route = useRoute();
+    const navigation = useNavigation();
+    const [showDropdown, setShowDropdown] = useState(false);
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            setShowDropdown(false);
+        });
+        return unsubscribe;
+    }, [navigation])
     const [getBooks, { loading: gettingBooks }] = useLazyQuery(GET_BOOKS_FOR_BROWSING, {
         onError() {
             showToast("Có lỗi xảy ra khi lấy dữ liệu");
         },
+        fetchPolicy: 'cache-and-network',
         onCompleted(data) {
             if (data.getBooksForBrowsing && data.getBooksForBrowsing.books) {
-                // if (route.name === "BookScreen") {
-                //     showToast(Intl.NumberFormat().format(data.getBooksForBrowsing.totalCount) + " sản phẩm");
-                // }
+                showToast(Intl.NumberFormat().format(data.getBooksForBrowsing.totalCount) + " sản phẩm");
                 setBookData({
                     books: data.getBooksForBrowsing.books,
                     totalCount: data.getBooksForBrowsing.totalCount
@@ -281,94 +290,99 @@ function BookScreen(props) {
 
     }, [/*filters.category, filters.rating,filters.author, filters.publisher, filters.price ? filters.price.id : undefined*/])
 
-    useEffect(() => {
+    const reloadBooks = () => {
         let where = {};
         if (filters.price) {
             if (filters.price.operator === 'gt') {
                 where = {
-                    categories_some: {
-                        id: filters.category?.id
-                    },
-                    authors_some: {
-                        id: filters.author?.id
-                    },
-                    basePrice_gt: filters.price.range[0],
+                    title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                    categories_some: filters.category?{
+                        id: filters.category.id
+                    }:undefined,
+                    authors_some: filters.author?{
+                        id: filters.author.id
+                    }: undefined,
                     collections_some: filters.collection ? {
                         id: filters.collection.id
                     } : undefined,
+                    publisher: filters.publisher?{
+                        id: filters.publisher.id
+                    }:undefined,
                     avgRating_gte: filters.rating?.id,
-                    publisher: {
-                        id: filters.publisher?.id
-                    }
+                    basePrice_gt: filters.price.range[0],
                 }
             } else if (filters.price.operator === 'lt') {
                 where = {
-                    categories_some: {
-                        id: filters.category?.id
-                    },
-                    authors_some: {
-                        id: filters.author?.id
-                    },
+                    title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                    categories_some: filters.category?{
+                        id: filters.category.id
+                    }:undefined,
+                    authors_some: filters.author?{
+                        id: filters.author.id
+                    }: undefined,
                     collections_some: filters.collection ? {
                         id: filters.collection.id
                     } : undefined,
+                    publisher: filters.publisher?{
+                        id: filters.publisher.id
+                    }:undefined,
                     avgRating_gte: filters.rating?.id,
                     basePrice_lt: filters.price.range[0],
-                    publisher: {
-                        id: filters.publisher?.id
-                    }
                 }
             } else if (filters.price.operator === 'between') {
                 where = {
                     AND: [{
-                        categories_some: {
-                            id: filters.category?.id
-                        },
-                        authors_some: {
-                            id: filters.author?.id
-                        },
+                        title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                        categories_some: filters.category?{
+                            id: filters.category.id
+                        }:undefined,
+                        authors_some: filters.author?{
+                            id: filters.author.id
+                        }: undefined,
                         collections_some: filters.collection ? {
                             id: filters.collection.id
                         } : undefined,
+                        publisher: filters.publisher?{
+                            id: filters.publisher.id
+                        }:undefined,
                         basePrice_gt: filters.price.range[0],
                         avgRating_gte: filters.rating?.id,
-                        publisher: {
-                            id: filters.publisher?.id
-                        }
                     }, {
-                        categories_some: {
-                            id: filters.category?.id
-                        },
-                        authors_some: {
-                            id: filters.author?.id
-                        },
+                        title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                        categories_some: filters.category?{
+                            id: filters.category.id
+                        }:undefined,
+                        authors_some: filters.author?{
+                            id: filters.author.id
+                        }: undefined,
                         collections_some: filters.collection ? {
                             id: filters.collection.id
                         } : undefined,
+                        publisher: filters.publisher?{
+                            id: filters.publisher.id
+                        }:undefined,
                         avgRating_gte: filters.rating?.id,
                         basePrice_lt: filters.price.range[1],
-                        publisher: {
-                            id: filters.publisher?.id
-                        }
                     }]
                 }
             }
         } else {
             where = {
-                categories_some: {
-                    id: filters.category?.id
-                },
-                authors_some: {
-                    id: filters.author?.id
-                },
-                // basePrice: filters.price,
+                title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                categories_some: filters.category?{
+                    id: filters.category.id
+                }:undefined,
+                authors_some: filters.author?{
+                    id: filters.author.id
+                }: undefined,
                 collections_some: filters.collection ? {
                     id: filters.collection.id
                 } : undefined,
+                publisher: filters.publisher?{
+                    id: filters.publisher.id
+                }:undefined,
+                // basePrice: filters.price,
                 avgRating_gte: filters.rating?.id,
-                publisher: {
-                    id: filters.publisher?.id
-                }
             }
         }
         getBooks({
@@ -379,9 +393,13 @@ function BookScreen(props) {
                 first: 9
             }
         });
+    }
 
+    useEffect(() => {
+        reloadBooks()
     }, [
         userSettings.sortDirection,
+        route.params ? route.params.searchKeyword : undefined,
         filters.price ? filters.price.id : undefined,
         filters.publisher?.id ?? undefined,
         filters.collection?.id ?? undefined,
@@ -409,8 +427,8 @@ function BookScreen(props) {
         return item.id === filters.collectionTemporary.id ? 0 : 1;
     }) : collections;
 
-
     const isFiltered = filters.author || filters.category || filters.publisher || filters.price || filters.rating || filters.collection;
+
     return (
         <Drawer renderNavigationView={() =>
             <Filters categories={catPassedDown}
@@ -432,7 +450,10 @@ function BookScreen(props) {
             drawerStyle={styles.drawer}
             type='overlay' >
             <View style={styles.container}>
-                <Header />
+                <Header searchBarRef={searchBarRef} showMore onClickMore={() => setShowDropdown(!showDropdown)}
+                    showCancel={false}
+                    searchKeyword={route.params ? route.params.searchKeyword : ''} />
+                {showDropdown && <DropDownHeader hideBook />}
                 <View style={styles.optionContainer}>
                     <View style={styles.orderByCtn}>
                         <Text style={{ width: 55, fontSize: 13, padding: 0 }}>Sắp xếp: </Text>
@@ -470,7 +491,9 @@ function BookScreen(props) {
                     {selectedCollection && <SelectedFilter text={selectedCollection.name}
                         value={selectedCollection} type={FILTER_TYPE_COLLECTION} />}
                 </View>}
-                {gettingBooks ? <ActivityIndicator style={{ marginTop: '45%' }} /> : <BookGrid books={bookData.books} loading={gettingBooks || gettingMoreBooks} fetchMore={fetchMore} />}
+                {gettingBooks ? <ActivityIndicator style={{ marginTop: '45%' }} /> : <BookGrid books={bookData.books}
+                    reload={reloadBooks}
+                    loading={gettingBooks || gettingMoreBooks} fetchMore={fetchMore} />}
             </View>
         </Drawer>
     )

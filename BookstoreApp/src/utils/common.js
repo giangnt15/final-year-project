@@ -61,5 +61,15 @@ const calculateReviewScore = (data) => {
     return roundHalf(Math.round((totalScore / data.totalCount) * 10) / 10);
 }
 
-
-export { getOrderStatusText, calculateDiscount, showToast, calculateReviewScore, getTotalScore,roundHalf };
+function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - 450;
+}
+export {
+    getOrderStatusText,
+    calculateDiscount,
+    showToast,
+    calculateReviewScore,
+    getTotalScore,
+    roundHalf,
+    isCloseToBottom
+};

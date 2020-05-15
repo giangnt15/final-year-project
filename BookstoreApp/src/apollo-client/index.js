@@ -8,7 +8,6 @@ import { ApolloLink } from 'apollo-link';
 
 const httpLink = createHttpLink({
   uri: 'http://18.191.134.82:30306',
-
   // uri: 'http://localhost:4000',
 });
 

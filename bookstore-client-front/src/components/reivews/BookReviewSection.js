@@ -115,7 +115,7 @@ function BookReviewSection(props) {
                     </Popconfirm> :
                         <Button color="primary" style={{ fontSize: 12 }} onClick={openReviewEditor}
                             variant="contained">{showReviewEditor ? 'Đóng' : 'Viết đánh giá'}</Button>
-                    },
+                    }
                 </div>
             </div>
         </div>

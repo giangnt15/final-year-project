@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import getUserId from '../utils/getUserId';
 import checkAdmin, { getUserRole } from '../utils/adminAuth';
+import { calculateDiscount } from '../utils/common';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
@@ -395,45 +396,67 @@ const Mutation = {
         }, `{id basePrice discounts{id discountRate from to usePercentage discountAmount}}`);
         let subTotal = 0;
         let orderItemsInOrder = []
-        for (let i = 0; i < orderItems.length; i++) {
-            if (orderItems[i].availableCopies < data.items[i].quantity) {
+        for (let orderItem of orderItems){
+            const correspondingDataItem = data.items.find(dt=>dt.book===orderItem.id);
+            if (orderItem.availableCopies < correspondingDataItem.quantity) {
                 throw new Error("Không đủ hàng trong kho, vui lòng liên hệ người quản trị để biết thêm chi tiết");
-            } else {
-                let totalItemPrice = 0;
-                let orderItemPrice = orderItems[i].basePrice;
-                if (orderItems[i].discounts.length > 0) {
-                    for (let discount of orderItems[i].discounts) {
-                        if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
-                            if (discount.usePercentage) {
-                                orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate))
-                            } else {
-                                if (orderItemPrice>=discount.discountAmount) {
-                                    orderItemPrice = (orderItemPrice - discount.discountAmount)
-                                }else{
-                                    orderItemPrice = 0;
-                                }
-                            }
-                        }
-                    }
-                    totalItemPrice = orderItemPrice * data.items[i].quantity;
-                } else {
-                    totalItemPrice = orderItemPrice * data.items[i].quantity;
-                }
-                subTotal += totalItemPrice;
+            }else{
+                const [discountedPrice,discountRate,discountAmount] = calculateDiscount(orderItem.basePrice,orderItem.discounts);
+                const totalItemPrice = discountedPrice * correspondingDataItem.quantity;
+                subTotal+=totalItemPrice;
                 orderItemsInOrder.push({
                     item: {
                         connect: {
-                            id: data.items[i].book
+                            id: correspondingDataItem.book
                         }
                     },
-                    basePrice: orderItems[i].basePrice * data.items[i].quantity,
-                    discount: orderItems[i].basePrice - orderItemPrice,
-                    price: orderItemPrice,
+                    basePrice: orderItem.basePrice * correspondingDataItem.quantity,
+                    discount: orderItem.basePrice - discountedPrice,
+                    price: discountedPrice,
                     totalItemPrice,
-                    quantity: data.items[i].quantity
+                    quantity: correspondingDataItem.quantity
                 })
             }
         }
+        // for (let i = 0; i < orderItems.length; i++) {
+        //     if (orderItems[i].availableCopies < data.items[i].quantity) {
+        //         throw new Error("Không đủ hàng trong kho, vui lòng liên hệ người quản trị để biết thêm chi tiết");
+        //     } else {
+        //         let totalItemPrice = 0;
+        //         let orderItemPrice = orderItems[i].basePrice;
+        //         if (orderItems[i].discounts.length > 0) {
+        //             for (let discount of orderItems[i].discounts) {
+        //                 if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
+        //                     if (discount.usePercentage) {
+        //                         orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate))
+        //                     } else {
+        //                         if (orderItemPrice>=discount.discountAmount) {
+        //                             orderItemPrice = (orderItemPrice - discount.discountAmount)
+        //                         }else{
+        //                             orderItemPrice = 0;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             totalItemPrice = orderItemPrice * data.items[i].quantity;
+        //         } else {
+        //             totalItemPrice = orderItemPrice * data.items[i].quantity;
+        //         }
+        //         subTotal += totalItemPrice;
+        //         orderItemsInOrder.push({
+        //             item: {
+        //                 connect: {
+        //                     id: data.items[i].book
+        //                 }
+        //             },
+        //             basePrice: orderItems[i].basePrice * data.items[i].quantity,
+        //             discount: orderItems[i].basePrice - orderItemPrice,
+        //             price: orderItemPrice,
+        //             totalItemPrice,
+        //             quantity: data.items[i].quantity
+        //         })
+        //     }
+        // }
         let grandTotal = subTotal;
         const shippingAddress = await prisma.query.userAddress({
             where: {

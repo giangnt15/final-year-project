@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Rating, Header, Text as RNText } from 'react-native-elements';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import moment from 'moment';
-import { DATE_TIME_VN_24H } from '../../../constants';
+import { DATE_TIME_VN_24H, COLOR_PRIMARY } from '../../../constants';
 import RatingReplyItem from './RatingReplyItem';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { useToken } from '../../../hooks/customHooks';
 
 const { width } = Dimensions.get('window');
 
@@ -30,15 +33,43 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderLeftWidth: 1,
         marginTop: 16
+    },
+    hideShowRepliesbtn: {
+        marginRight: 12
+    },
+    displayFlexRow: {
+        display: "flex",
+        flexDirection: 'row'
     }
 })
 
 function RatingItem(props) {
 
-    const { review,hideReplies } = props;
-    const { id, rating, reviewHeader, reviewText, createdAt, author,replies } = review;
+    const { review, hideReplies, containerStyle = {} } = props;
+    const { id, rating, reviewHeader, reviewText, createdAt, author, replies = [] } = review;
+    const [showReplies, setShowReplies] = useState(false);
+
+    const navigation = useNavigation();
+    const [, , tokenValid] = useToken()
+
+    function navigateToReplyScreen() {
+        if (!tokenValid) {
+            navigation.navigate("LoginSignupScreen", {
+                from: {
+                    stack: 'ReplyReviewScreen',
+                    params: {
+                        id
+                    }
+                }
+            })
+        } else {
+            navigation.navigate("ReplyReviewScreen", {
+                id
+            });
+        }
+    }
     return (
-        <View style={styles.container}>
+        <View style={{ ...styles.container, ...containerStyle }}>
             <View style={styles.header}>
                 <Rating
                     readonly startingValue={rating}
@@ -52,11 +83,19 @@ function RatingItem(props) {
             <View>
                 <Text style={styles.createdAt}>{author.fullName ?? author.username}</Text>
             </View>
-            {reviewText!==null&&reviewText!==undefined&&reviewText!==''&&<View>
+            {reviewText !== null && reviewText !== undefined && reviewText !== '' && <View>
                 <Text style={styles.reviewText}>{reviewText}</Text>
             </View>}
-            {!hideReplies&&<View style={styles.repliesCtn}>
-                {replies.map(r=>(
+            <View style={{ ...styles.displayFlexRow, marginTop: 12 }}>
+                {replies.length > 0 && <TouchableOpacity style={styles.hideShowRepliesbtn} onPress={() => setShowReplies(prev => !prev)}>
+                    <Text style={{ color: COLOR_PRIMARY }}>{showReplies ? "Ẩn" : 'Hiện'} trả lời</Text>
+                </TouchableOpacity>}
+                <TouchableOpacity onPress={navigateToReplyScreen}>
+                    <Text style={{ color: COLOR_PRIMARY }}>Gửi trả lời</Text>
+                </TouchableOpacity>
+            </View>
+            {!hideReplies && showReplies && <View style={styles.repliesCtn}>
+                {replies.map(r => (
                     <RatingReplyItem key={r.id} reply={r} />
                 ))}
             </View>}

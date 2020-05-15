@@ -1,6 +1,6 @@
-import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_BOOK } from '../api/bookApi';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useApolloClient, useLazyQuery } from '@apollo/react-hooks';
+import { GET_BOOK, ADD_BOOK_TO_WISH_LIST } from '../api/bookApi';
 import { GET_REVIEWS_BY_BOOK } from '../api/reviewApi';
 import { showToast, calculateDiscount, roundHalf } from '../utils/common';
 import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
@@ -17,6 +17,11 @@ import RatingSummary from '../components/molecules/rating/RatingSummary';
 import RatingItem from '../components/molecules/rating/RatingItem';
 import BookSection from '../components/organisms/books/BookSection';
 import HeaderBackAction from '../components/atomics/HeaderBackAction';
+import DropDownHeader from '../components/atomics/DropdownHeader';
+import { useToken } from '../hooks/customHooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSingleItemToCartAysnc } from '../redux/actions/cartAction';
+import { useFocusEffect } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
     container: {
@@ -114,20 +119,53 @@ function BookDetailScreen(props) {
             id
         }
     });
-    const { loading: gettingBookReviews, data: bookReviews = { getBookReviewsByBook: { bookReviews: [] } } } = useQuery(GET_REVIEWS_BY_BOOK, {
+
+    const [getBookReviews, { loading: gettingBookReviews, data: bookReviews = { getBookReviewsByBook: { bookReviews: [] } } }] = useLazyQuery(GET_REVIEWS_BY_BOOK, {
         onError(err) {
             showToast("Có lỗi xảy ra khi lấy dữ liệu sách" + err.message);
         },
+        fetchPolicy: 'cache-and-network',
         variables: {
             bookId: id,
-            orderby: 'createdAt_DESC',
+            orderBy: 'createdAt_DESC',
             first: 2,
             skip: 0
         }
     })
+
+    useFocusEffect(useCallback(()=>{
+        getBookReviews();
+    },[navigation]))
+
+    const [showDropdown, setShowDropdown] = useState(false);
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            setShowDropdown(false);
+        });
+        return unsubscribe;
+    }, [navigation]);
+    const [, , tokenValid] = useToken();
+    function navigateToLogin(params) {
+        navigation.navigate("LoginSignupScreen",params)
+    }
+
+    const [addToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
+        onError() {
+            showToast("Có lỗi xảy ra, vui lòng thử lại sau");
+        },
+        onCompleted(data) {
+            showToast(data.addBookToWishList.message);
+        }
+    })
+    const client = useApolloClient();
+    const dispatch = useDispatch();
+    const { cart } = useSelector(state => ({
+        cart: state.cart
+    }))
     if (gettingBook) {
         return <ActivityIndicator />
     }
+
     const { thumbnail,
         title,
         basePrice,
@@ -145,6 +183,7 @@ function BookDetailScreen(props) {
         publishedDate
     } = dataBook.getBook;
     const avgRating = calculateReviewScore(bookReviews.getBookReviewsByBook);
+    const [discountedPrice, discountRate, discountAmmount] = calculateDiscount(basePrice, discounts);
     // const { fiveStar, fourStar, threeStar, twoStar, oneStar, totalCount } = bookReviews.getBookReviewsByBook;
     // const fourStarPercent = roundHalf(fourStar / totalCount * 100);
     // const threeStarPercent = roundHalf(threeStar / totalCount * 100);
@@ -152,10 +191,62 @@ function BookDetailScreen(props) {
     // const fiveStarPercent = roundHalf(fiveStar / totalCount * 100);
     // const oneStarPercent = roundHalf(oneStar / totalCount * 100);
 
-    const [discountedPrice, discountRate, discountAmmount] = calculateDiscount(basePrice, discounts);
+    function navigateToReviewScreen(){
+        navigation.navigate("ReviewScreen", {
+            bookId: id,
+            title,
+            thumbnail
+        })
+    };
+
+    
+    function navigateToCreateReviewScreen() {
+        if (!tokenValid) {
+            navigation.navigate("LoginSignupScreen", {
+                from: {
+                    stack: 'CreateReviewScreen',
+                    params: {
+                        book: {
+                            thumbnail,
+                            id,
+                            title
+                        }
+                    }
+                }
+            });
+        } else {
+            navigation.navigate("CreateReviewScreen", {
+                book: {
+                    thumbnail,
+                    id,
+                    title
+                }
+            })
+        }
+    }
+
     return (
-        <View style={{display: 'flex', height: '100%'}}>
-            <HeaderBackAction />
+        <View style={{ display: 'flex', height: '100%' }}>
+            <HeaderBackAction showRight onClickMore={() => setShowDropdown(!showDropdown)} />
+            {showDropdown && <DropDownHeader showHeart={() => {
+                if (!tokenValid) {
+                    navigateToLogin({
+                        from: {
+                            stack: 'BookDetailScreen',
+                            params: {
+                                id
+                            }
+                        }
+                    })
+                } else {
+                    setShowDropdown(false);
+                    addToWishList({
+                        variables: {
+                            bookId: id
+                        }
+                    })
+                }
+            }} />}
             <ScrollView style={styles.container}>
                 <View style={styles.section}>
                     <TouchableOpacity style={styles.sectionItem}>
@@ -172,7 +263,7 @@ function BookDetailScreen(props) {
                                     readonly startingValue={avgRating}
                                     ratingBackgroundColor="#ccc"
                                     imageSize={16} ratingCount={5} />
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={navigateToReviewScreen}>
                                     <Text style={styles.totalReviewSm}>(Xem {bookReviews.getBookReviewsByBook.totalCount} đánh giá)</Text>
                                 </TouchableOpacity>
                             </View>}
@@ -191,7 +282,10 @@ function BookDetailScreen(props) {
                         </View>
                     </View>
                     <View style={styles.sectionItem}>
-                        <Button buttonStyle={{ backgroundColor: COLOR_BUTTON_PRIMARY }} title="Chọn Mua"></Button>
+                        <Button buttonStyle={{ backgroundColor: COLOR_BUTTON_PRIMARY }}
+                            loading={cart.adding} disabled={cart.adding} disabledStyle={{backgroundColor: COLOR_BUTTON_PRIMARY}}
+                            onPress={() => dispatch(addSingleItemToCartAysnc(client, dataBook.getBook, 1))}
+                            title="Chọn Mua"></Button>
                     </View>
                 </View>
                 <View style={styles.section}>
@@ -256,7 +350,7 @@ function BookDetailScreen(props) {
                         display: "flex", flexDirection: 'row', justifyContent: 'space-between'
                     }}>
                         <Text style={styles.sectionTitle}>Khách Hàng Đánh Giá</Text>
-                        {bookReviews.getBookReviewsByBook.totalCount > 0 && <TouchableOpacity ><Text style={{ color: COLOR_PRIMARY, fontWeight: '700', fontSize: 13 }}>XEM TẤT CẢ</Text></TouchableOpacity>}
+                        {bookReviews.getBookReviewsByBook.totalCount > 0 && <TouchableOpacity onPress={navigateToReviewScreen}><Text style={{ color: COLOR_PRIMARY, fontWeight: '700', fontSize: 13 }}>XEM TẤT CẢ</Text></TouchableOpacity>}
                     </View>
                     <View style={styles.sectionItem}>
                         <RatingSummary bookReviews={bookReviews} gettingBookReviews={gettingBookReviews} />
@@ -274,18 +368,16 @@ function BookDetailScreen(props) {
                         borderColor: "#ccc",
                         borderBottomWidth: 1
                     }}>
-                        <Text>Xem tất cả {bookReviews.getBookReviewsByBook.totalCount} đánh giá</Text>
+                        <TouchableOpacity onPress={navigateToReviewScreen}><Text style={{color: COLOR_PRIMARY}}>Xem tất cả {bookReviews.getBookReviewsByBook.totalCount} đánh giá</Text></TouchableOpacity>
                     </View>
                     }
                     <View style={styles.sectionItem}>
-                        <Button type="outline" onPress={() => navigation.navigate("BookDescriptionScreen", {
-                            description
-                        })}
+                        <Button type="outline" onPress={navigateToCreateReviewScreen}
                             buttonStyle={{
                                 borderColor: COLOR_PRIMARY,
                                 alignSelf: 'center',
                                 width: '50%'
-                            }} title="Viết Nhận Xét"></Button>
+                            }} title="Viết Đánh Giá"></Button>
                     </View>
                 </View>
                 <BookSection name="Cùng Tác Giả" variables={{

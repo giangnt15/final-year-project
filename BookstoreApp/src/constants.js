@@ -67,6 +67,7 @@ export const CHANGE_CART_ITEM_QTY_SUCCESSFULLY ="CHANGE_CART_ITEM_QTY_SUCCESSFUL
 export const CHANGE_CART_ITEM_QTY_FAILED ="CHANGE_CART_ITEM_QTY_FAILED";
 export const REMOVE_ITEM_FROM_CART_SUCCESSFULLY = "REMOVE_ITEM_FROM_CART_SUCCESSFULLY";
 export const RESET_CART = "RESET_CART";
+export const INIT_CART = "INIT_CART";
 
 //end cart
 
@@ -80,3 +81,4 @@ export const ADD_ITEM_TO_CART_SUCCEEDED = 'Đã thêm vào giỏ hàng của b�
 //color
 export const COLOR_PRIMARY = "#3e1b9e";
 export const COLOR_BUTTON_PRIMARY = "#e81e4d";
+export const COLOR_BUTTON_LINK = "#428eff";

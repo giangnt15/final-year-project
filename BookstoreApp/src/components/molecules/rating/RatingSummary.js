@@ -1,20 +1,54 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
 import { Rating } from 'react-native-elements';
 import { Bar } from 'react-native-progress';
 import { calculateReviewScore, roundHalf } from '../../../utils/common';
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
+    container: {
+        display: "flex",
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        width: '100%'
+    },
+    avgRatingCtn: {
+        display: "flex", 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        borderRightColor: '#ccc',
+        // borderRightWidth: 1, 
+        paddingHorizontal: 12,
+        width: 100
+    },
+    starPercentageRowCtn: {
+        display: "flex",
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 6,
+        paddingRight: 12,
+    },
     starPercentageRow: {
         marginVertical: 4,
         display: "flex",
-        width: 60,
+        width: '100%',
+        overflow: 'scroll',
         flexDirection: 'row',
         alignItems: 'center',
     },
     percentageText: {
-        fontSize: 12
+        fontSize: 11,
+        color: '#a1a1a1',
+    },
+    bar: {
+        height: 7,
+        marginRight: 8,
+        marginLeft: 8,
+        // maxWidth: 125
     }
+
 })
 
 function RatingSummary(props) {
@@ -36,66 +70,57 @@ function RatingSummary(props) {
         oneStarPercent = roundHalf(oneStar / totalCount * 100);
     }
     return (
-        <View style={{ display: "flex", flexDirection: 'row' }}>
-            <View style={{
-                display: "flex", alignItems: 'center',
-                justifyContent: 'center', borderRightColor: '#ccc',
-                borderRightWidth: 1, paddingHorizontal: 24
-            }}>
+        <View style={styles.container}>
+            <View style={styles.avgRatingCtn}>
                 {gettingBookReviews ? <ActivityIndicator /> : <>
                     <Text style={{ fontSize: 36, fontWeight: '700' }}>{isNaN(avgRating) && !avgRating ? 0 : avgRating.toFixed(1)}</Text>
                     <Rating
                         readonly startingValue={isNaN(avgRating) && !avgRating ? 0 : avgRating}
                         ratingBackgroundColor="#ccc"
                         imageSize={13} ratingCount={5} />
-                    <Text style={{ color: '#a1a1a1' }}>{Intl.NumberFormat().format(bookReviews.getBookReviewsByBook.totalCount)} đánh giá</Text>
+                    <Text style={{ color: '#a1a1a1', fontSize: 11, textAlign: 'center' }}>{Intl.NumberFormat().format(bookReviews.getBookReviewsByBook.totalCount)} đánh giá</Text>
                 </>}
             </View>
-            <View style={{
-                display: "flex",
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingHorizontal: 8,
-            }}>
+            <View style={styles.starPercentageRowCtn}>
                 <View style={styles.starPercentageRow}>
                     <Rating
                         readonly startingValue={5}
                         ratingBackgroundColor="#ccc"
-                        imageSize={12} ratingCount={5} />
-                    <Bar progress={isNaN(fiveStarPercent) ? 0 : fiveStarPercent} animated={false} color="#16687a" style={{ height: 7, marginRight: 8, marginLeft: 8 }} />
-                    <Text style={styles.percentageText}>{fiveStarPercent}%</Text>
+                        imageSize={10} ratingCount={5} />
+                    <Bar progress={isNaN(fiveStarPercent) ? 0 : fiveStarPercent / 100} animated={false} color="#16687a" style={styles.bar} />
+                    <Text style={styles.percentageText}>{fiveStarPercent}% ({fiveStar})</Text>
                 </View>
                 <View style={styles.starPercentageRow}>
                     <Rating
                         readonly startingValue={4}
                         ratingBackgroundColor="#ccc"
-                        imageSize={12} ratingCount={5} />
-                    <Bar progress={isNaN(fourStarPercent) ? 0 : fourStarPercent} animated={false} color="#16687a" style={{ height: 7, marginRight: 8, marginLeft: 8 }} />
-                    <Text style={styles.percentageText}>{fourStarPercent}%</Text>
+                        imageSize={10} ratingCount={5} />
+                    <Bar progress={isNaN(fourStarPercent) ? 0 : fourStarPercent / 100} animated={false} color="#16687a" style={styles.bar} />
+                    <Text style={styles.percentageText}>{fourStarPercent}% ({fourStar})</Text>
                 </View>
                 <View style={styles.starPercentageRow}>
                     <Rating
                         readonly startingValue={3}
                         ratingBackgroundColor="#ccc"
-                        imageSize={12} ratingCount={5} />
-                    <Bar progress={isNaN(threeStarPercent) ? 0 : threeStarPercent} animated={false} color="#16687a" style={{ height: 7, marginRight: 8, marginLeft: 8 }} />
-                    <Text style={styles.percentageText}>{threeStarPercent}%</Text>
+                        imageSize={10} ratingCount={5} />
+                    <Bar progress={isNaN(threeStarPercent) ? 0 : threeStarPercent / 100} animated={false} color="#16687a" style={styles.bar} />
+                    <Text style={styles.percentageText}>{threeStarPercent}% ({threeStar})</Text>
                 </View>
                 <View style={styles.starPercentageRow}>
                     <Rating
                         readonly startingValue={2}
                         ratingBackgroundColor="#ccc"
-                        imageSize={12} ratingCount={5} />
-                    <Bar progress={isNaN(twoStarPercent) ? 0 : twoStarPercent} animated={false} color="#16687a" style={{ height: 7, marginRight: 8, marginLeft: 8 }} />
-                    <Text style={styles.percentageText}>{twoStarPercent}%</Text>
+                        imageSize={10} ratingCount={5} />
+                    <Bar progress={isNaN(twoStarPercent) ? 0 : twoStarPercent / 100} animated={false} color="#16687a" style={styles.bar} />
+                    <Text style={styles.percentageText}>{twoStarPercent}% ({twoStar})</Text>
                 </View>
                 <View style={styles.starPercentageRow}>
                     <Rating
                         readonly startingValue={1}
                         ratingBackgroundColor="#ccc"
-                        imageSize={12} ratingCount={5} />
-                    <Bar progress={isNaN(oneStarPercent) ? 0 : oneStarPercent} animated={false} color="#16687a" style={{ height: 7, marginRight: 8, marginLeft: 8 }} />
-                    <Text style={styles.percentageText}>{oneStarPercent}%</Text>
+                        imageSize={10} ratingCount={5} />
+                    <Bar progress={isNaN(oneStarPercent) ? 0 : oneStarPercent / 100} animated={false} color="#16687a" style={styles.bar} />
+                    <Text style={styles.percentageText}>{oneStarPercent}% ({oneStar})</Text>
                 </View>
             </View>
         </View>

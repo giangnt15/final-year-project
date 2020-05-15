@@ -6,15 +6,26 @@ import { useFocusEffect } from '@react-navigation/native';
 function SearchScreen(props) {
     const { route, navigation } = props;
     const searchBarRef = useRef();
-    const unsubscribe = navigation.addListener('focus', () => {
-        // do something
-    });
 
-    useFocusEffect(useCallback(()=>{
-        if (searchBarRef.current) {
-            searchBarRef.current.focus();
-        }
-    }));
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
+            if (searchBarRef.current)
+                searchBarRef.current.focus();
+            // do something
+        });
+  
+        return unsubscribe;
+    },[navigation]);
+
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('blur', () => {
+            if (searchBarRef.current)
+                searchBarRef.current.blur();
+            // do something
+        });
+  
+        return unsubscribe;
+    },[navigation]);
 
     return (
         <View >

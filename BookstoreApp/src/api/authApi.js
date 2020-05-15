@@ -14,8 +14,8 @@ export const LOGIN = gql`
                 phone
                 isActive
                 gender
-                birthdate
                 password
+                birthdate
                 role
             }
             token

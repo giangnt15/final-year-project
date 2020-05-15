@@ -553,6 +553,13 @@ const Query = {
             }
         }
 
+    },
+    getReviewById(parent, {id}, {prisma},info){
+        return prisma.query.bookReview({
+            where: {
+                id
+            }
+        },info);
     }
 }
 

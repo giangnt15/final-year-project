@@ -1,13 +1,14 @@
-import jsonwebtoken from 'jsonwebtoken'
+import jwtdecode from 'jwt-decode'
 
 export default function isTokenValid(token) {
     try {
-        let decoded = jsonwebtoken.decode(token);
+        let decoded = jwtdecode(token);
         if (decoded.exp < new Date().getTime() / 1000) {
             return false;
         }
         return true;
-    } catch{
+    } catch(err){
+        console.log(err)
         return false;
     }
 }

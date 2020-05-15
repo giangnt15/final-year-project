@@ -45,15 +45,27 @@ export const GET_REVIEWS = gql`
                 reviewText
                 rating
                 updatedAt
+                createdAt
                 author{
                     id
                     username
                     avatar
+                    fullName
                 }
                 book{
                     id 
                     title
                     thumbnail
+                }
+                replies{
+                    id
+                    text
+                    author{
+                        id
+                        username
+                        fullName
+                    }
+                    updatedAt
                 }
             }
             totalCount
@@ -93,4 +105,75 @@ export const GET_REVIEW_REPLIES = gql`
             updatedAt
         }
 }
+`
+
+export const GET_REVIEW_BY_ID = gql`
+    query getReviewById($id: ID!){
+        getReviewById(id: $id){
+            id
+            reviewHeader
+            reviewText
+            rating
+            updatedAt
+            createdAt
+            author{
+                id
+                username
+                avatar
+            }
+            book{
+                id 
+                title
+                thumbnail
+            }
+            replies{
+                id
+                text
+                author{
+                    id
+                    username
+                    fullName
+                }
+                updatedAt
+                createdAt
+            }
+        }
+    }
+`
+
+export const REVIEW_SUBSCRIPTION = gql`
+    subscription bookReview($where: BookReviewSubscriptionWhereInput!){
+        bookReview(where: $where){
+            mutation
+            node{
+                id
+                reviewHeader
+                reviewText
+                rating
+                updatedAt
+                createdAt
+                author{
+                    id
+                    username
+                    avatar
+                }
+                book{
+                    id 
+                    title
+                    thumbnail
+                }
+                replies{
+                    id
+                    text
+                    author{
+                        id
+                        username
+                        fullName
+                    }
+                    updatedAt
+                    createdAt
+                }
+            }
+        }
+    }
 `

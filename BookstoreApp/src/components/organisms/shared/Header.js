@@ -1,10 +1,11 @@
 import React from 'react';
-import { Header as RNHeader } from 'react-native-elements';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { Header as RNHeader, Icon } from 'react-native-elements';
+import { StyleSheet, Dimensions, View, TouchableHighlight } from 'react-native';
 import NavBar from '../../molecules/shared/NavBar';
 import CartNavigation from '../../atomics/CartNavigation';
 import SearchBar from '../../atomics/SearchBar';
 import { COLOR_PRIMARY } from '../../../constants';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: COLOR_PRIMARY,
         alignItems: 'center',
-        paddingRight: 10
+        paddingRight: 10,
     },
     headerRight: {
         display: "flex",
@@ -32,11 +33,29 @@ const styles = StyleSheet.create({
 })
 
 function Header(props) {
-    const {hideCart,searchBarRef, style={}} = props;
+    const { hideCart, searchBarRef, style = {}, onClickBack, showMore, onClickMore,
+        showBackBtn, searchKeyword, setSearchKeyWord, showCancel } = props;
+    const navigation = useNavigation();
+
     return (
-        <View style={{...styles.header,...style}}>
-            <SearchBar searchBarRef={searchBarRef} />
-            {!hideCart&&<CartNavigation />}
+        <View style={{ ...styles.header, ...style }}>
+            {showBackBtn && <TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
+                underlayColor="rgba(255,255,255,0)" onPress={() => {
+                    if (onClickBack) {
+                        onClickBack();
+                    } else if (navigation.canGoBack()) {
+                        navigation.goBack();
+                    }
+                }}>
+                <Icon type="antdesign" size={18} name="arrowleft" color="#fff" />
+            </TouchableHighlight>}
+            <SearchBar searchBarRef={searchBarRef} searchKeyword={searchKeyword} showCancel={showCancel}
+                setSearchKeyWord={setSearchKeyWord} />
+            {!hideCart && <CartNavigation />}
+            {showMore && <TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
+                underlayColor="rgba(255,255,255,0.2)" onPress={onClickMore}>
+                <Icon type="feather" size={18} name="more-horizontal" color="#fff" />
+            </TouchableHighlight>}
         </View>
     )
 }

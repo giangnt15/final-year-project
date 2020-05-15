@@ -23,13 +23,6 @@ function CommonFilter(props) {
         suffix="đ" thousandSeparator={true} /></div>)
     },{
         range: [100000,200000],
-        id: '3',
-        operator: 'between',
-        name: (<div style={{display: 'flex'}}>Từ &nbsp;<NumberFormat value={100000} displayType={'text'}
-        suffix="đ" thousandSeparator={true} />&nbsp; - &nbsp;<NumberFormat value={200000} displayType={'text'}
-        suffix="đ" thousandSeparator={true} /></div>)
-    },{
-        range: [100000,200000],
         id: '4',
         operator: 'between',
         name: (<div style={{display: 'flex'}}>Từ &nbsp;<NumberFormat value={100000} displayType={'text'}
