@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './search.css';
-import { GET_BOOKS } from '../../../api/bookApi';
+import { GET_BOOKS, GET_BOOKS_FOR_BROWSING } from '../../../api/bookApi';
 import { SORT_DIRECTION_LATEST } from '../../../constants';
 import ProductItem from '../../products/ProductItem';
 import { NavLink } from 'react-router-dom';
@@ -47,7 +47,7 @@ function SearchBox(props) {
         setSpinning(true);
         try {
           const res = await client.query({
-            query: GET_BOOKS,
+            query: GET_BOOKS_FOR_BROWSING,
             variables: {
               where: {
                 OR: [
@@ -69,44 +69,9 @@ function SearchBox(props) {
               orderBy: SORT_DIRECTION_LATEST,
               skip: 0,
               first: 10,
-              selection: `{
-            id
-            title
-            basePrice
-            description
-            thumbnail
-            images
-            dimensions
-            translator
-            format
-            isbn
-            publishedDate
-            availableCopies
-            pages
-            discounts{
-              id 
-              from 
-              to 
-              discountRate
-              discountAmount
-              usePercentage
-            }
-            publisher{
-              id
-              name
-            }
-            authors{
-              id
-              pseudonym
-            }
-            categories{
-              id
-              name
-            }
-          }`
             }
           })
-          setBooks(res.data.getBooks.books)
+          setBooks(res.data.getBooksForBrowsing.books)
           setSpinning(false);
         } catch (err) {
           message.error("Có lỗi xảy ra khi lấy dữ liệu");

@@ -410,6 +410,7 @@ const Query = {
                     translator
                     format
                     isbn
+                    sku
                     publishedDate
                     availableCopies
                     pages

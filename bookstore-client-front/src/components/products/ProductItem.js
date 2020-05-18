@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import './products.css';
 import { NavLink, useHistory } from 'react-router-dom';
-import { Popover, Button, message } from 'antd';
+import { Popover, Button, message, Rate } from 'antd';
 import { FILTER_TYPE_AUTHOR, RESET_FILTERS } from '../../constants';
 import { connect } from 'react-redux';
 import { changeFilter } from '../../redux/actions/filtersActions';
@@ -14,8 +14,9 @@ import _ from 'lodash';
 import { calculateDiscount } from '../../utils/common';
 
 function ProductItem(props) {
-  const { id, thumbnail, basePrice, availableCopies,title, authors, description, discounts = [] } = props.book;
-  const [discountedPrice, discountRate, discountAmount] = calculateDiscount(basePrice, discounts);
+  const { id, thumbnail, basePrice, availableCopies,title, authors, description, reviews,
+    discounts = {discountedPrice: 0, discountRate: 0, discountAmount: 0} } = props.book;
+  const {discountedPrice, discountRate, discountAmount} = discounts;
   const { width, thumbHeight, changeFilter, addSingleItemToCart, cart } = props;
   const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
     onError() {
@@ -45,8 +46,8 @@ function ProductItem(props) {
             history.push('/books');
           }}>{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
         ))}
-        {/* <a href="/tac-gia/chu-viet-nga-auth43519/p1" ng-repeat="item in productItem.Authors" className="ng-binding ng-scope">{}</a>end ngRepeat: item in productItem.Authors */}
       </div>
+        {reviews.avgRating>0&&<Rate disabled style={{ fontSize: 13 }} allowHalf value={reviews.avgRating}></Rate>}
       <div className="des-view ng-binding">
         <div className="product__info__main">
           <div className="product__overview">
@@ -57,12 +58,12 @@ function ProductItem(props) {
       <div className="p-view">
         <span className="real-price ng-binding"><NumberFormat value={discountedPrice} displayType={'text'}
           suffix="đ" thousandSeparator={true} /></span> &nbsp;&nbsp;
-      {discountAmount>0&&<span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
+      {discountRate>0&&<span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
           <NumberFormat value={basePrice} displayType={'text'}
             suffix="đ" thousandSeparator={true} /></span>}
-        {discountAmount > 0 && <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
+        {discountRate > 0 && <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
           <label> Giảm giá </label>
-          <span className="ng-binding"><NumberFormat suffix="đ" thousandSeparator={true} value={discountAmount} /> </span>
+          <span className="ng-binding"><NumberFormat suffix="%" thousandSeparator={true} value={discountRate*100} /> </span>
         </div>}
         <div className="clearfix" />
       </div>
@@ -114,9 +115,9 @@ function ProductItem(props) {
         <div className="product__thumb" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: thumbHeight }}>
           <NavLink className="first__img" to={`/book/${id}`}><img src={thumbnail} alt="product image" /></NavLink>
           {/* <a className="second__img animation1" href="single-product.html"><img src={thumbnail} alt="product image" /></a> */}
-          {discountAmount > 0 && <div className="hot__box">
-            <span className="hot-label"><NumberFormat value={discountAmount} displayType={'text'}
-              suffix="VNĐ" prefix="-" thousandSeparator={true} /></span>
+          {discountRate > 0 && <div className="hot__box">
+            <span className="hot-label"><NumberFormat value={discountRate*100} displayType={'text'}
+              suffix="%" prefix="-" thousandSeparator={true} /></span>
           </div>}
         </div>
         <div className="product__content content--center">
@@ -124,7 +125,7 @@ function ProductItem(props) {
           {availableCopies>0&& <ul className="prize d-flex">
             <li><NumberFormat value={discountedPrice} displayType={'text'}
               suffix="đ" thousandSeparator={true} /></li>
-            {discountAmount>0&&<li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
+            {discountRate>0&&<li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
               suffix="đ" thousandSeparator={true} /></li>}
           </ul>}
           {

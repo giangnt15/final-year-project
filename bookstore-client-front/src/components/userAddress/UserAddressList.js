@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Skeleton, Empty } from 'antd';
+import { Skeleton, Empty, message } from 'antd';
 import UserAddressItem from './userAddressItem';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_USER_ADDRESSES } from '../../api/userAddressApi';
@@ -9,7 +9,11 @@ function UserAddressList(props) {
 
     const [drawerVisible, setDrawerVisible] = useState(false);
     const { error: errorGettingUserAddresses, refetch: refetchUserAddresses,
-        loading: loadingUserAddresses, data: dataUserAddresses = {} } = useQuery(GET_USER_ADDRESSES);
+        loading: loadingUserAddresses, data: dataUserAddresses = {} } = useQuery(GET_USER_ADDRESSES, {
+            onError(){
+                message.error("Có lỗi xảy ra khi lấy danh sách địa chỉ")
+            },
+        });
     const [edittingAddress, setEdittingAddress] = useState({
         fullName: '',
         phone: '',

@@ -26,7 +26,8 @@ function ReviewScreen(props) {
     });
 
     const { bookId, title, thumbnail } = route.params;
-    const [getReviewSummary, { loading: gettingReviewSummary, data: reviewSummary = { getBookReviewsByBook: { bookReviews: [] } } }] = useLazyQuery(GET_REVIEWS_BY_BOOK, {
+    const [getReviewSummary, { loading: gettingReviewSummary, 
+         data: reviewSummary = { getBookReviewsByBook: { bookReviews: [] } }}] = useLazyQuery(GET_REVIEWS_BY_BOOK, {
         onError(err) {
             showToast("Có lỗi xảy ra khi lấy đánh giá" + err.message);
         },
@@ -81,7 +82,7 @@ function ReviewScreen(props) {
                     rating: star
                 },
                 orderBy: 'createdAt_DESC',
-                first: 4,
+                first: 20,
                 skip: 0
             }
         })
@@ -96,6 +97,7 @@ function ReviewScreen(props) {
     }, [star]);
 
     useFocusEffect(useCallback(()=>{
+        getReviewSummary();
         refetchReviews();
     },[navigation]));
 
@@ -115,8 +117,6 @@ function ReviewScreen(props) {
     const fetchMore = () => {
 
         if (reviewData.reviews.length < reviewData.totalCount) {
-            console.log(reviewData.totalCount)
-            console.log(reviewData.reviews.length)
             getMoreReviews({
                 variables: {
                     where: {
@@ -126,7 +126,7 @@ function ReviewScreen(props) {
                         rating: star
                     },
                     orderBy: 'createdAt_DESC',
-                    first: 4,
+                    first: 20,
                     skip: reviewData.reviews.length
                 }
             });
@@ -218,7 +218,8 @@ function ReviewScreen(props) {
 const styles = StyleSheet.create({
     container: {
         display: 'flex',
-        height: '100%'
+        height: '100%',
+        backgroundColor:'#fff'
     },
     sectionSummary: {
         backgroundColor: '#fff',

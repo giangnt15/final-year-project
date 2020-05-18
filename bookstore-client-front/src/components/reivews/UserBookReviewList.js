@@ -14,6 +14,7 @@ function UserBookReviewList(props) {
         onError() {
             message.error("Có lỗi xảy ra khi lấy các nhận xét của bạn")
         },
+        fetchPolicy: 'cache-and-network',
         variables: {
             where: {
                 author: {

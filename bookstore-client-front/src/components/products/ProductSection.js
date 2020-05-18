@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../shared/slider/sliders.css';
-import { GET_BOOKS } from '../../api/bookApi';
+import { GET_BOOKS, GET_BOOKS_FOR_BROWSING } from '../../api/bookApi';
 import { useQuery } from '@apollo/react-hooks';
 import { Skeleton, Empty } from 'antd';
 
@@ -14,7 +14,7 @@ function ProductSection(props) {
 
   const { sectionName, variables, isFullWidth, slickSettings } = props;
 
-  const { loading, error, data={} } = useQuery(GET_BOOKS, {
+  const { loading, error, data={} } = useQuery(GET_BOOKS_FOR_BROWSING, {
     variables,
   })
 
@@ -58,7 +58,7 @@ function ProductSection(props) {
   </section>)
 
   const renderProducts = () => {
-    return data.getBooks.books.map((book, index) => {
+    return data.getBooksForBrowsing.books.map((book, index) => {
       return (
         <div key={index}><ProductItem width={250} thumbHeight={280} book={book} /></div>
       )
@@ -77,7 +77,7 @@ function ProductSection(props) {
         </div>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {data.getBooks&&data.getBooks.books&&data.getBooks.books.length>0?<SlickSlider settings={slickSettings}>
+        {data.getBooksForBrowsing&&data.getBooksForBrowsing.books&&data.getBooksForBrowsing.books.length>0?<SlickSlider settings={slickSettings}>
           {renderProducts()}
         </SlickSlider>:<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Không có dữ liệu"}/>}
       </div>

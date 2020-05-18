@@ -1,5 +1,5 @@
 import { GETTING_BOOKS, GET_BOOKS_SUCCESSFULLY, GET_BOOKS_FAILED, GETTING_BOOK, GET_BOOK_SUCCESSFULLY, GET_BOOK_FAILED } from "../../constants";
-import { GET_BOOKS } from "../../api/bookApi";
+import { GET_BOOKS, GET_BOOKS_FOR_BROWSING } from "../../api/bookApi";
 
 const gettingBooks = () => ({
     type: GETTING_BOOKS
@@ -15,23 +15,20 @@ const getBooksFailed = (error) => ({
     error
 });
 
-export const getBooks = (client, { where, orderBy, skip, first,selection }) => {
+export const getBooks = (client, { where, orderBy, skip, first }) => {
     return async dispatch => {
         dispatch(gettingBooks())
         try {
             const res = await client.query({
-                query: GET_BOOKS,
+                query: GET_BOOKS_FOR_BROWSING,
                 variables: {
                     where,
                     orderBy,
                     skip,
-                    first,
-                    selection
+                    first
                 }
             })
-            console.log(res.data.getBooks)
-
-            dispatch(getBooksSuccessfully(res.data.getBooks))
+            dispatch(getBooksSuccessfully(res.data.getBooksForBrowsing))
         } catch (error) {
             dispatch(getBooksFailed(error))
         }

@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import NumberFormat from 'react-number-format';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { COLOR_BUTTON_PRIMARY } from '../../../constants';
 
 const styles = StyleSheet.create({
     container: {
@@ -40,6 +41,17 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 12,
         height: 30
+    },
+    discountBadge: {
+        backgroundColor: COLOR_BUTTON_PRIMARY,
+        color:'#fff',
+        position: 'absolute',
+        borderRadius: 20,
+        padding: 2,
+        paddingHorizontal: 4,
+        top: 8,
+        right: 8,
+        fontSize: 12
     }
 })
 
@@ -71,6 +83,9 @@ function BookItem(props) {
                     {discountRate > 0 && <Text style={styles.discountRate}>-{discountRate * 100}%</Text>}
                 </View>
             </View>
+            {discountRate>0&&<Text style={styles.discountBadge}>
+                -{discountRate*100}%
+            </Text>}
         </TouchableOpacity>
     )
 }

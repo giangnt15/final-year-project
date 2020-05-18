@@ -7,7 +7,7 @@ import CommonFilter from '../filters/CommonFilter';
 import PriceFilter from '../filters/PriceFilter';
 import { NavLink } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_BEST_SELLER } from '../../../api/bookApi';
+import { GET_BEST_SELLER, GET_BEST_SELLER_FOR_BROWSING } from '../../../api/bookApi';
 import { message, Empty } from 'antd';
 import moment from 'moment';
 
@@ -81,7 +81,7 @@ function BestSellerList(props) {
         setCurrentPage(pageNumber);
     }
 
-    const { loading, data = { getBestSeller: { books: [], totalCount: 0 } } } = useQuery(GET_BEST_SELLER, {
+    const { loading, data = { getBestSellerForBrowsing: { books: [], totalCount: 0 } } } = useQuery(GET_BEST_SELLER_FOR_BROWSING, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu")
         },
@@ -99,8 +99,8 @@ function BestSellerList(props) {
         if (listWrapper) {
             listWrapper.scrollIntoView();
         }
-        if (data.getBestSeller.books.length) {
-            return data.getBestSeller.books.map((book, index) => {
+        if (data.getBestSellerForBrowsing.books.length) {
+            return data.getBestSellerForBrowsing.books.map((book, index) => {
                 return (
                     <div key={index}><ProductItem width={220} thumbHeight={240} book={book} /></div>
                 )
@@ -115,9 +115,9 @@ function BestSellerList(props) {
         if (listWrapper) {
             listWrapper.scrollIntoView();
         }
-        if (data.getBestSeller.books.length) {
+        if (data.getBestSellerForBrowsing.books.length) {
 
-            return data.getBestSeller.books.map((book, index) => {
+            return data.getBestSellerForBrowsing.books.map((book, index) => {
                 return (
                     <div key={index}><ListProductItem width={300} thumbHeight={360} book={book} /></div>
                 )
@@ -174,8 +174,8 @@ function BestSellerList(props) {
                                             <a className={`nav-item nav-link${viewMode === VIEW_MODE_LIST ? " active" : ""}`}
                                                 data-toggle="tab" onClick={() => setViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
                                         </div>
-                                        <p>Hiển thị {(currentPage - 1) * 20 + 1 > data.getBestSeller.totalCount ? data.getBestSeller.totalCount : (currentPage - 1) * 20 + 1} – {(currentPage - 1) * 20 + 20 >
-                                            data.getBestSeller.totalCount ? data.getBestSeller.totalCount : (currentPage - 1) * 20 + 20} trên {data.getBestSeller.totalCount} kết quả</p>
+                                        <p>Hiển thị {(currentPage - 1) * 20 + 1 > data.getBestSellerForBrowsing.totalCount ? data.getBestSellerForBrowsing.totalCount : (currentPage - 1) * 20 + 1} – {(currentPage - 1) * 20 + 20 >
+                                            data.getBestSellerForBrowsing.totalCount ? data.getBestSellerForBrowsing.totalCount : (currentPage - 1) * 20 + 20} trên {data.getBestSellerForBrowsing.totalCount} kết quả</p>
                                         <div className="orderby__wrapper">
                                             <span>Khoảng thời gian: </span>
                                             <select className="shot__byselect" defaultValue="all_time" onChange={changeTimeRage}>
@@ -203,7 +203,7 @@ function BestSellerList(props) {
                             <br />
                             <br />
                             <Pagination page={currentPage} goToPage={goToPage}
-                                totalCount={data.getBestSeller.totalCount} itemsPerPage={20} />
+                                totalCount={data.getBestSellerForBrowsing.totalCount} itemsPerPage={20} />
                         </div>
                     </div>
                 </div>

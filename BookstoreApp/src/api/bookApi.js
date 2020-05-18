@@ -124,9 +124,15 @@ export const GET_WISH_LIST = gql`
           id
           thumbnail
           title
-          reviews{
+          avgRating
+          basePrice
+          discounts{
             id
-            rating
+            from
+            to
+            discountRate
+            usePercentage
+            discountAmount
           }
         }
         totalCount

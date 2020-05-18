@@ -346,6 +346,7 @@ type Mutation{
     addBookToWishList(bookId: ID!): AddBookToWishListPayload!
     removeBookFromWishList(bookId: ID!): AddBookToWishListPayload!
     createPasswordToken(email: String!): CreatePasswordTokenPayload!
+    sendPasswordViaEmail(email: String!): CreatePasswordTokenPayload!
     resetPassword(passwordToken: String!, password: String!): CreatePasswordTokenPayload!
 }
 

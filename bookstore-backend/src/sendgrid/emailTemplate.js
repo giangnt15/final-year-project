@@ -14,6 +14,21 @@ const emailTemplate = {
             Bookstore
         <br>
     </div></div>`,
+    resetPasswordEmail: (password)=> `
+    <div>Bạn đã yêu cầu đổi mật khẩu. Đây là một email được gửi đến bạn để thực hiện việc đó.
+        <br>
+        <br>
+            Xin vui lòng dùng mật khẩu dưới đây để đăng nhập tài khoản của bạn:<br>
+        <br>
+        <b style="font-size: 28px">${password}</b><br>
+        <br>
+            Vui lòng đổi mật khẩu sau khi đăng nhập.
+        <br>
+        <br>
+            Thân gửi,<br>
+            Bookstore
+        <br>
+    </div></div>`,
     accountActivation: (activationLink)=> `
     <div>Bạn vừa mới đăng ký tài khoản tại Bookstore. Đây là một email được gửi đến bạn để kích hoạt tài khoản.
         <br>

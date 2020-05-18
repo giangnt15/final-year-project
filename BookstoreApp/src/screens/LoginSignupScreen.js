@@ -7,10 +7,11 @@ import { Input, Icon, Button, CheckBox } from 'react-native-elements';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import { useMutation } from '@apollo/react-hooks';
-import { LOGIN } from '../api/authApi';
+import { LOGIN, SIGNUP } from '../api/authApi';
 import { showToast } from '../utils/common';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { useToken } from '../hooks/customHooks';
 
 const Login = (props) => {
 
@@ -22,6 +23,7 @@ const Login = (props) => {
         onError(err) {
             showToast("Có lỗi xảy ra, vui lòng thử lại sau" + err.message);
         },
+        // fetchPolicy: 'no-cache',
         async onCompleted(res) {
             console.log(res)
             if (res.login.statusCode === 200) {
@@ -40,7 +42,8 @@ const Login = (props) => {
             } else if (res.login.statusCode === 400) {
                 showToast(res.login.message);
             } else if (res.login.statusCode === 405) {
-                await AsyncStorage.setItem('userInfo', JSON.stringify(res.login.user));
+                showToast(res.login.message);
+                // await AsyncStorage.setItem('userInfo', JSON.stringify(res.login.user));
                 // history.push('/email-activation');
                 // dispatch(loginFailed());
             }
@@ -140,7 +143,7 @@ const Login = (props) => {
             />
             <Button loading={loggingIn} onPress={onLoginPressed}
                 buttonStyle={styles.button} title="ĐĂNG NHẬP"></Button>
-            <TouchableOpacity style={{ alignSelf: 'center', marginTop: 18 }}>
+            <TouchableOpacity style={{ alignSelf: 'center', marginTop: 18 }} onPress={()=>navigation.navigate("ForgotPasswordScreen")}>
                 <Text style={{ color: COLOR_BUTTON_LINK }}>Quên mật khẩu?</Text>
             </TouchableOpacity>
         </ScrollView>)
@@ -148,12 +151,100 @@ const Login = (props) => {
 
 const Signup = (props) => {
 
+    const { route } = props;
+    const navigation = useNavigation();
     const [secureTextEntry, setSecureTextEntry] = useState(true);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [inputs, setInputs] = useState({
         birthdate: undefined,
-        gender: true
+        gender: true,
+        fullName: '',
+        phone: '',
+        email: '',
+        username: '',
+        password: ''
     });
+
+    function handleInputChange(name,value){
+        setInputs(prev=>({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const [signup, {loading}] = useMutation(SIGNUP, {
+        onError(){
+            showToast("Có lỗi xảy ra khi tạo tài khoản");
+        },
+        async onCompleted(data){
+            if (data.signUp&&data.signUp.statusCode!==200){
+                showToast(data.signUp.message);
+            }else{
+                await AsyncStorage.setItem('userInfo', JSON.stringify(data.signUp.user));
+                await AsyncStorage.setItem('token', data.signUp.token);
+                if (route.params && route.params.from) {
+                    navigation.navigate(route.params.from.stack, route.params.from.screen ? {
+                        screen: route.params.from.screen,
+                        params: route.params.from.params
+                    } : route.params.from.params);
+                } else {
+                    navigation.navigate("TabScreen", {
+                        screen: "Cá nhân"
+                    })
+                }
+            }
+        }
+    });
+
+    const [errors, setErrors] = useState({
+        email: false,
+        password: false,
+        username: false
+    });
+
+    function onSignupPressed() {
+        if (!inputs.email) {
+            setErrors(prev => ({
+                ...prev,
+                email: true
+            }));
+        } else {
+            setErrors(prev => ({
+                ...prev,
+                email: false
+            }));
+        }
+        if (!inputs.password) {
+            setErrors(prev => ({
+                ...prev,
+                password: true
+            }));
+        } else {
+            setErrors(prev => ({
+                ...prev,
+                password: false
+            }));
+        }
+        if (!inputs.username) {
+            setErrors(prev => ({
+                ...prev,
+                username: true
+            }));
+        } else {
+            setErrors(prev => ({
+                ...prev,
+                username: false
+            }));
+        }
+        if (!inputs.email || !inputs.password||!inputs.username) return;
+        signup({
+            variables: {
+                data: {
+                    ...inputs,
+                }
+            }
+        })
+    }
 
     return (
         <ScrollView style={[styles.scene]} >
@@ -161,6 +252,8 @@ const Signup = (props) => {
                 label="Họ tên"
                 inputStyle={{ fontSize: 13 }}
                 labelStyle={{ fontSize: 14 }}
+                value={inputs.fullName}
+                onChangeText={(val)=>handleInputChange('fullName',val)}
                 inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                 placeholder="Họ tên"
                 leftIcon={<Icon type='materialicon' size={20} name='person' />}
@@ -169,6 +262,8 @@ const Signup = (props) => {
                 label="Số điện thoại"
                 inputStyle={{ fontSize: 13 }}
                 labelStyle={{ fontSize: 14 }}
+                value={inputs.phone}
+                onChangeText={(val)=>handleInputChange('phone',val)}
                 inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                 placeholder="Số điện thoại"
                 leftIcon={<Icon type='materialicon' size={20} name='phone' />}
@@ -177,15 +272,44 @@ const Signup = (props) => {
                 label="Email"
                 inputStyle={{ fontSize: 13 }}
                 labelStyle={{ fontSize: 14 }}
+                value={inputs.email}
+                onChangeText={(val)=>handleInputChange('email',val)}
                 inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                 placeholder="Email"
+                renderErrorMessage
+                errorStyle={{
+                    opacity: errors.email ? 1 : 0
+                }}
+                errorMessage="Email không được để trống"
                 leftIcon={<Icon type='materialicon' size={20} name='email' />}
+            />
+            <Input
+                label="Username"
+                inputStyle={{ fontSize: 13 }}
+                labelStyle={{ fontSize: 14 }}
+                value={inputs.username}
+                onChangeText={(val)=>handleInputChange('username',val)}
+                inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
+                placeholder="Username"
+                renderErrorMessage
+                errorStyle={{
+                    opacity: errors.username ? 1 : 0
+                }}
+                errorMessage="Username không được để trống"
+                leftIcon={<Icon type='materialicon' size={20} name='person' />}
             />
             <Input
                 placeholder="Mật khẩu"
                 label="Mật khẩu"
                 labelStyle={{ fontSize: 14 }}
                 inputStyle={{ fontSize: 13 }}
+                value={inputs.password}
+                renderErrorMessage
+                errorStyle={{
+                    opacity: errors.password ? 1 : 0
+                }}
+                errorMessage="Mật khẩu không được để trống"
+                onChangeText={(val)=>handleInputChange('password',val)}
                 inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                 secureTextEntry={secureTextEntry}
                 leftIcon={<Icon type='materialicon' size={20} name='lock' />}
@@ -214,7 +338,7 @@ const Signup = (props) => {
                 }}
                 mode="date" onCancel={() => setShowDatePicker(false)} />
             <View style={{ display: 'flex', flexDirection: 'row' }}><CheckBox
-                containerStyle={{ padding: 0, marginBottom: 24 }}
+                containerStyle={{ padding: 0, marginBottom: 24, backgroundColor: '#fff',borderWidth: 0  }}
                 title='Nam'
                 checkedIcon='dot-circle-o'
                 uncheckedIcon='circle-o'
@@ -225,7 +349,7 @@ const Signup = (props) => {
                 checked={inputs.gender}
             />
                 <CheckBox
-                    containerStyle={{ padding: 0, marginBottom: 24 }}
+                    containerStyle={{ padding: 0, marginBottom: 24, backgroundColor: '#fff',borderWidth: 0 }}
                     title='Nữ'
                     checkedIcon='dot-circle-o'
                     uncheckedIcon='circle-o'
@@ -236,7 +360,10 @@ const Signup = (props) => {
                     checked={!inputs.gender}
                 />
             </View>
-            <Button buttonStyle={styles.button} title="ĐĂNG KÝ"></Button>
+            <Button buttonStyle={styles.button} 
+            onPress={onSignupPressed}
+            loading={loading}
+             title="ĐĂNG KÝ"></Button>
         </ScrollView>
     )
 };
@@ -251,15 +378,23 @@ function LoginSignupScreen(props) {
     ]);
 
     const route = useRoute();
+    const navigation = useNavigation();
 
     const renderScene = SceneMap({
         login: () => <Login route={route} />,
         signup: () => <Signup route={route} />,
     });
 
+    const [,,tokenValid] = useToken();
+
+    if (tokenValid){
+        navigation.navigate("TabScreen", {
+            screen: 'Cá nhân'
+        })
+    }
 
     return (
-        <View style={{ height: '100%' }}>
+        <View style={{ height: '100%', backgroundColor: '#fff' }}>
             <HeaderBackAction title="Đăng nhập / Đăng ký" />
             <TabView sceneContainerStyle={{ height: '100%' }}
                 navigationState={{ index, routes }}
@@ -283,7 +418,8 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 10,
         marginVertical: 8,
-        height: '100%'
+        height: '100%',
+        backgroundColor: '#fff'
     },
     button: {
         backgroundColor: COLOR_BUTTON_PRIMARY,

@@ -100,7 +100,7 @@ function CheckoutPayment(props) {
                         </div>
                         <div className="card-body">
                             {orderItems.map(item =>{
-                                const [discountedPrice] = calculateDiscount(item.basePrice, item.discounts);
+                                const {discountedPrice} = item.discounts;
                                 return (
                                 <div key={item.id} className="d-flex fs-11" style={{
                                     justifyContent: 'space-between', paddingBottom: 8,

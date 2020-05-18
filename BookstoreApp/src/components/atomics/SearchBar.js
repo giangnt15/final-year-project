@@ -30,7 +30,7 @@ function SearchBar(props) {
     const route = useRoute();
     const [text, setText] = useState("")
     return (
-        <RNSearchBar placeholder="Tìm sách qua tên sách, tác giả, NXB..."
+        <RNSearchBar placeholder="Tìm kiếm sách..."
             containerStyle={styles.searchBarCtn}
             inputStyle={styles.inputSearchStyle}
             ref={searchBarRef}

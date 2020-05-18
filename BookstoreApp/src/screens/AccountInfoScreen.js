@@ -56,17 +56,17 @@ function AccountInfoScreen(props) {
         }))
     }, [email]);
 
-    const handleInputChange = (name,value) => {
+    const handleInputChange = (name, value) => {
         setInputs(prev => ({
             ...prev,
             [name]: value
         }));
     }
 
-    const [validataions,setValidations] = useState({
+    const [validataions, setValidations] = useState({
         confirmPwdMatched: true,
         isPwdValid: true
-    })  
+    })
 
     const onUpdateUser = (e) => {
         setValidations({
@@ -100,7 +100,7 @@ function AccountInfoScreen(props) {
                     inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                     placeholder="Họ tên"
                     value={inputs.fullName}
-                    onChangeText={val=>handleInputChange("fullName",val)}
+                    onChangeText={val => handleInputChange("fullName", val)}
                     leftIcon={<Icon type='materialicon' size={20} name='person' />}
                 />
                 <Input
@@ -110,7 +110,7 @@ function AccountInfoScreen(props) {
                     inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                     placeholder="Số điện thoại"
                     value={inputs.phone}
-                    onChangeText={val=>handleInputChange("phone",val)}
+                    onChangeText={val => handleInputChange("phone", val)}
                     leftIcon={<Icon type='materialicon' size={20} name='phone' />}
                 />
                 <Input
@@ -154,7 +154,7 @@ function AccountInfoScreen(props) {
                     }}
                     mode="date" onCancel={() => setShowDatePicker(false)} />
                 <View style={{ display: 'flex', flexDirection: 'row' }}><CheckBox
-                    containerStyle={{ padding: 0, marginBottom: 24, borderWidth: 0 }}
+                    containerStyle={{ padding: 0, marginBottom: 24, borderWidth: 0, backgroundColor: '#fff' }}
                     title='Nam'
                     checkedIcon='dot-circle-o'
                     uncheckedIcon='circle-o'
@@ -165,7 +165,7 @@ function AccountInfoScreen(props) {
                     checked={inputs.gender}
                 />
                     <CheckBox
-                        containerStyle={{ padding: 0, marginBottom: 24, borderWidth: 0 }}
+                        containerStyle={{ padding: 0, marginBottom: 24, borderWidth: 0, backgroundColor: '#fff' }}
                         title='Nữ'
                         checkedIcon='dot-circle-o'
                         uncheckedIcon='circle-o'
@@ -178,7 +178,7 @@ function AccountInfoScreen(props) {
 
                 </View>
                 <CheckBox
-                    containerStyle={{ padding: 0, marginBottom: 24, borderWidth: 0 }}
+                    containerStyle={{ padding: 0, marginBottom: 24, borderWidth: 0, backgroundColor: '#fff' }}
                     title='Đổi mật khẩu'
                     checkedIcon='check-square'
                     uncheckedIcon='square-o'
@@ -192,7 +192,7 @@ function AccountInfoScreen(props) {
                     inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                     secureTextEntry={secureTextEntry}
                     value={inputs.currentPassword}
-                    onChangeText={(val)=>handleInputChange("currentPassword",val)}
+                    onChangeText={(val) => handleInputChange("currentPassword", val)}
                     errorMessage="Vui lòng điền vào trường này"
                     errorStyle={{
                         opacity: inputs.currentPassword && inputs.currentPassword.length > 0 ? 0 : 1
@@ -213,7 +213,7 @@ function AccountInfoScreen(props) {
                         errorStyle={{
                             opacity: validataions.isPwdValid ? 0 : 1
                         }}
-                        onChangeText={(val)=>handleInputChange("newPassword",val)}
+                        onChangeText={(val) => handleInputChange("newPassword", val)}
                         secureTextEntry={secureTextEntry}
                         leftIcon={<Icon type='materialicon' size={20} name='lock' />}
                         rightIcon={<TouchableWithoutFeedback onPress={() => setSecureTextEntry(!secureTextEntry)}>
@@ -227,7 +227,7 @@ function AccountInfoScreen(props) {
                         inputContainerStyle={{ padding: 0, margin: 0, height: 32 }}
                         secureTextEntry={secureTextEntry}
                         value={inputs.confirmNewPassword}
-                        onChangeText={(val)=>handleInputChange("confirmNewPassword",val)}
+                        onChangeText={(val) => handleInputChange("confirmNewPassword", val)}
                         errorMessage={"Xác nhận mật khẩu không trùng khớp"}
                         errorStyle={{
                             opacity: validataions.confirmPwdMatched ? 0 : 1
@@ -240,7 +240,7 @@ function AccountInfoScreen(props) {
             </ScrollView>
             <View style={styles.buttonCtn}>
                 <Button buttonStyle={styles.button} loading={updatingUser}
-                 onPress={onUpdateUser}
+                    onPress={onUpdateUser}
                     title="LƯU THAY ĐỔI"></Button>
             </View>
         </View>
@@ -251,7 +251,8 @@ function AccountInfoScreen(props) {
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        display: 'flex'
+        display: 'flex',
+        backgroundColor: '#fff'
     },
     scene: {
         flex: 1,

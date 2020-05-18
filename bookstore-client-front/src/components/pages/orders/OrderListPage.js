@@ -40,19 +40,19 @@ const columns = [
 
 function OrderList(props) {
 
-    const [currentPage,setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
-    const [getOrders,{ error, loading, data }] = useLazyQuery(GET_ORDERS, {
+    const [getOrders, { error, loading, data = { getOrders: { orders: [], totalCount: 0 } } }] = useLazyQuery(GET_ORDERS, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy thông tin đơn hàng, vui lòng thử lại sau.");
         },
-       
+        fetchPolicy: 'cache-and-network'
     });
 
-    useEffect(()=>{
+    useEffect(() => {
         getOrders({
             variables: {
-                skip: (currentPage-1)*10,
+                skip: (currentPage - 1) * 10,
                 first: 10,
                 orderBy: 'createdAt_DESC',
                 selection: `{
@@ -97,9 +97,10 @@ function OrderList(props) {
                 }`
             }
         })
-    },[currentPage]);
+    }, [currentPage]);
 
     const mapDataToTable = (orders) => {
+        if (orders.length === 0) return [];
         return orders.map(item => {
             return {
                 key: item.id,
@@ -118,14 +119,15 @@ function OrderList(props) {
             <div className="w-100">
                 <h4>Đơn hàng của tôi</h4>
                 <br />
-                <Table loading={loading} columns={columns} size="middle" scroll
-                    onChange={(page)=>setCurrentPage(page)}
+                <Table loading={loading} columns={columns} size="middle" 
                     pagination={{
                         pageSize: 10,
-                        current: currentPage,
-                        total: data && data.getOrders? data.getOrders.totalCount:10
+                        total: data.getOrders.totalCount,
+                        onChange(page) {
+                            setCurrentPage(page)
+                        }
                     }}
-                    dataSource={data && data.getOrders ? mapDataToTable(data.getOrders.orders) : []} locale={{
+                    dataSource={mapDataToTable(data.getOrders.orders)} locale={{
                         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Bạn không có đơn hàng nào" />
                     }}>
 

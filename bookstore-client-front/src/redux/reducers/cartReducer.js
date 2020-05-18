@@ -15,13 +15,11 @@ const calculateCartTotalQty = (items) => {
 const calculateCartSubTotal = (items) => {
     if (items.length === 0) return 0;
     if (items.length === 1) {
-        const [discountedPrice, discountRate] = calculateDiscount(items[0].basePrice, items[0].discounts);
-        return items[0].qty * discountedPrice;
+        return items[0].qty * items[0].discounts.discountedPrice;
     }
     let subTotal = 0;
     for (let item of items) {
-        const [discountedPrice, discountRate] = calculateDiscount(item.basePrice, item.discounts);
-        subTotal += discountedPrice * item.qty;
+        subTotal += item.discounts.discountedPrice * item.qty;
     }
     return subTotal;
 }

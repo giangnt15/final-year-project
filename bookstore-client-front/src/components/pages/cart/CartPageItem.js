@@ -10,7 +10,7 @@ import { calculateDiscount } from '../../../utils/common';
 function CartPageItem(props) {
 
     const { book, changeCartItemQty, removeItemFromCart} = props;
-    const [discountedPrice] = calculateDiscount(book.basePrice, book.discounts);
+    const {discountedPrice} =  book.discounts;
 
     return (
         <div className="row shopping-cart-item p-b-8 m-b-8" style={{ flexWrap: 'nowrap', borderBottom: '1px solid #ccc' }}>

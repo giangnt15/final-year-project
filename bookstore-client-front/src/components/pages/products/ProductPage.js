@@ -15,7 +15,7 @@ import { RESET_FILTERS, FILTER_TYPE_AUTHOR, FILTER_TYPE_CAT, FILTER_TYPE_PUBLISH
 import { addSingleItemToCartAysnc } from '../../../redux/actions/cartAction';
 import { withApollo } from '@apollo/react-hoc';
 import ProductSectionContainer from '../../../containers/products/ProductSectionContainer';
-import { calculateDiscount } from '../../../utils/common';
+import { calculateDiscount, calculateReviewScore } from '../../../utils/common';
 
 function ProductPage(props) {
   const { auth, changeFilter, cart, addSingleItemToCart } = props;
@@ -43,19 +43,20 @@ function ProductPage(props) {
       }
     }
   });
-  const { loading: loadingBookReviews, data: dataBookReviews,
-    error: errorBookReviews, refetch: refetchBookReviews } = useQuery(GET_REVIEWS_BY_BOOK, {
-      onCompleted() {
-        const mainContent = document.querySelector('.maincontent');
-        if (mainContent) {
-          mainContent.scrollIntoView({});
-        }
-      },
-      variables: {
-        bookId,
-        orderBy: 'createdAt_DESC'
-      }
-    });
+  const { loading: gettingReviewSummary, data: reviewSummary = { getBookReviewsByBook: { bookReviews: [] } },refetch: refetchReviewSummary } = useQuery(GET_REVIEWS_BY_BOOK, {
+    onError(err) {
+      message.error("Có lỗi xảy ra khi lấy đánh giá");
+    },
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      bookId: bookId,
+      orderBy: 'createdAt_DESC',
+      first: 0,
+      skip: 0
+    }
+  });
+  const avgScore = calculateReviewScore(reviewSummary.getBookReviewsByBook);
+
   if (loading) {
     return (<div className="container m-t-120 m-b-80">
       <div className="row">
@@ -78,19 +79,6 @@ function ProductPage(props) {
     });
   }
 
-  const getTotalScore = (data) => {
-    if (!data) return 0;
-    return data.fiveStar * 5 + data.fourStar * 4 + data.threeStar * 3
-      + data.twoStar * 2 + data.oneStar * 1;
-  }
-
-  const calculateReviewScore = (data) => {
-    if (!data) return 0;
-    const totalScore = getTotalScore(data);
-    return Math.round((totalScore / data.totalCount) * 10) / 10;
-  }
-
-  const avgScore = calculateReviewScore(dataBookReviews ? dataBookReviews.getBookReviewsByBook : undefined);
   const { id, title, basePrice, description, thumbnail, dimensions, translator, format, isbn, publishedDate, discounts, availableCopies, pages, publisher, authors, categories } = data.getBook;
   const [discountedPrice, discountRate, discountAmount] = calculateDiscount(basePrice, discounts);
   return (
@@ -142,15 +130,15 @@ function ProductPage(props) {
                           {format === "PaperBack" ? "Bìa mềm" : format === "HardCover" ? "Bìa cứng" : ""}
                         </div>
                       </div>
-                      <div className="product-reviews-summary d-flex">
+                      {reviewSummary.getBookReviewsByBook.totalCount>0&&<div className="product-reviews-summary d-flex">
                         <Rate disabled value={avgScore} style={{ color: '#FF5501', fontSize: 16 }} />
-                        <a onClick={() => onReadMoreClick('review')}>(Xem {dataBookReviews ? dataBookReviews.getBookReviewsByBook.totalCount : 0} đánh giá)</a>
-                      </div>
+                        <a onClick={() => onReadMoreClick('review')}>(Xem {reviewSummary.getBookReviewsByBook.totalCount} đánh giá)</a>
+                      </div>}
                       <div className="price-box">
                         <span><NumberFormat value={discountedPrice} displayType={'text'}
                           suffix="đ" thousandSeparator={true} /></span>
-                       {(discountRate>0||discountAmount>0) && <p style={{ textDecoration: 'line-through' }}>
-                          <NumberFormat style={{fontSize: 'inherit', color: 'inherit', fontWeight: 300}} value={basePrice} displayType={'text'}
+                        {(discountRate > 0 || discountAmount > 0) && <p style={{ textDecoration: 'line-through' }}>
+                          <NumberFormat style={{ fontSize: 'inherit', color: 'inherit', fontWeight: 300 }} value={basePrice} displayType={'text'}
                             suffix="đ" thousandSeparator={true} /></p>}
                       </div>
                       <div className="product__overview">
@@ -280,8 +268,9 @@ function ProductPage(props) {
                   {/* End Single Tab Content */}
                   {/* Start Single Tab Content */}
                   <div className="pro__tab_label tab-pane fade" id="nav-review" role="tabpanel">
-                    <BookReviewSection isAuthenticated={isAuthenticated} refetchBookReviews={refetchBookReviews}
-                      loading={loadingBookReviews} data={dataBookReviews} error={errorBookReviews}
+                    <BookReviewSection isAuthenticated={isAuthenticated}
+                    refetchReviewSummary={refetchReviewSummary}
+                    getBookReviewsByBook={reviewSummary.getBookReviewsByBook}
                       bookId={id} bookTitle={title} avgScore={avgScore} />
                   </div>
                   {/* End Single Tab Content */}
@@ -300,39 +289,6 @@ function ProductPage(props) {
                 orderBy: 'createdAt_DESC',
                 skip: 0,
                 first: 20,
-                selection: `{id
-                title
-                basePrice
-                description
-                thumbnail
-                images
-                dimensions
-                translator
-                format
-                isbn
-                publishedDate
-                availableCopies
-                pages
-                discounts{
-                  id 
-                  from 
-                  to 
-                  discountRate
-                  discountAmount
-                  usePercentage
-                }
-                publisher{
-                  id
-                  name
-                }
-                authors{
-                  id
-                  pseudonym
-                }
-                categories{
-                  id
-                  name
-                }}`
               }}>
               </ProductSectionContainer>
               <ProductSectionContainer slickSettings={{
@@ -348,39 +304,6 @@ function ProductPage(props) {
                 orderBy: 'createdAt_DESC',
                 skip: 0,
                 first: 20,
-                selection: `{id
-                title
-                basePrice
-                description
-                thumbnail
-                images
-                dimensions
-                translator
-                format
-                isbn
-                publishedDate
-                availableCopies
-                pages
-                discounts{
-                  id 
-                  from 
-                  to 
-                  discountRate
-                  discountAmount
-                  usePercentage
-                }
-                publisher{
-                  id
-                  name
-                }
-                authors{
-                  id
-                  pseudonym
-                }
-                categories{
-                  id
-                  name
-                }}`
               }}>
               </ProductSectionContainer>
 

@@ -64,7 +64,7 @@ function BookReviewItem(props) {
     return (
         <Comment
             actions={actions}
-            author={<a>{author.username}</a>}
+            author={<a>{author.fullName??author.username}</a>}
             avatar={
                 <Avatar src={author.avatar} alt={getAvatarAlt(author)}>
                     {getAvatarAlt(author)}
@@ -91,7 +91,7 @@ function BookReviewItem(props) {
         >
             {showReplies && replies && replies.length > 0 && replies.map(reply => {
                 return (<Comment
-                    author={<a>{reply.author.username}</a>}
+                    author={<a>{reply.author.fullName??reply.author.username}</a>}
                     avatar={
                         <Avatar src={reply.author.avatar} alt={getAvatarAlt(reply.author)}>
                             {getAvatarAlt(reply.author)}

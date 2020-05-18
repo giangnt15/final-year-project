@@ -26,15 +26,16 @@ import CartScreen from './src/screens/CartScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ReplyReviewScreen from './src/screens/ReplyReviewScreen';
 import CreateReviewScreen from './src/screens/CreateReviewScreen';
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
+import AddressListScreen from './src/screens/AddressListScreen';
+import EditAddressScreen from './src/screens/EditAddressScreen';
+import AddAddressScreen from './src/screens/AddAddressScreen';
+import WishListScreen from './src/screens/WishListScreen';
+import MyReviewScreen from './src/screens/MyReviewScreen';
+import OrderListScreen from './src/screens/OrderListScreen';
+import OrderDetailScreen from './src/screens/OrderDetailScreen';
+import CheckoutScreen from './src/screens/CheckoutScreen';
+import BestSellerScreen from './src/screens/BestSellerScreen';
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 
 const composeEnhancers = composeWithDevTools({
   // Specify here name, actionsBlacklist, actionsCreators and other options
@@ -79,9 +80,8 @@ function TabNav() {
       <Tab.Screen name="Sách" component={BookScreen}
         options={{ tabBarVisible: false }} />
       <Tab.Screen name="Tìm kiếm" component={SearchScreen} initialParams={{ focusInput: true }} />
-      <Tab.Screen name="Bán chạy" component={SettingsScreen} />
+      <Tab.Screen name="Bán chạy" component={BestSellerScreen} />
       <Tab.Screen name="Cá nhân" component={AccountScreen} />
-
     </Tab.Navigator>
   )
 }
@@ -119,9 +119,36 @@ export default function App() {
             <Stack.Screen name="ReplyReviewScreen" options={{
               headerShown: false,
             }} component={ReplyReviewScreen} />
-               <Stack.Screen name="CreateReviewScreen" options={{
+            <Stack.Screen name="CreateReviewScreen" options={{
               headerShown: false,
             }} component={CreateReviewScreen} />
+            <Stack.Screen name="AddressListScreen" options={{
+              headerShown: false,
+            }} component={AddressListScreen} />
+            <Stack.Screen name="EditAddressScreen" options={{
+              headerShown: false,
+            }} component={EditAddressScreen} />
+            <Stack.Screen name="AddAddressScreen" options={{
+              headerShown: false,
+            }} component={AddAddressScreen} />
+            <Stack.Screen name="WishListScreen" options={{
+              headerShown: false,
+            }} component={WishListScreen} />
+            <Stack.Screen name="MyReviewScreen" options={{
+              headerShown: false,
+            }} component={MyReviewScreen} />
+            <Stack.Screen name="OrderListScreen" options={{
+              headerShown: false,
+            }} component={OrderListScreen} />
+            <Stack.Screen name="OrderDetailScreen" options={{
+              headerShown: false,
+            }} component={OrderDetailScreen} />
+            <Stack.Screen name="CheckoutScreen" options={{
+              headerShown: false,
+            }} component={CheckoutScreen} />
+            <Stack.Screen name="ForgotPasswordScreen" options={{
+              headerShown: false,
+            }} component={ForgotPasswordScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

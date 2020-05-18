@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 function LoginForm(props) {
 
-    const {auth,login,isShowTitle=true,submitBtnFullWidth=true} = props;
+    const { auth, login, isShowTitle = true, submitBtnFullWidth = true } = props;
 
     const [inputs, setInputs] = useState({
         username: '',
@@ -42,7 +42,7 @@ function LoginForm(props) {
 
     return (
         <form onSubmit={onSubmit} className="login100-form validate-form flex-sb flex-w">
-            {isShowTitle&&<span className="login100-form-title p-b-20">
+            {isShowTitle && <span className="login100-form-title p-b-20">
                 Đăng nhập
             </span>}
             {/* <a href="#" className="btn-face m-b-20">
@@ -80,9 +80,9 @@ function LoginForm(props) {
                 {inputChanged.password && !inputs.password && <span className="error-txt">Password không được để trống</span>}
             </div>
             <div className="container-login100-form-btn m-t-17">
-                <Button style={{width: submitBtnFullWidth?'100%':undefined}} htmlType="submit" type="primary" loading={auth.loading} className="login100-form-btn">
+                <Button style={{ width: submitBtnFullWidth ? '100%' : undefined }} htmlType="submit" type="primary" loading={auth.loading} className="login100-form-btn">
                     Đăng nhập
-        </Button>
+                </Button>
             </div>
         </form>
     )

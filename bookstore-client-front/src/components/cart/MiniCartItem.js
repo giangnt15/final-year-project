@@ -6,7 +6,7 @@ import { calculateDiscount } from '../../utils/common';
 export default function MiniCartItem(props) {
     const {cartItem, removeItemFromCart} = props;
     const { title, id, basePrice, qty, thumbnail, discounts } = cartItem;
-    const [discountedPrice] = calculateDiscount(basePrice,discounts);
+    const {discountedPrice} = discounts;
     return (
         <div className="item01 d-flex mt--20">
             <div className="thumb">

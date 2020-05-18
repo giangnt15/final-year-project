@@ -40,7 +40,7 @@ function App(props) {
           <Route path="/collection/:id" exact component={CollectionPage}></Route>
           <Route path="/auth/login" exact component={LoginPage}></Route>
           <Route path="/reset-password" exact component={ForgotPassword}></Route>
-          <Route path="/reset-password/:token" exact component={ResetPassword}></Route>
+          {/* <Route path="/reset-password/:token" exact component={ResetPassword}></Route> */}
           <Route path="/auth/signup" exact component={SignupPage}></Route>
           <Route path="/email-activation" exact component={ActivationEmailPage}></Route>
           <Route path="/auth/account" render={()=><PrivateRoute render={() => <AccountPage />} />}></Route>

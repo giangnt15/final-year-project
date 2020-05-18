@@ -42,5 +42,15 @@ services:
     build:
       context: ./bookstore-client-front
       dockerfile: Dockerfile
+  bookstore_backend_admin:
+    image: giang1998/bookstorebackendadmin:1.0.0
+    build:
+      context: ./bookstore-backend-admin
+      dockerfile: Dockerfile.prod
+  bookstore_admin_front:
+    image: giang1998/bookstore-admin-front:1.0.0
+    build:
+      context: ./bookstore-admin-front
+      dockerfile: Dockerfile
 volumes:
   mysql:

@@ -13,6 +13,7 @@ export const GET_REVIEWS_BY_BOOK = gql`
                 author{
                     id
                     username
+                    fullName
                     avatar
                 }
                 replies{
@@ -21,6 +22,7 @@ export const GET_REVIEWS_BY_BOOK = gql`
                     author{
                         id
                         username
+                        fullName
                         avatar
                     }
                     updatedAt
@@ -45,10 +47,22 @@ export const GET_REVIEWS = gql`
                 reviewText
                 rating
                 updatedAt
+                replies{
+                    id
+                    text
+                    author{
+                        id
+                        username
+                        avatar
+                        fullName
+                    }
+                    updatedAt
+                }
                 author{
                     id
                     username
                     avatar
+                    fullName
                 }
                 book{
                     id 

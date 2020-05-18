@@ -81,3 +81,11 @@ export const SIGNUP = gql`
         }
     }
 `
+export const SEND_PASSWORD_VIA_EMAIL = gql`
+    mutation sendPasswordViaEmail($email: String!){
+        sendPasswordViaEmail(email: $email){
+            statusCode
+            message
+        }
+    }
+`

@@ -5,7 +5,7 @@ import './util.css';
 import { connect } from 'react-redux';
 import { withApollo } from '@apollo/react-hoc';
 import validator from 'validator';
-import { CREATE_PASSWORD_TOKEN } from '../../../api/authApi';
+import { SEND_PASSWORD_VIA_EMAIL } from '../../../api/authApi';
 import { useMutation } from '@apollo/react-hooks';
 import { message, Button } from 'antd';
 
@@ -19,13 +19,15 @@ function ForgotPassword(props) {
         email: false,
     });
 
-    const [createPasswordToken, { loading,data={} }] = useMutation(CREATE_PASSWORD_TOKEN, {
+    const [sendPasswordViaEmail, { loading,data={} }] = useMutation(SEND_PASSWORD_VIA_EMAIL, {
         onError() {
             message.error("Có lỗi xảy ra, vui lòng thử lại sau");
         },
         onCompleted(data) {
-            if (data.createPasswordToken.statusCode !== 200) {
-                message.error(data.createPasswordToken.message);
+            if (data.sendPasswordViaEmail.statusCode !== 200) {
+                message.error(data.sendPasswordViaEmail.message);
+            }else{
+                message.success("Mật khẩu mới đã được gửi tới hộp thư của bạn");
             }
         }
     })
@@ -49,7 +51,7 @@ function ForgotPassword(props) {
         e.preventDefault();
         const { email } = inputs;
         if (email && validator.isEmail(email)) {
-            createPasswordToken({
+            sendPasswordViaEmail({
                 variables: {
                     email
                 }
@@ -63,7 +65,7 @@ function ForgotPassword(props) {
                     <div className="d-flex justify-content-center p-b-20">
                         <NavLink to="/"><img src="/images/logo/logo.png" height={50} /></NavLink>
                     </div>
-                    {data.createPasswordToken&&data.createPasswordToken.statusCode===200?
+                    {data.sendPasswordViaEmail&&data.sendPasswordViaEmail.statusCode===200?
                     <div style={{textAlign: 'center'}}>Chúng tôi đã gửi một email để lấy lại mật khẩu. Vui lòng kiểm tra hộp thư của bạn.</div>:
                     <form onSubmit={onSubmit} className="login100-form validate-form flex-sb flex-w">
                         <span className="login100-form-title p-b-20">

@@ -47,24 +47,28 @@ const styles = StyleSheet.create({
 
 
 function HeaderBackAction(props) {
-    const { title, showRight, onClickMore,showRightOptions={},hideBack } = props;
+    const { title, showRight, onClickMore, showRightOptions = {}, hideBack, onClickBack } = props;
     const navigation = useNavigation();
-    const {hideSearch,hideMore,hideHome,hideCart} = showRightOptions;
+    const { hideSearch, hideMore, hideHome, hideCart } = showRightOptions;
 
     return (
         <View style={styles.header}>
             <View style={styles.headerLeft}>
-                {!hideBack&&<TouchableHighlight style={{ borderRadius: 100, padding: 8,marginRight: 12 }}
+                {!hideBack && <TouchableHighlight style={{ borderRadius: 100, padding: 8, marginRight: 12 }}
                     underlayColor="rgba(255,255,255,0.2)" onPress={() => {
-                        if (navigation.canGoBack())
-                            navigation.goBack()
+                        if (!onClickBack) {
+                            if (navigation.canGoBack())
+                                navigation.goBack()
+                        }else{
+                            onClickBack();
+                        }
                     }}>
                     <Icon type="antdesign" size={18} name="arrowleft" color="#fff" />
                 </TouchableHighlight>}
                 <Text style={styles.headerTitle}>{title}</Text>
             </View>
-            {showRight&&<View style={styles.headerRight}>
-                {!hideSearch&&<TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
+            {showRight && <View style={styles.headerRight}>
+                {!hideSearch && <TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
                     underlayColor="rgba(255,255,255,0.2)" onPress={() => {
                         navigation.navigate("TabScreen", {
                             screen: "Tìm kiếm"
@@ -72,16 +76,16 @@ function HeaderBackAction(props) {
                     }}>
                     <Icon type="antdesign" size={18} name="search1" color="#fff" />
                 </TouchableHighlight>}
-                {!hideHome&&<TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
-                    underlayColor="rgba(255,255,255,0.2)" onPress={() =>   navigation.navigate("TabScreen", {
+                {!hideHome && <TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
+                    underlayColor="rgba(255,255,255,0.2)" onPress={() => navigation.navigate("TabScreen", {
                         screen: "Trang chủ"
                     })}>
                     <Icon type="antdesign" size={18} name="home" color="#fff" />
                 </TouchableHighlight>}
-                {!hideCart&&<CartNavigation />}
-                {!hideMore&&<TouchableHighlight style={{ borderRadius: 100, padding: 8}} 
+                {!hideCart && <CartNavigation />}
+                {!hideMore && <TouchableHighlight style={{ borderRadius: 100, padding: 8 }}
                     underlayColor="rgba(255,255,255,0.2)" onPress={onClickMore}>
-                        <Icon type="feather" size={18} name="more-horizontal" color="#fff" />
+                    <Icon type="feather" size={18} name="more-horizontal" color="#fff" />
                 </TouchableHighlight>}
             </View>}
         </View>

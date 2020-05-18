@@ -327,41 +327,6 @@ function ShopGrid(props) {
     props.getBooks({
       where,
       orderBy: userSettings.sortDirection,
-      selection: `{
-          id
-          title
-          basePrice
-          description
-          thumbnail
-          images
-          dimensions
-          translator
-          format
-          isbn
-          publishedDate
-          availableCopies
-          pages
-          discounts{
-            id 
-            from 
-            to 
-            discountRate
-            discountAmount
-            usePercentage
-          }
-          publisher{
-            id
-            name
-          }
-          authors{
-            id
-            pseudonym
-          }
-          categories{
-            id
-            name
-          }
-        }`,
       skip: (userSettings.shopPage - 1) * 9,
       first: 9
     });

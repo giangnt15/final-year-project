@@ -1,9 +1,10 @@
 import React from 'react';
 import { Spin } from 'antd';
+import { GET_BOOKS_FOR_BROWSING } from '../api/bookApi';
 
 function productSectionWrapper(WrappedComponent, variables){
     return function(props){
-        const {loading,error,data} = useQuery(GET_BOOKS, {
+        const {loading,error,data} = useQuery(GET_BOOKS_FOR_BROWSING, {
             variables
         })
 
@@ -11,7 +12,7 @@ function productSectionWrapper(WrappedComponent, variables){
         if (error) return <div>Error</div>
 
         return (
-            <WrappedComponent books={data.getBooks} {...props} />
+            <WrappedComponent books={data.getBooksForBrowsing} {...props} />
         )
     }
 }

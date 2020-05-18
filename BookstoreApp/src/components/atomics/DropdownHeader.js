@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
 function DropDownHeader(props) {
 
     const navigation = useNavigation();
-    const { hideHome, hideBook, hideBestSeller, hideAccount,showHeart } = props;
+    const { hideHome, hideBook, hideBestSeller, hideAccount, showHeart } = props;
     return (
         <View style={styles.dropDownCtn}>
-            {!hideHome && <TouchableOpacity style={styles.dropDownItem} onPress={() => navigation.navigate("TabScreen",{
+            {!hideHome && <TouchableOpacity style={styles.dropDownItem} onPress={() => navigation.navigate("TabScreen", {
                 screen: 'Trang chủ'
             })}>
                 <Icon type="antdesign" size={18} name="home" color="#fff" />
@@ -54,7 +54,10 @@ function DropDownHeader(props) {
                 <Icon type="feather" size={18} name="book" color="#fff" />
                 <Text style={styles.dropDownItemText}>Sách</Text>
             </TouchableOpacity>}
-            {!hideBestSeller && <TouchableOpacity style={styles.dropDownItem}>
+            {!hideBestSeller && <TouchableOpacity style={styles.dropDownItem}
+                onPress={() => navigation.navigate("TabScreen", {
+                    screen: 'Bán chạy'
+                })}>
                 <Icon type="feather" size={18} name="star" color="#fff" />
                 <Text style={styles.dropDownItemText}>Bán chạy</Text>
             </TouchableOpacity>}

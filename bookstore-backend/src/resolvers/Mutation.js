@@ -10,50 +10,71 @@ import emailTemplate from '../sendgrid/emailTemplate';
 const Mutation = {
     async signUp(parent, { data }, { prisma, env, sgMailer }, info) {
         const hashed = await bcrypt.hash(data.password, 10);
+
+        const userExisted = await prisma.exists.User({
+            email: data.email
+        });
+
+        if (userExisted) return {
+            statusCode: 400,
+            message: "Email đã tồn tại",
+        }
+
+        const userExisted1 = await prisma.exists.User({
+            username: data.username
+        });
+
+        if (userExisted1) {
+            return {
+                statusCode: 400,
+                message: "Username đã tồn tại",
+            }
+        }
+
         const user = await prisma.mutation.createUser({
             data: {
                 ...data,
                 receiveEmailNotification: false,
-                isActive: false,
+                isActive: true,
                 role: 'User',
                 password: hashed
             }
         });
-        const token = uuidv4();
-        const authToken = await prisma.mutation.createAuthToken({
-            data: {
-                token,
-                expiredAfter: 86400000,
-                type: "ActivationToken",
-                user: {
-                    connect: {
-                        id: user.id
-                    }
-                }
-            }
-        });
-        try {
-            sgMailer.send({
-                from: {
-                    email: "noreply@bookstore.vn",
-                    name: "Bookstore"
-                },
-                to: data.email,
-                html: emailTemplate.accountActivation(`${env.CLIENT_HOST}/account-activation/${token}`),
-                subject: "[Bookstore] Kích hoạt tài khoản",
-            });
-        } catch (err) {
-            console.log(err);
-        }
+        // const token = uuidv4();
+        // const authToken = await prisma.mutation.createAuthToken({
+        //     data: {
+        //         token,
+        //         expiredAfter: 86400000,
+        //         type: "ActivationToken",
+        //         user: {
+        //             connect: {
+        //                 id: user.id
+        //             }
+        //         }
+        //     }
+        // });
+        // try {
+        //     sgMailer.send({
+        //         from: {
+        //             email: "giangqwerty69@gmail.com",
+        //             name: "Bookstore"
+        //         },
+        //         to: data.email,
+        //         html: emailTemplate.accountActivation(`${env.CLIENT_HOST}/account-activation/${token}`),
+        //         subject: "[Bookstore] Kích hoạt tài khoản",
+        //     });
+        // } catch (err) {
+        //     console.log(err);
+        // }
         return {
-            statusCode: 405,
-            message: "Tài khoản chưa được kích hoạt",
+            statusCode: 200,
+            message: "Đã tạo tài khoản",
             user,
-            // token: jwt.sign({
-            //     userId: user.id,
-            // }, env.JWT_SECRET, {
-            //     expiresIn: '2 days'
-            // })
+            token: jwt.sign({
+                userId: user.id,
+            }, env.JWT_SECRET, {
+                expiresIn: '2 days'
+            })
         }
     },
     async login(parent, { data }, { prisma, env }, info) {
@@ -351,7 +372,7 @@ const Mutation = {
             data
         }, info)
     },
-    async createBookReview(parent, { data }, { prisma, httpContext ,mySqlConnection}, info) {
+    async createBookReview(parent, { data }, { prisma, httpContext, mySqlConnection }, info) {
         const userId = getUserId(httpContext);
         if (data.rating > 5 || data.rating <= 0) {
             throw new Error("Rating score is invalid");
@@ -396,14 +417,14 @@ const Mutation = {
         }, `{id basePrice discounts{id discountRate from to usePercentage discountAmount}}`);
         let subTotal = 0;
         let orderItemsInOrder = []
-        for (let orderItem of orderItems){
-            const correspondingDataItem = data.items.find(dt=>dt.book===orderItem.id);
+        for (let orderItem of orderItems) {
+            const correspondingDataItem = data.items.find(dt => dt.book === orderItem.id);
             if (orderItem.availableCopies < correspondingDataItem.quantity) {
                 throw new Error("Không đủ hàng trong kho, vui lòng liên hệ người quản trị để biết thêm chi tiết");
-            }else{
-                const [discountedPrice,discountRate,discountAmount] = calculateDiscount(orderItem.basePrice,orderItem.discounts);
+            } else {
+                const [discountedPrice, discountRate, discountAmount] = calculateDiscount(orderItem.basePrice, orderItem.discounts);
                 const totalItemPrice = discountedPrice * correspondingDataItem.quantity;
-                subTotal+=totalItemPrice;
+                subTotal += totalItemPrice;
                 orderItemsInOrder.push({
                     item: {
                         connect: {
@@ -685,11 +706,48 @@ const Mutation = {
         });
         await sgMailer.send({
             from: {
-                email: "noreply@bookstore.vn",
+                email: "giangqwerty69@gmail.com",
                 name: "Bookstore"
             },
             to: email,
             html: emailTemplate.resetPassword(`${env.CLIENT_HOST}/reset-password/${token}`),
+            subject: "[Bookstore] Lấy lại mật khẩu",
+        });
+        return {
+            statusCode: 200,
+            message: "OK"
+        }
+    },
+    async sendPasswordViaEmail(parent, { email }, { prisma, sgMailer, env }, info) {
+        const user = await prisma.query.user({
+            where: {
+                email
+            }
+        });
+        if (!user) {
+            return {
+                statusCode: 400,
+                message: "Tài khoản không tồn tại"
+            }
+        }
+        const newPassword = uuidv4().substring(0, 10);
+        const hashed = await bcrypt.hash(newPassword, 10);
+        await prisma.mutation.updateUser({
+            where: {
+                email
+            },
+            data: {
+                password: hashed
+            }
+        });
+
+        await sgMailer.send({
+            from: {
+                email: "giangqwerty69@gmail.com",
+                name: "Bookstore"
+            },
+            to: email,
+            html: emailTemplate.resetPasswordEmail(newPassword),
             subject: "[Bookstore] Lấy lại mật khẩu",
         });
         return {
@@ -727,7 +785,7 @@ const Mutation = {
             statusCode: 200,
             message: "Đổi mật khẩu thành công"
         }
-    }
+    },
 }
 
 export default Mutation;

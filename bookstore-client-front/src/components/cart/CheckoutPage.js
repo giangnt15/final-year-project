@@ -50,8 +50,9 @@ function CheckoutPage(props) {
     }, [tokenValid]);
 
     useEffect(()=>{
-       document.querySelector('.scroll-anchor').scrollIntoView({
-       })
+        if (document.querySelector('.scroll-anchor')){
+            document.querySelector('.scroll-anchor').scrollIntoView({});
+        }
     },[])
 
     const next = () => {

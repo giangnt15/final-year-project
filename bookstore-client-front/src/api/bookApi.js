@@ -43,6 +43,51 @@ export const GET_BOOKS = gql`
   }
 `;
 
+export const GET_BOOKS_FOR_BROWSING = gql`
+  query getBooksForBrowsing($where: BookWhereInput, $orderBy: BookOrderByInput, $first: Int, $skip: Int){
+    getBooksForBrowsing(where: $where, orderBy: $orderBy, first: $first, skip: $skip) {
+      books{
+        id
+        title
+        basePrice
+        description
+        thumbnail
+        images
+        dimensions
+        translator
+        format
+        isbn
+        publishedDate
+        availableCopies
+        pages
+        reviews{
+          avgRating
+          totalCount
+        }
+        discounts{
+          discountRate
+          discountAmount
+          discountedPrice
+        }
+        publisher{
+          id
+          name
+        }
+        authors{
+          id
+          pseudonym
+        }
+        categories{
+          id
+          name
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
+
 export const GET_BOOK_QTY = gql`
   query getItemStockQty($id: ID!){
     getItemStockQty(id: $id){
@@ -155,6 +200,50 @@ export const GET_BEST_SELLER = gql`
           discountRate
           usePercentage
           discountAmount
+        }
+        publisher{
+          id
+          name
+        }
+        authors{
+          id
+          pseudonym
+        }
+        categories{
+          id
+          name
+        }
+      }
+      totalCount
+    }
+  }
+`
+
+export const GET_BEST_SELLER_FOR_BROWSING = gql`
+  query getBestSellerForBrowsing($first: Int!, $skip: Int!, $dateFrom: String, $dateTo: String){
+    getBestSellerForBrowsing(first: $first, skip: $skip, dateFrom: $dateFrom, dateTo: $dateTo){
+      books{
+        id
+        title
+        basePrice
+        description
+        thumbnail
+        images
+        dimensions
+        translator
+        format
+        isbn
+        publishedDate
+        availableCopies
+        pages
+        reviews{
+          avgRating
+          totalCount
+        }
+        discounts{
+          discountRate
+          discountAmount
+          discountedPrice
         }
         publisher{
           id

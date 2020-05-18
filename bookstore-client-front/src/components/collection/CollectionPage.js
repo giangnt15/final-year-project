@@ -6,7 +6,7 @@ import {
 } from '../../constants';
 import { NavLink, useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_BOOKS } from '../../api/bookApi';
+import { GET_BOOKS, GET_BOOKS_FOR_BROWSING } from '../../api/bookApi';
 import { GET_COLLECTION } from '../../api/collectionApi';
 import { message, Skeleton } from 'antd';
 import ListProductItem from '../products/ListProductItem';
@@ -47,7 +47,7 @@ function CollectionPage(props) {
             id: collectionId
         }
     });
-    const { loading, data = { getBooks: { books: [] } } } = useQuery(GET_BOOKS, {
+    const { loading, data = { getBooksForBrowsing: { books: [] } } } = useQuery(GET_BOOKS_FOR_BROWSING, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");
         },
@@ -60,44 +60,9 @@ function CollectionPage(props) {
             orderBy,
             first: 20,
             skip: (currentPage - 1) * 20,
-            selection: `{
-                id
-                title
-                basePrice
-                description
-                thumbnail
-                images
-                dimensions
-                translator
-                format
-                isbn
-                publishedDate
-                availableCopies
-                pages
-                discounts{
-                    id 
-                    from 
-                    to 
-                    discountRate
-                    discountAmount
-                    usePercentage
-                }
-                publisher{
-                  id
-                  name
-                }
-                authors{
-                  id
-                  pseudonym
-                }
-                categories{
-                  id
-                  name
-                }
-              }`,
         }
     })
-    const { books } = data.getBooks;
+    const { books } = data.getBooksForBrowsing;
 
     const renderProducts = () => {
         const listWrapper = document.querySelector(".shop__list__wrapper");
@@ -191,8 +156,8 @@ function CollectionPage(props) {
                                             <a className={`nav-item nav-link${viewMode === VIEW_MODE_LIST ? " active" : ""}`}
                                                 data-toggle="tab" onClick={() => setViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
                                         </div>
-                                        <p>Hiển thị {(currentPage - 1) * 20 + 1 > data.getBooks.totalCount ? data.getBooks.totalCount : (currentPage - 1) * 20 + 1} – {(currentPage - 1) * 20 + 20 >
-                                            data.getBooks.totalCount ? data.getBooks.totalCount : (currentPage - 1) * 20 + 20} trên {data.getBooks.totalCount} kết quả</p>
+                                        <p>Hiển thị {(currentPage - 1) * 20 + 1 > data.getBooksForBrowsing.totalCount ? data.getBooksForBrowsing.totalCount : (currentPage - 1) * 20 + 1} – {(currentPage - 1) * 20 + 20 >
+                                            data.getBooksForBrowsing.totalCount ? data.getBooksForBrowsing.totalCount : (currentPage - 1) * 20 + 20} trên {data.getBooksForBrowsing.totalCount} kết quả</p>
                                         <div className="orderby__wrapper">
                                             <span>Sắp xếp theo: </span>
                                             <select className="shot__byselect" value={orderBy} onChange={(e) => { setOrderBy(e.target.value) }}>
@@ -220,7 +185,7 @@ function CollectionPage(props) {
                             <br />
                             <br />
                             <Pagination page={currentPage} goToPage={(page) => setCurrentPage(page)}
-                                totalCount={data.getBooks.totalCount} itemsPerPage={20} />
+                                totalCount={data.getBooksForBrowsing.totalCount} itemsPerPage={20} />
                         </div>
                     </div>
                 </div>

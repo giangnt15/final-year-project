@@ -18,39 +18,6 @@ function HomePage(props) {
                 orderBy: 'createdAt_DESC',
                 skip: 0,
                 first: 20,
-                selection: `{id
-                title
-                basePrice
-                description
-                thumbnail
-                images
-                dimensions
-                translator
-                format
-                isbn
-                publishedDate
-                availableCopies
-                pages
-                discounts{
-                  id 
-                  from 
-                  to 
-                  discountRate
-                  discountAmount
-                  usePercentage
-              }
-                publisher{
-                  id
-                  name
-                }
-                authors{
-                  id
-                  pseudonym
-                }
-                categories{
-                  id
-                  name
-                }}`
             }}>
             </ProductSectionContainer>
             <ProductSectionContainer isFullWidth slickSettings={{
@@ -66,39 +33,6 @@ function HomePage(props) {
                 orderBy: 'createdAt_DESC',
                 skip: 0,
                 first: 20,
-                selection: `{id
-                title
-                basePrice
-                description
-                thumbnail
-                images
-                dimensions
-                translator
-                format
-                isbn
-                publishedDate
-                availableCopies
-                pages
-                discounts{
-                  id 
-                  from 
-                  to 
-                  discountRate
-                  discountAmount
-                  usePercentage
-              }
-                publisher{
-                  id
-                  name
-                }
-                authors{
-                  id
-                  pseudonym
-                }
-                categories{
-                  id
-                  name
-                }}`
             }}>
             </ProductSectionContainer>
         </Fragment>

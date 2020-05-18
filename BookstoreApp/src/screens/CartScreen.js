@@ -7,6 +7,8 @@ import { Divider, Button } from 'react-native-elements';
 import NumberFormat from 'react-number-format';
 import { COLOR_BUTTON_PRIMARY } from '../constants';
 import Empty from '../components/atomics/Empty';
+import { useNavigation } from '@react-navigation/native';
+import { useToken } from '../hooks/customHooks';
 
 function CartScreen(props) {
 
@@ -21,11 +23,14 @@ function CartScreen(props) {
             hideBorderBottom={index === items.length - 1} />
     }
 
+    const navigation = useNavigation();
+    const [, , tokenValid] = useToken();
+
     return (
         <View style={styles.container}>
             <HeaderBackAction title={`Giỏ hàng (${cartTotalQty})`} />
             <FlatList style={styles.section} ListEmptyComponent={
-                <View style={{marginTop: 50}}>
+                <View style={{ marginTop: 50 }}>
                     <Empty emptyText="Bạn chưa có sản phẩm nào trong giỏ hàng" />
                 </View>
             }
@@ -91,7 +96,18 @@ function CartScreen(props) {
                         paddingHorizontal: 12,
                         paddingVertical: 8,
                         paddingBottom: 12
-                    }}><Button buttonStyle={{ backgroundColor: COLOR_BUTTON_PRIMARY }}
+                    }}><Button onPress={() => {
+                        if (!tokenValid) {
+                            navigation.navigate("LoginSignupScreen", {
+                                from: {
+                                    stack: 'CartScreen'
+                                }
+                            });
+                        } else {
+                            navigation.navigate("CheckoutScreen");
+                        }
+                    }}
+                        buttonStyle={{ backgroundColor: COLOR_BUTTON_PRIMARY }}
                         title="Tiến Hành Đặt Hàng"></Button></View>
                 </View>
             </>}

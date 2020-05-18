@@ -19,7 +19,6 @@ const useToken = () => {
                 console.log(err)
             } else {
                 if (data) {
-                    console.log(JSON.parse(data))
                     setUserInfo(JSON.parse(data));
                 }
             }

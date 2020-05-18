@@ -12,7 +12,8 @@ import moment from 'moment';
 const styles = StyleSheet.create({
     container: {
         display: 'flex',
-        height: '100%'
+        height: '100%',
+        backgroundColor: '#fff'
     },
     ScrollView: {
         paddingHorizontal: 10,

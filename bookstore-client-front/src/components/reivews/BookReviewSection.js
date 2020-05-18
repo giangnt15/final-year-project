@@ -1,16 +1,41 @@
 import React, { Fragment, useState } from 'react';
-import { Rate, Skeleton, Progress, Icon, Popconfirm, Button as AntdButton, message } from 'antd';
+import { Rate, Skeleton, Progress, Icon, Popconfirm, Button as AntdButton, message, Pagination, Empty } from 'antd';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { CREATE_BOOK_REVIEW } from '../../api/reviewApi';
+import { CREATE_BOOK_REVIEW, GET_REVIEWS } from '../../api/reviewApi';
 import { useParams, useHistory } from 'react-router-dom';
 import BookReviewItem from './BookReviewItem';
 import { Button } from '@material-ui/core';
-import { roundHalf } from '../../utils/common';
+import { roundHalf, calculateReviewScore } from '../../utils/common';
 
 function BookReviewSection(props) {
 
     const { id: bookId } = useParams();
-    const { isAuthenticated, bookTitle,loading,error,data,refetchBookReviews,avgScore } = props;
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const { loading, data = {getBookReviews: {bookReviews: [],totalCount: 0}},refetch: refetchBookReviews } = useQuery(GET_REVIEWS, {
+            onCompleted() {
+                const mainContent = document.querySelector('.review-fieldset');
+                if (mainContent) {
+                    mainContent.scrollIntoView({});
+                }
+            },
+            onError(){
+                message.error("Có lỗi xảy ra khi lấy đánh giá")
+            },
+            variables: {
+                where: {
+                    book: {
+                        id: bookId
+                    }
+                },
+                orderBy: 'createdAt_DESC',
+                skip: (currentPage - 1) * 10,
+                first: 10
+            }
+        });
+
+
+    const { isAuthenticated, bookTitle,avgScore,getBookReviewsByBook,refetchReviewSummary } = props;
 
     const history = useHistory();
 
@@ -34,13 +59,15 @@ function BookReviewSection(props) {
     const [createReview, { loading: creatingReview,
         error: errorCreatingReivew, data: dataCreatingReview }] = useMutation(CREATE_BOOK_REVIEW, {
             onCompleted() {
+                refetchReviewSummary();
                 refetchBookReviews();
                 setShowReviewEditor(false);
             },
-            onError(error){
+            onError(error) {
                 message.error("Có lỗi xảy ra, xin thử lại sau");
             }
         });
+
 
     if (loading) {
         return <Skeleton avatar paragraph={{ rows: 4 }} />
@@ -97,11 +124,11 @@ function BookReviewSection(props) {
                             <b>{avgScore}/5</b>
                         </h1>
                         <Rate disabled defaultValue={avgScore} value={avgScore} style={{ color: '#FF5501' }} />
-                        <div className="p-t-10">{`(${data.getBookReviewsByBook.totalCount} đánh giá)`}</div>
+                        <div className="p-t-10">{`(${data.getBookReviews?.totalCount} đánh giá)`}</div>
                     </div>
                 </div>
                 <div className="review-content" >
-                    {renderPercentage(data.getBookReviewsByBook)}
+                    {renderPercentage(getBookReviewsByBook)}
                 </div>
                 <div className="leave-comment-section m-l-50 p-l-50 d-flex flex-column align-items-center" >
                     <h6 className="fs-14 m-b-8">Chia sẻ đánh giá</h6>
@@ -149,9 +176,15 @@ function BookReviewSection(props) {
                     </div>
                 </div>
             </form> : <Fragment>
-                    {data.getBookReviewsByBook.bookReviews.map(review => (
-                        <BookReviewItem refetchBookReviews={refetchBookReviews} bookId={bookId} key={review.id} review={review} />
-                    ))}
+                    {data.getBookReviews.bookReviews.length>0?data.getBookReviews?.bookReviews.map(review => (
+                        <BookReviewItem refetchBookReviews={()=>{
+                            refetchReviewSummary();
+                            refetchBookReviews();
+                        }} bookId={bookId} key={review.id} review={review} />
+                    )):<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có đánh giá nào" />}
+                    <Pagination current={currentPage} onChange={(page) => {
+                        setCurrentPage(page)
+                    }} total={data.getBookReviews?.totalCount} />
                 </Fragment>}
         </div>
     </Fragment>)

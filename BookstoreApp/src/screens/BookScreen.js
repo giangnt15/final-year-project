@@ -154,7 +154,6 @@ function BookScreen(props) {
         totalCount: 0
     });
     const drawerRef = useRef();
-    const hasMore = bookData.books.length < bookData.totalCount;
     const searchBarRef = useRef();
     const route = useRoute();
     const navigation = useNavigation();
@@ -200,8 +199,103 @@ function BookScreen(props) {
 
     const fetchMore = () => {
         if (bookData.books.length < bookData.totalCount) {
+            let where = {};
+            if (filters.price) {
+                if (filters.price.operator === 'gt') {
+                    where = {
+                        title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                        categories_some: filters.category?{
+                            id: filters.category.id
+                        }:undefined,
+                        authors_some: filters.author?{
+                            id: filters.author.id
+                        }: undefined,
+                        collections_some: filters.collection ? {
+                            id: filters.collection.id
+                        } : undefined,
+                        publisher: filters.publisher?{
+                            id: filters.publisher.id
+                        }:undefined,
+                        avgRating_gte: filters.rating?.id,
+                        basePrice_gt: filters.price.range[0],
+                    }
+                } else if (filters.price.operator === 'lt') {
+                    where = {
+                        title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                        categories_some: filters.category?{
+                            id: filters.category.id
+                        }:undefined,
+                        authors_some: filters.author?{
+                            id: filters.author.id
+                        }: undefined,
+                        collections_some: filters.collection ? {
+                            id: filters.collection.id
+                        } : undefined,
+                        publisher: filters.publisher?{
+                            id: filters.publisher.id
+                        }:undefined,
+                        avgRating_gte: filters.rating?.id,
+                        basePrice_lt: filters.price.range[0],
+                    }
+                } else if (filters.price.operator === 'between') {
+                    where = {
+                        AND: [{
+                            title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                            categories_some: filters.category?{
+                                id: filters.category.id
+                            }:undefined,
+                            authors_some: filters.author?{
+                                id: filters.author.id
+                            }: undefined,
+                            collections_some: filters.collection ? {
+                                id: filters.collection.id
+                            } : undefined,
+                            publisher: filters.publisher?{
+                                id: filters.publisher.id
+                            }:undefined,
+                            basePrice_gt: filters.price.range[0],
+                            avgRating_gte: filters.rating?.id,
+                        }, {
+                            title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                            categories_some: filters.category?{
+                                id: filters.category.id
+                            }:undefined,
+                            authors_some: filters.author?{
+                                id: filters.author.id
+                            }: undefined,
+                            collections_some: filters.collection ? {
+                                id: filters.collection.id
+                            } : undefined,
+                            publisher: filters.publisher?{
+                                id: filters.publisher.id
+                            }:undefined,
+                            avgRating_gte: filters.rating?.id,
+                            basePrice_lt: filters.price.range[1],
+                        }]
+                    }
+                }
+            } else {
+                where = {
+                    title_contains: route.params ? route.params.searchKeyword ?? undefined : undefined,
+                    categories_some: filters.category?{
+                        id: filters.category.id
+                    }:undefined,
+                    authors_some: filters.author?{
+                        id: filters.author.id
+                    }: undefined,
+                    collections_some: filters.collection ? {
+                        id: filters.collection.id
+                    } : undefined,
+                    publisher: filters.publisher?{
+                        id: filters.publisher.id
+                    }:undefined,
+                    // basePrice: filters.price,
+                    avgRating_gte: filters.rating?.id,
+                }
+            }
             getMoreBooks({
                 variables: {
+                    where,
                     orderBy: userSettings.sortDirection,
                     first: 9,
                     skip: bookData.books.length

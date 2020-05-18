@@ -79,7 +79,7 @@ export const login = (client, { email, password }) => {
                 localStorage.setItem('userInfo', JSON.stringify(res.data.login.user));
                 history.push('/email-activation');
                 dispatch(loginFailed());
-            }else{
+            } else {
                 dispatch(loginFailed());
             }
 
@@ -130,11 +130,18 @@ export const signUp = (client, { email, username, password, avatar, birthdate, f
                     }
                 }
             });
-            localStorage.setItem('userInfo', JSON.stringify(res.data.signUp.user));
-            localStorage.setItem('token', res.data.signUp.token);
-            history.push('/email-activation');
-            dispatch(signUpSuccessfully(res.data.signUp));
+            if (res.data.signUp.statusCode !== 200) {
+                message.error(res.data.signUp.message);
+                dispatch(signUpFailed());
+            } else {
+                localStorage.setItem('userInfo', JSON.stringify(res.data.signUp.user));
+                localStorage.setItem('token', res.data.signUp.token);
+                // history.push('/email-activation');
+                dispatch(signUpSuccessfully(res.data.signUp));
+                message.success("Tạo tài khoản thành công");
+            }
         } catch (ex) {
+            message.error("Có lỗi xảy ra khi đăng ký");
             dispatch(signUpFailed());
         }
     }
