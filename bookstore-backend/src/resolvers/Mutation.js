@@ -6,6 +6,13 @@ import { calculateDiscount } from '../utils/common';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
+import QRCode from 'qrcode'
+import transporter from '../sendgrid/nodeMailer';
+import FormData from 'form-data';
+import Axios from 'axios';
+import fs from 'fs';
+import request from 'request';
+import _ from 'lodash';
 
 const Mutation = {
     async signUp(parent, { data }, { prisma, env, sgMailer }, info) {
@@ -407,7 +414,7 @@ const Mutation = {
         await updateAvgRating();
         return bookReview;
     },
-    async createOrder(parent, { data }, { prisma, httpContext }, info) {
+    async createOrder(parent, { data }, { prisma, httpContext,env }, info) {
         const userId = getUserId(httpContext);
         if (data.items.length === 0) throw new Error("Đơn hàng không có sản phẩm.")
         const orderItems = await prisma.query.books({
@@ -439,45 +446,6 @@ const Mutation = {
                 })
             }
         }
-        // for (let i = 0; i < orderItems.length; i++) {
-        //     if (orderItems[i].availableCopies < data.items[i].quantity) {
-        //         throw new Error("Không đủ hàng trong kho, vui lòng liên hệ người quản trị để biết thêm chi tiết");
-        //     } else {
-        //         let totalItemPrice = 0;
-        //         let orderItemPrice = orderItems[i].basePrice;
-        //         if (orderItems[i].discounts.length > 0) {
-        //             for (let discount of orderItems[i].discounts) {
-        //                 if (moment(discount.from).isBefore(moment()) && moment(discount.to).isAfter(moment())) {
-        //                     if (discount.usePercentage) {
-        //                         orderItemPrice = (orderItemPrice - (orderItemPrice * discount.discountRate))
-        //                     } else {
-        //                         if (orderItemPrice>=discount.discountAmount) {
-        //                             orderItemPrice = (orderItemPrice - discount.discountAmount)
-        //                         }else{
-        //                             orderItemPrice = 0;
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //             totalItemPrice = orderItemPrice * data.items[i].quantity;
-        //         } else {
-        //             totalItemPrice = orderItemPrice * data.items[i].quantity;
-        //         }
-        //         subTotal += totalItemPrice;
-        //         orderItemsInOrder.push({
-        //             item: {
-        //                 connect: {
-        //                     id: data.items[i].book
-        //                 }
-        //             },
-        //             basePrice: orderItems[i].basePrice * data.items[i].quantity,
-        //             discount: orderItems[i].basePrice - orderItemPrice,
-        //             price: orderItemPrice,
-        //             totalItemPrice,
-        //             quantity: data.items[i].quantity
-        //         })
-        //     }
-        // }
         let grandTotal = subTotal;
         const shippingAddress = await prisma.query.userAddress({
             where: {
@@ -485,7 +453,7 @@ const Mutation = {
             }
         }, `{id fullName phone address ward{id} district{id} province{id}}`);
         console.log(shippingAddress)
-        return prisma.mutation.createOrder({
+        const order = await prisma.mutation.createOrder({
             data: {
                 items: {
                     create: orderItemsInOrder
@@ -528,7 +496,132 @@ const Mutation = {
                 grandTotal,
                 subTotal
             }
-        });
+        },`{
+            id
+            items{
+                id
+                price
+                totalItemPrice
+                quantity
+                discount
+                item{
+                    id
+                    title
+                    thumbnail
+                }
+            }
+            customer{
+                id
+                email
+                fullName
+            }
+            grandTotal
+            subTotal
+            recipientFullName
+            recipientPhone
+            recipientWard{
+                id
+                name
+            }
+            recipientDistrict{
+                id
+                name
+            }
+            recipientProvince{
+                id
+                name
+            }
+            recipientAddress
+            paymentMethod{
+                id
+                name
+            }
+            shippingMethod{
+                id
+                name
+            }
+            orderStatus
+            paymentStatus
+            createdAt
+        }`);
+        try {
+            var file = await QRCode.toFile('temp/'+order.id+'.png',`${env.HOST_NAME}/api/order/pickup/${order.id}`);
+            const formData = new FormData();
+            const path = 'temp/'+order.id+'.png';
+            formData.append('image', fs.createReadStream(path),{
+                filename: order.id, 
+            });
+            formData.getLength((err,length)=>{
+                if (err){
+                    throw new Error(err.message);
+                }
+                const r = request.post(`${env.HOST_NAME_IMG}/api/image`,async (error,res,body)=>{
+                    if (error){
+                        console.log(error);
+                        throw new Error();
+                    }
+                    const bodyObj = JSON.parse(body);
+                    await transporter.sendMail({
+                        from: {
+                            address: "bookstore3369@gmail.com",
+                            name: "Bookstore"
+                        },
+                        to: order.customer.email,
+                        html: emailTemplate.emailReciept({
+                            QRCode: bodyObj.url,
+                            createdAt: moment(order.createdAt).format("DD-MM-YYYY"),
+                            logo: 'http://18.191.134.82/images/logo/logo.png',
+                            orderId: order.id,
+                            recipientName: order.customer.fullName?order.customer.fullName:order.customer.email,
+                            userEmail: order.customer.email,
+                            paid: order.paymentStatus?order.grandTotal:0,
+                            fullAddress: `${order.recipientAddress}, ${order.recipientWard.name}, ${order.recipientDistrict.name}, ${order.recipientProvince.name}`,
+                            paymentMethod: order.paymentMethod.name,
+                            productsTable: _.join(order.items.map(item=>` <tr>
+                            <td>
+                                ${item.item.title}
+                            </td>
+                            <td style="text-align: left">
+                                ${Intl.NumberFormat().format(item.price)}đ
+                            </td>
+                            <td style="text-align: center">
+                                ${item.quantity}
+                            </td>
+                            <td style="text-align: left">
+                                ${Intl.NumberFormat().format(item.totalItemPrice)}đ
+                            </td>
+                        </tr>`),'') + `<tr>
+                        <td></td> <td></td>
+                                                <td style="/* column-span: none; */text-align: center;font-weight: 700;">
+                                                    Tổng cộng: 
+                                                </td>
+                                                
+                                                <td style="col-span: 2; text-align:left">
+                                                    ${Intl.NumberFormat().format(order.grandTotal)}đ
+                                                </td>
+                                            </tr>`
+                        }),
+                        subject: "[Bookstore] Hóa đơn "+order.id,
+                    });
+                    prisma.mutation.updateOrder({
+                        where: {
+                            id: order.id
+                        },
+                        data: {
+                            pickupQR: bodyObj.url
+                        }
+                    });
+                });
+                r.headers = {...formData.getHeaders(), "Content-length": length};
+                r._form = formData;
+                fs.unlink(path,()=>{})
+               
+            })
+        }catch(err){
+            console.log(err);
+            // throw new Error("Có lỗi xảy ra khi tạo QR code");
+        }
+        return order;
     },
     async updateOrderStatus(parent, { orderId, orderStatus }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
@@ -704,9 +797,9 @@ const Mutation = {
                 }
             }
         });
-        await sgMailer.send({
+        await transporter.sendMail({
             from: {
-                email: "giangqwerty69@gmail.com",
+                address: "bookstore3369@gmail.com",
                 name: "Bookstore"
             },
             to: email,
@@ -741,9 +834,9 @@ const Mutation = {
             }
         });
 
-        await sgMailer.send({
+        await transporter.sendMail({
             from: {
-                email: "giangqwerty69@gmail.com",
+                address: "bookstore3369@gmail.com",
                 name: "Bookstore"
             },
             to: email,

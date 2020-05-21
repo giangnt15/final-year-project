@@ -6,7 +6,7 @@ import { useHistory, NavLink, useParams } from 'react-router-dom';
 import '@ckeditor/ckeditor5-build-classic/build/translations/vi';
 import useScroll from '../../custom-hooks/useScroll';
 import NumberFormat from 'react-number-format';
-import { GET_ORDER_BY_ID, UPDATE_ORDER_ADDRESS, UPDATE_ORDER_STATUS } from '../../api/orderApi';
+import { GET_ORDER_BY_ID, UPDATE_ORDER_ADDRESS, UPDATE_ORDER_STATUS, UPDATE_PAYMENT_STATUS } from '../../api/orderApi';
 import moment from 'moment';
 import { DATE_TIME_VN_24H } from '../../constants';
 import { getOrderStatusText } from '../../utils/common';
@@ -24,6 +24,7 @@ function OrderDetail(props) {
     const isScrolled = useScroll(62);
     const [orderUpdateInfo, setOrderUpdateInfo] = useState({
         orderStatus: '',
+        paymentStatus: false,
         recipientWard: '',
         recipientDistrict: '',
         recipientProvince: '',
@@ -34,6 +35,8 @@ function OrderDetail(props) {
 
     const [edittingAddress, setEdittingAddress] = useState(false);
     const [edittingOrderStatus, setEdittingOrderStatus] = useState(false);
+    const [edittingPaymentStatus, setEdittingPaymentStatus] = useState(false);
+
     // const onInputChange = (e) => {
     //     const { name, value } = e.target;
     //     setInputs(prev => {
@@ -71,6 +74,7 @@ function OrderDetail(props) {
                 if (getOrderById) {
                     setOrderUpdateInfo({
                         orderStatus: getOrderById.orderStatus,
+                        paymentStatus: getOrderById.paymentStatus,
                         recipientWard: getOrderById.recipientWard.id,
                         recipientDistrict: getOrderById.recipientDistrict.id,
                         recipientProvince: getOrderById.recipientProvince.id,
@@ -222,6 +226,17 @@ function OrderDetail(props) {
             refetch();
             setEdittingOrderStatus(false);
         }
+    });
+
+    const [updatePaymentStatus, { loading: updatingPaymentStatus }] = useMutation(UPDATE_PAYMENT_STATUS, {
+        onError() {
+            console.log("Có lỗi xảy ra khi cập nhật trạng thái thanh toán, vui lòng thử lại sau");
+        },
+        onCompleted() {
+            message.success("Cập nhật thành công");
+            refetch();
+            setEdittingPaymentStatus(false);
+        }
     })
 
     return (
@@ -302,7 +317,26 @@ function OrderDetail(props) {
                                     <div>
                                         <label>Trạng thái thanh toán: &nbsp;</label>
                                         <div className="m-l-16">
-                                            {data.getOrderById.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán"}
+                                        {edittingPaymentStatus && <Select style={{ minWidth: 200 }} name="paymentStatus"
+                                                onChange={(val) => setOrderUpdateInfo(prev => ({ ...prev, paymentStatus: val }))}
+                                                value={orderUpdateInfo.paymentStatus}>
+                                                <Option value={false}>Chưa thanh toán</Option>
+                                                <Option value={true}>Đã thanh toán</Option>
+                                            </Select>}
+                                            {!edittingPaymentStatus && (data.getOrderById.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán")}
+                                            <div className="m-t-4">
+                                                {edittingPaymentStatus &&
+                                                    <Button className="m-r-4" type="primary" loading={updatingPaymentStatus} onClick={() => {
+                                                        updatePaymentStatus({
+                                                            variables: {
+                                                                orderId: id,
+                                                                paymentStatus: orderUpdateInfo.paymentStatus
+                                                            }
+                                                        })
+                                                    }}  ><SaveOutlined />&nbsp; Lưu</Button>}
+                                                <Button onClick={() => setEdittingPaymentStatus(prev=>!prev)}
+                                                    type="ghost">{edittingPaymentStatus ? "Hủy" : "Sửa"}</Button>
+                                            </div>
                                         </div>
                                     </div>
                                 </Col>

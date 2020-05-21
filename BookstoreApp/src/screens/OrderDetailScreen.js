@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { GET_ORDER_BY_ID, UPDATE_ORDER_STATUS } from '../api/orderApi';
 import { showToast, getOrderStatusText } from '../utils/common';
@@ -7,7 +7,7 @@ import { View, StyleSheet, ScrollView, ActivityIndicator, Text, TouchableOpacity
 import moment from 'moment';
 import { Divider, Image, Icon, Button } from 'react-native-elements';
 import { DATE_TIME_VN_24H, COLOR_BUTTON_PRIMARY } from '../constants';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import NumberFormat from 'react-number-format';
 import PopConfirm from '../components/atomics/PopConfirm';
 
@@ -16,7 +16,7 @@ const { width } = Dimensions.get('window');
 function OrderDetailScreen(props) {
     const route = useRoute();
     const navigation = useNavigation();
-    const { id } = route.params;
+    const { id,canRefetch } = route.params;
 
     const { loading, data = { getOrderById: {} }, refetch } = useQuery(GET_ORDER_BY_ID, {
         onError() {
@@ -42,17 +42,22 @@ function OrderDetailScreen(props) {
     const toggleOverlay = () => {
         setOverlayVisible(!overlayVisible);
     };
+    useFocusEffect(useCallback(()=>{
+        if (canRefetch){
+            refetch();
+        }
+    },[navigation]));
+
+    const { createdAt, orderStatus, grandTotal, subTotal, recipientFullName,
+        recipientPhone, recipientWard = {}, recipientDistrict = {},
+        recipientProvince = {}, recipientAddress, items = [], paymentMethod = {}, shippingMethod = {} } = data.getOrderById;
+    const fullAddress = `${recipientAddress}, ${recipientWard.name}, ${recipientDistrict.name}, ${recipientProvince.name}`;
 
     if (loading) return (
         <View style={{ paddingTop: 150, height: '100%' }}>
             <ActivityIndicator animating />
         </View>
     )
-
-    const { createdAt, orderStatus, grandTotal, subTotal, recipientFullName,
-        recipientPhone, recipientWard = {}, recipientDistrict = {},
-        recipientProvince = {}, recipientAddress, items = [], paymentMethod = {}, shippingMethod = {} } = data.getOrderById;
-    const fullAddress = `${recipientAddress}, ${recipientWard.name}, ${recipientDistrict.name}, ${recipientProvince.name}`;
 
     return (
         <View style={styles.container}>

@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Sat May 16 2020 20:23:35 GMT+0700 (Indochina Time)
+# timestamp: Thu May 21 2020 10:04:10 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -6391,6 +6391,7 @@ type Order implements Node {
   beginDeliveryDate: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+  pickupQR: String
 }
 
 """A connection to a list of items."""
@@ -6415,6 +6416,7 @@ input OrderCreateInput {
   grandTotal: Float!
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
   customer: UserCreateOneWithoutOrdersInput!
   recipientProvince: ProvinceCreateOneInput!
   recipientDistrict: DistrictCreateOneInput!
@@ -6446,6 +6448,7 @@ input OrderCreateWithoutCustomerInput {
   grandTotal: Float!
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
   recipientProvince: ProvinceCreateOneInput!
   recipientDistrict: DistrictCreateOneInput!
   recipientWard: WardCreateOneInput!
@@ -6466,6 +6469,7 @@ input OrderCreateWithoutItemsInput {
   grandTotal: Float!
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
   customer: UserCreateOneWithoutOrdersInput!
   recipientProvince: ProvinceCreateOneInput!
   recipientDistrict: DistrictCreateOneInput!
@@ -7114,6 +7118,8 @@ enum OrderOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  pickupQR_ASC
+  pickupQR_DESC
 }
 
 type OrderPreviousValues {
@@ -7130,6 +7136,7 @@ type OrderPreviousValues {
   beginDeliveryDate: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+  pickupQR: String
 }
 
 input OrderScalarWhereInput {
@@ -7469,6 +7476,46 @@ input OrderScalarWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  pickupQR: String
+
+  """All values that are not equal to given value."""
+  pickupQR_not: String
+
+  """All values that are contained in given list."""
+  pickupQR_in: [String!]
+
+  """All values that are not contained in given list."""
+  pickupQR_not_in: [String!]
+
+  """All values less than the given value."""
+  pickupQR_lt: String
+
+  """All values less than or equal the given value."""
+  pickupQR_lte: String
+
+  """All values greater than the given value."""
+  pickupQR_gt: String
+
+  """All values greater than or equal the given value."""
+  pickupQR_gte: String
+
+  """All values containing the given string."""
+  pickupQR_contains: String
+
+  """All values not containing the given string."""
+  pickupQR_not_contains: String
+
+  """All values starting with the given string."""
+  pickupQR_starts_with: String
+
+  """All values not starting with the given string."""
+  pickupQR_not_starts_with: String
+
+  """All values ending with the given string."""
+  pickupQR_ends_with: String
+
+  """All values not ending with the given string."""
+  pickupQR_not_ends_with: String
 }
 
 enum OrderStatus {
@@ -7526,6 +7573,7 @@ input OrderUpdateInput {
   grandTotal: Float
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
   customer: UserUpdateOneRequiredWithoutOrdersInput
   recipientProvince: ProvinceUpdateOneRequiredInput
   recipientDistrict: DistrictUpdateOneRequiredInput
@@ -7546,6 +7594,7 @@ input OrderUpdateManyDataInput {
   grandTotal: Float
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
 }
 
 input OrderUpdateManyMutationInput {
@@ -7559,6 +7608,7 @@ input OrderUpdateManyMutationInput {
   grandTotal: Float
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
 }
 
 input OrderUpdateManyWithoutCustomerInput {
@@ -7596,6 +7646,7 @@ input OrderUpdateWithoutCustomerDataInput {
   grandTotal: Float
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
   recipientProvince: ProvinceUpdateOneRequiredInput
   recipientDistrict: DistrictUpdateOneRequiredInput
   recipientWard: WardUpdateOneRequiredInput
@@ -7615,6 +7666,7 @@ input OrderUpdateWithoutItemsDataInput {
   grandTotal: Float
   receivedDate: DateTime
   beginDeliveryDate: DateTime
+  pickupQR: String
   customer: UserUpdateOneRequiredWithoutOrdersInput
   recipientProvince: ProvinceUpdateOneRequiredInput
   recipientDistrict: DistrictUpdateOneRequiredInput
@@ -7976,6 +8028,46 @@ input OrderWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  pickupQR: String
+
+  """All values that are not equal to given value."""
+  pickupQR_not: String
+
+  """All values that are contained in given list."""
+  pickupQR_in: [String!]
+
+  """All values that are not contained in given list."""
+  pickupQR_not_in: [String!]
+
+  """All values less than the given value."""
+  pickupQR_lt: String
+
+  """All values less than or equal the given value."""
+  pickupQR_lte: String
+
+  """All values greater than the given value."""
+  pickupQR_gt: String
+
+  """All values greater than or equal the given value."""
+  pickupQR_gte: String
+
+  """All values containing the given string."""
+  pickupQR_contains: String
+
+  """All values not containing the given string."""
+  pickupQR_not_contains: String
+
+  """All values starting with the given string."""
+  pickupQR_starts_with: String
+
+  """All values not starting with the given string."""
+  pickupQR_not_starts_with: String
+
+  """All values ending with the given string."""
+  pickupQR_ends_with: String
+
+  """All values not ending with the given string."""
+  pickupQR_not_ends_with: String
   customer: UserWhereInput
   recipientProvince: ProvinceWhereInput
   recipientDistrict: DistrictWhereInput

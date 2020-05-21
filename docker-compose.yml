@@ -52,5 +52,10 @@ services:
     build:
       context: ./bookstore-admin-front
       dockerfile: Dockerfile
+  image_server:
+    image: giang1998/bookstore-img-server:1.0.0
+    build:
+      context: ./bookstore-image-server
+      dockerfile: Dockerfile
 volumes:
   mysql:

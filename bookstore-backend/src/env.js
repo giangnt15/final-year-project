@@ -13,7 +13,9 @@ const env = {
     MYSQL_PORT: process.env.MYSQL_PORT,
     MYSQL_USER: process.env.MYSQL_USER,
     MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
-    MYSQL_DB_NAME: process.env.MYSQL_DB_NAME
+    MYSQL_DB_NAME: process.env.MYSQL_DB_NAME,
+    HOST_NAME: process.env.HOST_NAME,
+    HOST_NAME_IMG: process.env.HOST_NAME_IMG,
 }
 
 export default env;

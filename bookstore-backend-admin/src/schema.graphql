@@ -79,6 +79,7 @@ type Order{
     beginDeliveryDate: String
     createdAt: String!
     updatedAt: String!
+    pickupQR: String
 }
 
 type PaymentMethod{
@@ -358,6 +359,7 @@ type Mutation{
     deleteAuthor(id: ID!): Author!
     createOrder(data: OrderCreateInput!): Order!
     updateOrderStatus(orderId: ID!,orderStatus: OrderStatus!): Order!
+    updatePaymentStatus(orderId: ID!,paymentStatus: Boolean!): Order!
     updateOrderAddress(orderId: ID!,data: OrderAddressUpdateInput!): Order!
     createReviewReply(data: ReviewReplyCreateInput!): BookReviewReply!
     deleteUserAddress(id: ID!): UserAddress!

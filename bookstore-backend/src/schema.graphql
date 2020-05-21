@@ -79,6 +79,7 @@ type Order{
     beginDeliveryDate: String
     createdAt: String!
     updatedAt: String!
+    pickupQR: String
 }
 
 type PaymentMethod{

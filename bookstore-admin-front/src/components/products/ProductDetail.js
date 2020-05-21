@@ -14,6 +14,7 @@ import { CREATE_BOOK, UPDATE_BOOK, GET_BOOK, DELETE_BOOKS } from '../../api/book
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { DATE_VN, DATE_US } from '../../constants';
+import Uploader from '../shared/Uploader';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -437,6 +438,17 @@ function ProductDetail(props) {
                             rules={[{ required: true, message: 'Please input your username!' }]}
                         >
                             <Input name="thumbnail" value={inputs.thumbnail} style={{ width: '100%' }} onChange={onInputChange} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Hoặc tải ảnh lên: "
+                            name="thumbnail"
+                            labelAlign="right"
+                            rules={[{ required: true, message: 'Please input your username!' }]}
+                        >
+                            <Uploader imageUrl={inputs.thumbnail} uploadCallback={(imageUrl)=>setInputs(prev=>({
+                                ...inputs,
+                                thumbnail: imageUrl
+                            }))}/>
                         </Form.Item>
                     </Panel>
                 </Collapse>

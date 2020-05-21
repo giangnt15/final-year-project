@@ -136,6 +136,21 @@ function AccountScreen(props) {
                     <Icon type="antdesign" name='right' size={10} color="#a29da3"></Icon>
                 </TouchableOpacity>
             </View>
+            <View style={{
+                ...styles.section,
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                paddingHorizontal: 0,
+                paddingVertical: 0
+            }}>
+                <TouchableOpacity style={styles.accountItemCtn} onPress={()=>navigation.navigate("ScanScreen")}>
+                    <View style={styles.accountItemLeft}>
+                        <Icon type="material-community" containerStyle={styles.accountItemIcon} size={22} name="qrcode-scan" color="#a29da3"></Icon>
+                        <Text style={styles.text}>Quét QR</Text>
+                    </View>
+                    <Icon type="antdesign" name='right' size={10} color="#a29da3"></Icon>
+                </TouchableOpacity>
+            </View>
             <View style={styles.logoutBtnCtn}>
                 <Button title="ĐĂNG XUẤT" onPress={async () => {
                     await AsyncStorage.removeItem('token');
@@ -205,6 +220,21 @@ function AccountScreen(props) {
                     <View style={styles.accountItemLeft}>
                         <Icon type="font-awesome-5" containerStyle={styles.accountItemIcon} size={22} name="comment-dots" color="#a29da3"></Icon>
                         <Text style={styles.text}>Nhận xét của tôi</Text>
+                    </View>
+                    <Icon type="antdesign" name='right' size={10} color="#a29da3"></Icon>
+                </TouchableOpacity>
+            </View>
+            <View style={{
+                ...styles.section,
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                paddingHorizontal: 0,
+                paddingVertical: 0
+            }}>
+                <TouchableOpacity style={styles.accountItemCtn} onPress={navigateToLogin}>
+                    <View style={styles.accountItemLeft}>
+                        <Icon type="material-community" containerStyle={styles.accountItemIcon} size={22} name="qrcode-scan" color="#a29da3"></Icon>
+                        <Text style={styles.text}>Quét QR</Text>
                     </View>
                     <Icon type="antdesign" name='right' size={10} color="#a29da3"></Icon>
                 </TouchableOpacity>

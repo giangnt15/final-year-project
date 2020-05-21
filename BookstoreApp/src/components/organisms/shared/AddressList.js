@@ -23,7 +23,8 @@ function AddressList(props) {
     const { loading, data = { getUserAddresses: [] }, refetch } = useQuery(GET_USER_ADDRESSES, {
         onError() {
             showToast("Có lỗi xảy ra khi lấy địa chỉ");
-        }
+        },
+        fetchPolicy: 'cache-and-network'
     });
     const [overlayVisible, setOverlayVisible] = useState(false);
     const toggleOverlay = () => {

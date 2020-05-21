@@ -592,6 +592,41 @@ const Mutation = {
         }
         throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");
     },
+    async updatePaymentStatus(parent, { orderId, paymentStatus }, { prisma, httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const role = await getUserRole(userId, prisma);
+        if (role === "User") {
+            const orders = await prisma.query.orders({
+                where: {
+                    customer: {
+                        id: userId
+                    },
+                    id: orderId
+                }
+            });
+            if (orders.length === 0) {
+                throw new Error("Không tìm thấy đơn hàng.");
+            }
+            return prisma.mutation.updateOrder({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    paymentStatus
+                }
+            }, info);
+        } else if (role === "Admin") {
+            return prisma.mutation.updateOrder({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    paymentStatus
+                }
+            }, info);
+        }
+        throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");
+    },
     async updateOrderAddress(parent, { orderId, data }, { prisma, httpContext }, info) {
         const userId = getUserId(httpContext);
         const role = await getUserRole(userId, prisma);

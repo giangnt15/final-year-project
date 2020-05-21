@@ -97,6 +97,14 @@ export const UPDATE_ORDER_STATUS = gql`
     }
 `
 
+export const UPDATE_PAYMENT_STATUS = gql`
+    mutation updatePaymentStatus($orderId: ID!, $paymentStatus: Boolean!){
+        updatePaymentStatus(orderId: $orderId, paymentStatus: $paymentStatus){
+            id
+        }
+    }
+`
+
 export const UPDATE_ORDER_ADDRESS = gql`
     mutation updateOrderAddress($orderId: ID!, $data: OrderAddressUpdateInput!){
         updateOrderAddress(orderId: $orderId, data: $data){
