@@ -22,7 +22,7 @@ function ProductPage(props) {
   const qtyRef = useRef();
   const history = useHistory();
   const { id: bookId } = useParams()
-  const isAuthenticated = isTokenValid(auth.token);
+  const isAuthenticated = isTokenValid(localStorage.getItem('token'));
   const { loading, error, data = {} } = useQuery(GET_BOOK, {
     onError() {
       message.error('Có lỗi xảy ra, vui lòng thử tải lại trang.')
@@ -43,7 +43,7 @@ function ProductPage(props) {
       }
     }
   });
-  const { loading: gettingReviewSummary, data: reviewSummary = { getBookReviewsByBook: { bookReviews: [] } },refetch: refetchReviewSummary } = useQuery(GET_REVIEWS_BY_BOOK, {
+  const { loading: gettingReviewSummary, data: reviewSummary = { getBookReviewsByBook: { bookReviews: [] } }, refetch: refetchReviewSummary } = useQuery(GET_REVIEWS_BY_BOOK, {
     onError(err) {
       message.error("Có lỗi xảy ra khi lấy đánh giá");
     },
@@ -130,7 +130,7 @@ function ProductPage(props) {
                           {format === "PaperBack" ? "Bìa mềm" : format === "HardCover" ? "Bìa cứng" : ""}
                         </div>
                       </div>
-                      {reviewSummary.getBookReviewsByBook.totalCount>0&&<div className="product-reviews-summary d-flex">
+                      {reviewSummary.getBookReviewsByBook.totalCount > 0 && <div className="product-reviews-summary d-flex">
                         <Rate disabled value={avgScore} style={{ color: '#FF5501', fontSize: 16 }} />
                         <a onClick={() => onReadMoreClick('review')}>(Xem {reviewSummary.getBookReviewsByBook.totalCount} đánh giá)</a>
                       </div>}
@@ -167,11 +167,19 @@ function ProductPage(props) {
                             htmlType="submit" title="Add to Cart">THÊM VÀO GIỎ</Button>
                         </div>
                         <div className="product-addto-links clearfix">
-                          <a className="wishlist" onClick={() => addBookToWishList({
-                            variables: {
-                              bookId
+                          <a className="wishlist" onClick={() => {
+                            if (isAuthenticated) {
+                              addBookToWishList({
+                                variables: {
+                                  bookId
+                                }
+                              })
+                            } else {
+                              history.push('/auth/login', {
+                                from: history.location.pathname
+                              });
                             }
-                          })} />
+                          }} />
                         </div>
                       </div>
                       <div className="product_meta">
@@ -269,14 +277,15 @@ function ProductPage(props) {
                   {/* Start Single Tab Content */}
                   <div className="pro__tab_label tab-pane fade" id="nav-review" role="tabpanel">
                     <BookReviewSection isAuthenticated={isAuthenticated}
-                    refetchReviewSummary={refetchReviewSummary}
-                    getBookReviewsByBook={reviewSummary.getBookReviewsByBook}
+                      refetchReviewSummary={refetchReviewSummary}
+                      getBookReviewsByBook={reviewSummary.getBookReviewsByBook}
                       bookId={id} bookTitle={title} avgScore={avgScore} />
                   </div>
                   {/* End Single Tab Content */}
                 </div>
               </div>
-              <ProductSectionContainer slickSettings={{
+              {/* <ProductSectionContainer slickSettings={{
+                width: '100%',
                 slidesToShow: 4,
                 rows: 1,
                 dots: false, slidesToScroll: 2, autoplay: true
@@ -290,7 +299,7 @@ function ProductPage(props) {
                 skip: 0,
                 first: 20,
               }}>
-              </ProductSectionContainer>
+              </ProductSectionContainer> */}
               <ProductSectionContainer slickSettings={{
                 slidesToShow: 4,
                 rows: 1,
@@ -306,7 +315,6 @@ function ProductPage(props) {
                 first: 20,
               }}>
               </ProductSectionContainer>
-
             </div>
           </div>
         </div>

@@ -1,13 +1,16 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
 import { useMutation } from '@apollo/react-hooks';
 import { ADD_BOOK_TO_WISH_LIST } from '../../api/bookApi';
 import { message } from 'antd';
+import isTokenValid from '../../utils/tokenValidation';
 
 function ListProductItem(props) {
   const { id, thumbnail, basePrice, title } = props.book;
   const { width, thumbHeight } = props;
+  const tokenValid = isTokenValid(localStorage.getItem('token'));
+  const history = useHistory();
   const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
     onError() {
       message.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -46,11 +49,19 @@ function ListProductItem(props) {
         <ul className="cart__action d-flex">
           <li className="cart"><a href="cart.html">Add to cart</a></li>
           <li className="wishlist"
-            onClick={() => addBookToWishList({
-              variables: {
-                bookId: id
-              }
-            })}><a /></li>
+           onClick={() => {
+            if (tokenValid) {
+              addBookToWishList({
+                variables: {
+                  bookId: id
+                }
+              })
+            } else {
+              history.push('/auth/login', {
+                from: history.location.pathname
+              });
+            }
+          }}><a /></li>
         </ul>
       </div>
     </div>

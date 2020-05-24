@@ -8,7 +8,7 @@ import PriceFilter from '../filters/PriceFilter';
 import { NavLink } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BEST_SELLER, GET_BEST_SELLER_FOR_BROWSING } from '../../../api/bookApi';
-import { message, Empty } from 'antd';
+import { message, Empty, Skeleton } from 'antd';
 import moment from 'moment';
 
 const sortDirections = [
@@ -96,9 +96,21 @@ function BestSellerList(props) {
 
     const renderProducts = () => {
         const listWrapper = document.querySelector(".shop__list__wrapper");
-        if (listWrapper) {
-            listWrapper.scrollIntoView();
-        }
+        if (loading) {
+            return (<Fragment><div className="d-flex w-100 m-b-8">
+              <Skeleton active loading />
+              <Skeleton active loading />
+              <Skeleton active loading />
+              <Skeleton active loading />
+            </div>
+              <div className="d-flex w-100">
+                <Skeleton active loading />
+                <Skeleton active loading />
+                <Skeleton active loading />
+                <Skeleton active loading />
+              </div>
+            </Fragment>)
+          }
         if (data.getBestSellerForBrowsing.books.length) {
             return data.getBestSellerForBrowsing.books.map((book, index) => {
                 return (
@@ -112,9 +124,11 @@ function BestSellerList(props) {
 
     const renderProductsList = () => {
         const listWrapper = document.querySelector(".shop__list__wrapper");
-        if (listWrapper) {
-            listWrapper.scrollIntoView();
-        }
+        if (loading) {
+            return (<Fragment>
+              <Skeleton active loading />
+            </Fragment>)
+          }
         if (data.getBestSellerForBrowsing.books.length) {
 
             return data.getBestSellerForBrowsing.books.map((book, index) => {

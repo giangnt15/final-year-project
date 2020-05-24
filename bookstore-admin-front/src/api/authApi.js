@@ -56,6 +56,23 @@ export const UPDATE_USER_ADMIN = gql`
     }
 `
 
+export const CREATE_USER_ADMIN = gql`
+    mutation createUserAdmin($data: UserSignupInput!){
+        createUserAdmin(data: $data){
+            id
+            username
+            fullName
+            avatar
+            email
+            phone
+            gender
+            birthdate
+            password
+            role
+        }
+    }
+`
+
 export const CREATE_PASSWORD_TOKEN = gql`
     mutation createPasswordToken($email: String!){
         createPasswordToken(email: $email){

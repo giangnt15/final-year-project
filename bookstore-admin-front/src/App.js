@@ -41,6 +41,7 @@ import { DELETE_PUBLISHERS } from './api/publisherApi';
 import PublisherEdit from './components/publishers/PublisherEdit';
 import PublisherCreate from './components/publishers/PublisherCreate';
 import isTokenValid from './utils/tokenValidation';
+import CreateUser from './components/users/CreateUser';
 
 const ProductListWrapper = ListCommon(ProductList, 'title_DESC', "Sách", DELETE_BOOKS);
 const OrderListWrapper = ListCommon(OrderList, 'createdAt_DESC', "Đơn hàng", CREATE_ORDER);
@@ -84,11 +85,12 @@ function App() {
           <Route path="/sale/order/list" exact render={(props) => <PrivateRoute render={() => <OrderListWrapper {...props} showDelete={false} />} />} />
           <Route path="/users/users" exact render={(props) => <PrivateRoute render={() => <UserListWrapper
             showDelete={false}
-            onClickCreate={() => history.push('/users/user/create')} {...props} />} />} />
+            onClickCreate={() => history.push('/users/create')} {...props} />} />} />
           <Route path="/promotion/discounts" exact render={(props) => <PrivateRoute render={() => <DiscountListWrapper onClickCreate={() => history.push('/promotion/discount/create')} {...props} />} />} />
           <Route path="/promotion/discount/create" exact render={(props) => <PrivateRoute render={() => <DiscountCreate {...props} />} />} />
           <Route path="/promotion/discount/edit/:id" exact render={(props) => <PrivateRoute render={() => <DiscountEdit {...props} />} />} />
           <Route path="/users/edit/:id" exact render={(props) => <PrivateRoute render={() => <UserDetail {...props} />} />} />
+          <Route path="/users/create" exact render={(props) => <PrivateRoute render={() => <CreateUser {...props} />} />} />
           <Route path="/catalog/collection/create" exact render={(props) => <PrivateRoute render={() => <CollectionCreate {...props} />} />} />
           <Route path="/catalog/collection/edit/:id" exact render={(props) => <PrivateRoute render={() => <CollectionEdit {...props} />} />} />
           <Route path="/catalog/author/edit/:id" exact render={(props) => <PrivateRoute render={() => <AuthorEdit {...props} />} />} />

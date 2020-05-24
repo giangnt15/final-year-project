@@ -7,53 +7,23 @@ import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
 
 const Mutation = {
-    async signUp(parent, { data }, { prisma, env, sgMailer }, info) {
+    async createUserAdmin(parent, { data }, { prisma, env, sgMailer,httpContext }, info) {
+        const userId = getUserId(httpContext);
+        const role = await getUserRole(userId,prisma);
+        if (role!=="Admin"){
+            throw new Error("Unauthorize");
+        }
+
         const hashed = await bcrypt.hash(data.password, 10);
         const user = await prisma.mutation.createUser({
             data: {
                 ...data,
                 receiveEmailNotification: false,
-                isActive: false,
-                role: 'User',
+                isActive: data.isActive?true:false,
                 password: hashed
             }
         });
-        const token = uuidv4();
-        const authToken = await prisma.mutation.createAuthToken({
-            data: {
-                token,
-                expiredAfter: 86400000,
-                type: "ActivationToken",
-                user: {
-                    connect: {
-                        id: user.id
-                    }
-                }
-            }
-        });
-        try {
-            sgMailer.send({
-                from: {
-                    email: "noreply@bookstore.vn",
-                    name: "Bookstore"
-                },
-                to: data.email,
-                html: emailTemplate.accountActivation(`${env.CLIENT_HOST}/account-activation/${token}`),
-                subject: "[Bookstore] Kích hoạt tài khoản",
-            });
-        } catch (err) {
-            console.log(err);
-        }
-        return {
-            statusCode: 405,
-            message: "Tài khoản chưa được kích hoạt",
-            user,
-            // token: jwt.sign({
-            //     userId: user.id,
-            // }, env.JWT_SECRET, {
-            //     expiresIn: '2 days'
-            // })
-        }
+        return user;
     },
     async login(parent, { data }, { prisma, env }, info) {
         const { email, password } = data;

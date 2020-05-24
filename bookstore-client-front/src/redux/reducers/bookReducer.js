@@ -1,4 +1,4 @@
-import { GETTING_BOOKS, GET_BOOKS_SUCCESSFULLY } from "../../constants"
+import { GETTING_BOOKS, GET_BOOKS_SUCCESSFULLY, GET_BOOKS_FAILED } from "../../constants"
 
 let initialState = {
     books: [],
@@ -22,7 +22,7 @@ const bookReducer = (state = initialState, action) => {
                 books: action.books.books,
                 totalCount: action.books.totalCount
             }
-        case GET_BOOKS_SUCCESSFULLY:
+        case GET_BOOKS_FAILED:
             return {
                 ...state,
                 loading: false,

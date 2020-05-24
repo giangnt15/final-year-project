@@ -82,11 +82,11 @@ function SideMenu(props) {
                             <span className="icon-bar" />
                             <span className="icon-bar" />
                         </button>
-                        <h1><a className="navbar-brand" href="index.html"><span className="fa fa-area-chart" /> Glance<span className="dashboard_text">Design dashboard</span></a></h1>
+                        <h1><NavLink className="navbar-brand" to="/"><span className="fa fa-area-chart" /> Admin<span className="dashboard_text">Bookstore</span></NavLink></h1>
                     </div>
                     <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul className="sidebar-menu">
-                            <li className="header">MAIN NAVIGATION</li>
+                            <li className="header">MENU CHÍNH</li>
                             {navs.map((nav, index) => (<li key={index}
                                 onClick={(e) => {
                                     setNavs(prev => {

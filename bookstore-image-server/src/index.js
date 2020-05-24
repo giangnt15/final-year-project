@@ -1,5 +1,5 @@
 require('dotenv').config({
-    path: 'config/dev.env'
+    path: 'config/prod.env'
 });
 
 const express = require('express');

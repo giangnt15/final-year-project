@@ -267,6 +267,7 @@ enum UserEventType{
 
 enum UserRole{
     User
+    Staff
     Admin
 }
 

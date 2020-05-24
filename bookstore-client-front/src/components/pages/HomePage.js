@@ -8,7 +8,6 @@ function HomePage(props) {
         <Fragment>
             <SlickSlider settings={{ slidesToShow: 1, dots: false, arrows: true, slidesToScroll: 1, autoplay: true }}>
                 <MainSlider />
-                <MainSlider />
             </SlickSlider>
             <ProductSectionContainer isFullWidth slickSettings={{
                 slidesToShow: 5,

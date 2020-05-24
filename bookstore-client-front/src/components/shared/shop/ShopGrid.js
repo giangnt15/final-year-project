@@ -9,7 +9,7 @@ import { GET_AUTHORS } from '../../../api/authorApi';
 import { GET_PUBLISHERS } from '../../../api/publisherApi';
 import PriceFilter from '../filters/PriceFilter';
 import { NavLink } from 'react-router-dom';
-import { message, Empty } from 'antd';
+import { message, Empty, Skeleton } from 'antd';
 
 const sortDirections = [
   {
@@ -259,68 +259,68 @@ function ShopGrid(props) {
     if (filters.price) {
       if (filters.price.operator === 'gt') {
         where = {
-          categories_some: filters.category?{
+          categories_some: filters.category ? {
             id: filters.category
-          }:undefined,
-          authors_some: filters.author?{
+          } : undefined,
+          authors_some: filters.author ? {
             id: filters.author
-          }:undefined,
-          publisher: filters.publisher?{
+          } : undefined,
+          publisher: filters.publisher ? {
             id: filters.publisher
-          }:undefined,
+          } : undefined,
           basePrice_gt: filters.price.range[0],
         }
       } else if (filters.price.operator === 'lt') {
         where = {
-          categories_some: filters.category?{
+          categories_some: filters.category ? {
             id: filters.category
-          }:undefined,
-          authors_some: filters.author?{
+          } : undefined,
+          authors_some: filters.author ? {
             id: filters.author
-          }:undefined,
-          publisher: filters.publisher?{
+          } : undefined,
+          publisher: filters.publisher ? {
             id: filters.publisher
-          }:undefined,
+          } : undefined,
           basePrice_lt: filters.price.range[0],
         }
       } else if (filters.price.operator === 'between') {
         where = {
           AND: [{
-            categories_some: filters.category?{
+            categories_some: filters.category ? {
               id: filters.category
-            }:undefined,
-            authors_some: filters.author?{
+            } : undefined,
+            authors_some: filters.author ? {
               id: filters.author
-            }:undefined,
-            publisher: filters.publisher?{
+            } : undefined,
+            publisher: filters.publisher ? {
               id: filters.publisher
-            }:undefined,
+            } : undefined,
             basePrice_gt: filters.price.range[0],
           }, {
-            categories_some: filters.category?{
+            categories_some: filters.category ? {
               id: filters.category
-            }:undefined,
-            authors_some: filters.author?{
+            } : undefined,
+            authors_some: filters.author ? {
               id: filters.author
-            }:undefined,
-            publisher: filters.publisher?{
+            } : undefined,
+            publisher: filters.publisher ? {
               id: filters.publisher
-            }:undefined,
+            } : undefined,
             basePrice_lt: filters.price.range[1],
           }]
         }
       }
     } else {
       where = {
-        categories_some: filters.category?{
+        categories_some: filters.category ? {
           id: filters.category
-        }:undefined,
-        authors_some: filters.author?{
+        } : undefined,
+        authors_some: filters.author ? {
           id: filters.author
-        }:undefined,
-        publisher: filters.publisher?{
+        } : undefined,
+        publisher: filters.publisher ? {
           id: filters.publisher
-        }:undefined,
+        } : undefined,
         basePrice: filters.price,
       }
     }
@@ -340,6 +340,21 @@ function ShopGrid(props) {
 
   const renderProducts = () => {
     const listWrapper = document.querySelector(".shop__list__wrapper");
+    if (books.loading) {
+      return (<Fragment><div className="d-flex w-100 m-b-8">
+        <Skeleton active loading />
+        <Skeleton active loading />
+        <Skeleton active loading />
+        <Skeleton active loading />
+      </div>
+        <div className="d-flex w-100">
+          <Skeleton active loading />
+          <Skeleton active loading />
+          <Skeleton active loading />
+          <Skeleton active loading />
+        </div>
+      </Fragment>)
+    }
     // if (listWrapper) {
     //   listWrapper.scrollIntoView();
     // }
@@ -358,8 +373,8 @@ function ShopGrid(props) {
 
   const renderProductsList = () => {
     const listWrapper = document.querySelector(".shop__list__wrapper");
-    if (listWrapper) {
-      listWrapper.scrollIntoView();
+    if (books.loading) {
+      return <Skeleton active />
     }
     if (books && books.books && books.books.length) {
       return books.books.map((book, index) => {

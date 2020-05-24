@@ -12,12 +12,15 @@ import { ADD_BOOK_TO_WISH_LIST } from '../../api/bookApi';
 import NumberFormat from 'react-number-format';
 import _ from 'lodash';
 import { calculateDiscount } from '../../utils/common';
+import isTokenValid from '../../utils/tokenValidation';
 
 function ProductItem(props) {
-  const { id, thumbnail, basePrice, availableCopies,title, authors, description, reviews,
-    discounts = {discountedPrice: 0, discountRate: 0, discountAmount: 0} } = props.book;
-  const {discountedPrice, discountRate, discountAmount} = discounts;
+  const { id, thumbnail, basePrice, availableCopies, title, authors, description, reviews,
+    discounts = { discountedPrice: 0, discountRate: 0, discountAmount: 0 } } = props.book;
+  const { discountedPrice, discountRate, discountAmount } = discounts;
   const { width, thumbHeight, changeFilter, addSingleItemToCart, cart } = props;
+  const tokenValid = isTokenValid(localStorage.getItem('token'));
+  const history = useHistory();
   const [addBookToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
     onError() {
       message.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -30,7 +33,6 @@ function ProductItem(props) {
       }
     }
   });
-  const history = useHistory();
   const productDialog = (<div id="express-buy-dialog" className="express-buy-l" >
     <div className="loading" style={{}} />
     <div className="content" id={105165} ng-show="productItem">
@@ -47,7 +49,7 @@ function ProductItem(props) {
           }}>{item.pseudonym}</a>{index !== authors.length - 1 && ','} </Fragment>
         ))}
       </div>
-        {reviews.avgRating>0&&<Rate disabled style={{ fontSize: 13 }} allowHalf value={reviews.avgRating}></Rate>}
+      {reviews.avgRating > 0 && <Rate disabled style={{ fontSize: 13 }} allowHalf value={reviews.avgRating}></Rate>}
       <div className="des-view ng-binding">
         <div className="product__info__main">
           <div className="product__overview">
@@ -58,12 +60,12 @@ function ProductItem(props) {
       <div className="p-view">
         <span className="real-price ng-binding"><NumberFormat value={discountedPrice} displayType={'text'}
           suffix="đ" thousandSeparator={true} /></span> &nbsp;&nbsp;
-      {discountRate>0&&<span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
+      {discountRate > 0 && <span className="price ng-binding" ng-show="productItem.DiscountPercent>0">
           <NumberFormat value={basePrice} displayType={'text'}
             suffix="đ" thousandSeparator={true} /></span>}
         {discountRate > 0 && <div className="discount-percent" ng-show="productItem.DiscountPercent>0">
           <label> Giảm giá </label>
-          <span className="ng-binding"><NumberFormat suffix="%" thousandSeparator={true} value={discountRate*100} /> </span>
+          <span className="ng-binding"><NumberFormat suffix="%" thousandSeparator={true} value={discountRate * 100} /> </span>
         </div>}
         <div className="clearfix" />
       </div>
@@ -97,11 +99,19 @@ function ProductItem(props) {
       <form action="/BookBuy/AddToFavorite" data-ajax-begin="AddToFavBegin" data-ajax-success="AddToFavSuccess" data-ajax="true" method="post" className="ng-pristine ng-valid">
         <input type="hidden" name="productid" className="productid" defaultValue={105165} />
         <a className="btn btn-default btn-fav"
-          onClick={() => addBookToWishList({
-            variables: {
-              bookId: id
+          onClick={() => {
+            if (tokenValid) {
+              addBookToWishList({
+                variables: {
+                  bookId: id
+                }
+              })
+            } else {
+              history.push('/auth/login', {
+                from: history.location.pathname
+              });
             }
-          })}>
+          }}>
           <i className="fa fa-heart" />
           Thêm vào yêu thích
       </a>
@@ -116,26 +126,26 @@ function ProductItem(props) {
           <NavLink className="first__img" to={`/book/${id}`}><img src={thumbnail} alt="product image" /></NavLink>
           {/* <a className="second__img animation1" href="single-product.html"><img src={thumbnail} alt="product image" /></a> */}
           {discountRate > 0 && <div className="hot__box">
-            <span className="hot-label"><NumberFormat value={discountRate*100} displayType={'text'}
+            <span className="hot-label"><NumberFormat value={discountRate * 100} displayType={'text'}
               suffix="%" prefix="-" thousandSeparator={true} /></span>
           </div>}
         </div>
         <div className="product__content content--center">
           <h4><NavLink to={`/book/${id}`}>{title}</NavLink></h4>
-          {availableCopies>0&& <ul className="prize d-flex">
+          {availableCopies > 0 && <ul className="prize d-flex">
             <li><NumberFormat value={discountedPrice} displayType={'text'}
               suffix="đ" thousandSeparator={true} /></li>
-            {discountRate>0&&<li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
+            {discountRate > 0 && <li className="old_prize"><NumberFormat value={basePrice} displayType={'text'}
               suffix="đ" thousandSeparator={true} /></li>}
           </ul>}
           {
-            availableCopies<=0 && <ul className="prize d-flex">
-            <li>Hết hàng</li></ul>
+            availableCopies <= 0 && <ul className="prize d-flex">
+              <li>Hết hàng</li></ul>
           }
           <div className="action">
             <div className="actions_inner">
               <ul className="add_to_links">
-                <li><a className="cart" title="Thêm vào giỏ hàng" onClick={()=>  addSingleItemToCart(props.book, 1)}><i className="bi bi-shopping-cart-full" /></a></li>
+                <li><a className="cart" title="Thêm vào giỏ hàng" onClick={() => addSingleItemToCart(props.book, 1)}><i className="bi bi-shopping-cart-full" /></a></li>
                 <li><a className="wishlist" onClick={() => addBookToWishList({
                   variables: {
                     bookId: id

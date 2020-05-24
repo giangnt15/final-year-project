@@ -338,7 +338,7 @@ type GetCollectionsPayload{
 }
 
 type Mutation{
-    signUp(data: UserSignupInput!): AuthPayload!
+    createUserAdmin(data: UserSignupInput!): User!
     login(data: UserLoginInput!): AuthPayload!
     updateUser(data: CustomUserUpdateInput!): User!
     updateUserAdmin(id: ID!, data: CustomUserUpdateInputAdmin!): User!
@@ -606,6 +606,7 @@ input UserLoginInput{
 input UserSignupInput{
     username: String!
     password: String!
+    role: UserRole
     fullName: String
     email: String!
     phone: String
@@ -613,4 +614,5 @@ input UserSignupInput{
     avatar: String
     birthdate: String
     receiveEmailNotification: Boolean
+    isActive: Boolean
 }
