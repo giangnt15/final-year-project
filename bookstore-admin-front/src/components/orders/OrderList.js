@@ -33,6 +33,8 @@ function OrderList(props) {
             selection: `
                 {
                     id
+                    orderNumber
+                    subTotal
                     grandTotal
                     recipientFullName
                     recipientPhone
@@ -66,8 +68,8 @@ function OrderList(props) {
     const columns = [
         {
             title: 'Mã đơn hàng',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'orderNumber',
+            key: 'orderNumber',
         },
         {
             title: <div className="d-flex">
@@ -154,7 +156,7 @@ function OrderList(props) {
         return orders.map((item, index) => {
             return {
                 ...item,
-                id: <NavLink to={`/sale/order/edit/${item.id}`}>{item.id}</NavLink>,
+                orderNumber: <NavLink to={`/sale/order/edit/${item.id}`}>{item.orderNumber}</NavLink>,
                 key: item.id,
                 createdAt: moment(item.createdAt).format(DATE_TIME_VN_24H),
                 customer: <NavLink to={`/users/edit/${item.customer.id}`}>{item.customer.email}</NavLink>,

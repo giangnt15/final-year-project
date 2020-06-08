@@ -57,6 +57,7 @@ type Collection{
 
 type Order{
     id: ID! @id
+    orderNumber: String
     customer: User! @relation(name: "OrderToUser", onDelete: SET_NULL)
     recipientAddress: String!
     recipientProvince: Province! @relation(name: "ProvinceToOrder", onDelete: SET_NULL)
@@ -77,6 +78,15 @@ type Order{
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
     pickupQR: String
+    orderSteps: [OrderStep!]! @relation(name: "OrderStepToOrder", onDelete: CASCADE)
+}
+
+type OrderStep{
+    id: ID! @id
+    orderStatus: OrderStatus!
+    order: Order! @relation(name: "OrderStepToOrder", onDelete: SET_NULL)
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
 }
 
 type PaymentMethod{
@@ -274,6 +284,10 @@ enum UserRole{
 enum OrderStatus{
     Ordered
     Processing
+    GettingProduct
+    Packaged
+    HandOver
+    Shipping
     Completed
     Canceled
 }

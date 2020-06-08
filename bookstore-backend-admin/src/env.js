@@ -1,5 +1,5 @@
 require('dotenv').config({
-    path: 'config/prod.env'
+    path: 'config/dev.env'
 })
 
 const env = {

@@ -6,6 +6,14 @@ function getOrderStatusText(status) {
             return "Đặt hàng thành công"
         case "Processing":
             return "Đang xử lý"
+        case "GettingProduct":
+            return "Đang lấy hàng";
+        case "Packaged":
+            return "Đóng gói";
+        case "HandOver":
+            return "Bàn giao vận chuyển";
+        case "Shipping":
+            return "Đang vận chuyển"
         case "Completed":
             return "Giao hàng thành công"
         case "Canceled":

@@ -95,6 +95,11 @@ export const GET_ORDER_BY_ID = gql`
                 id
                 name
             }
+            orderSteps{
+                id
+                orderStatus
+                createdAt
+            }
             orderStatus
             paymentStatus
             createdAt

@@ -94,14 +94,14 @@ function OrderConfirmation(props) {
                 </View>
                 <View style={{ ...styles.section, display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.text}>Phí vận chuyển</Text>
-                    <NumberFormat value={0} suffix={`đ`}
+                    <NumberFormat value={shippingMethod.id==="FAST_DELIVERY"?16000:0} suffix={`đ`}
                         renderText={value => <Text>{value}</Text>}
                         displayType={'text'} thousandSeparator={true} />
                 </View>
                 <Divider style={styles.sectionDivider} />
                 <View style={{ ...styles.section, display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.text}>Thành tiền</Text>
-                    <NumberFormat value={cartSubTotal} suffix={`đ`}
+                    <NumberFormat value={cartSubTotal+(shippingMethod.id==="FAST_DELIVERY"?16000:0)} suffix={`đ`}
                         renderText={value => <Text style={styles.activePrice}>{value}</Text>}
                         displayType={'text'} thousandSeparator={true} />
                 </View>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc'
     },
     text: {
-        color: '#a1a1a1'
+        color: '#626063'
     },
     sectionHeader: {
         fontSize: 15,

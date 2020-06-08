@@ -8567,5 +8567,7 @@ h4.asd label {
 }
 /*--//responsive-design---*/
 
-
+.justify-content-between{
+  justify-content: space-between;
+}
 

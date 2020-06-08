@@ -13,6 +13,7 @@ export const GET_ORDERS = gql`
         getOrders(where: $where, orderBy: $orderBy, first: $first, skip: $skip, selection: $selection){
            orders{
                id
+               orderNumber
                items{
                    id
                    price
@@ -60,6 +61,7 @@ export const GET_ORDER_BY_ID = gql`
     query getOrderById($id: ID!){
         getOrderById(id: $id){
             id
+            orderNumber
             items{
                 id
                 price
@@ -94,6 +96,11 @@ export const GET_ORDER_BY_ID = gql`
             shippingMethod{
                 id
                 name
+            }
+            orderSteps{
+                id
+                orderStatus
+                createdAt
             }
             orderStatus
             paymentStatus

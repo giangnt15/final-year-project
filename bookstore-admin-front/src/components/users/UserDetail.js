@@ -88,6 +88,7 @@ function UserDetail(props) {
             selection: `
                 {
                     id
+                    orderNumber
                     grandTotal
                     recipientFullName
                     recipientPhone
@@ -261,8 +262,8 @@ function UserDetail(props) {
     const columnOrders = [
         {
             title: 'Mã đơn hàng',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'orderNumber',
+            key: 'orderNumber',
         },
         {
             title: <div className="d-flex">
@@ -325,7 +326,7 @@ function UserDetail(props) {
         return orders.map((item, index) => {
             return {
                 ...item,
-                id: <NavLink to={`/sale/order/edit/${item.id}`}>{item.id}</NavLink>,
+                orderNumber: <NavLink to={`/sale/order/edit/${item.id}`}>{item.orderNumber}</NavLink>,
                 key: item.id,
                 createdAt: moment(item.createdAt).format(DATE_TIME_VN_24H),
                 customer: <NavLink to={`/users/edit/${item.customer.id}`}>{item.customer.email}</NavLink>,
@@ -347,7 +348,7 @@ function UserDetail(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info m-r-12"></i>Thông tin người dùng</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info m-r-12"></i><b>Thông tin người dùng</b></span>} key="1" showArrow={false}>
                         {loading ? <Skeleton active /> :
                             <Row gutter={16}>
                                 <form className="d-flex flex-column p-r-8 p-l-8"
@@ -397,7 +398,7 @@ function UserDetail(props) {
                                 </form>
                             </Row>}
                     </Panel>
-                    <Panel header={<span><i className="fa fa-address-book m-r-12"></i>Sổ địa chỉ</span>} key="2" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-address-book m-r-12"></i><b>Sổ địa chỉ</b></span>} key="2" showArrow={false}>
                         {loading ? <Skeleton active /> : <Fragment>
                             <Button type="primary" onClick={() => { setEdittingAddress({
                                         fullName: '',
@@ -423,13 +424,13 @@ function UserDetail(props) {
                                 dataSource={createDataSourceAddresses(dataGettingAddresses.getUserAddressesAdmin.addresses)} />
                         </Fragment>}
                     </Panel>
-                    <Panel header={<span><i className="fa fa-shopping-cart m-r-12"></i>Đơn hàng</span>} key="3" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-shopping-cart m-r-12"></i><b>Đơn hàng</b></span>} key="3" showArrow={false}>
                         <Table columns={columnOrders} loading={gettingOrders}
                             rowSelection={false}
                             scroll={{ x: 1200 }}
                             bordered={true}
                             pagination={{
-                                pageSize: rowsPerPage,
+                                pageSize: rowsPerPage.orders,
                                 pageSizeOptions: ['10', '20', '50', '100'],
                                 showTotal: (total) =>
                                     `Hiển thị ${(currentPage.orders - 1) * rowsPerPage.orders + 1} - ${currentPage.orders * rowsPerPage.orders <= dataOrders.getOrders.totalCount ? currentPage.orders * rowsPerPage.orders : dataOrders.getOrders.totalCount} trên ${dataOrders.getOrders.totalCount} kết quả`,

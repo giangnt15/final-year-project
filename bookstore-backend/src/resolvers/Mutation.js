@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import getUserId from '../utils/getUserId';
 import checkAdmin, { getUserRole } from '../utils/adminAuth';
-import { calculateDiscount } from '../utils/common';
+import { calculateDiscount, generateOrderNumber } from '../utils/common';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import emailTemplate from '../sendgrid/emailTemplate';
@@ -446,18 +446,21 @@ const Mutation = {
                 })
             }
         }
-        let grandTotal = subTotal;
+        let grandTotal = subTotal + (data.shippingMethod==="FAST_DELIVERY"?16000:0);
         const shippingAddress = await prisma.query.userAddress({
             where: {
                 id: data.shippingAddress
             }
         }, `{id fullName phone address ward{id} district{id} province{id}}`);
-        console.log(shippingAddress)
+        console.log(shippingAddress);
+        const count = await prisma.query.booksConnection(undefined, `{aggregate {count}}`);
+        
         const order = await prisma.mutation.createOrder({
             data: {
                 items: {
                     create: orderItemsInOrder
                 },
+                orderNumber: generateOrderNumber(count.aggregate.count),
                 orderStatus: "Ordered",
                 paymentStatus: false,
                 shippingMethod: {
@@ -493,11 +496,17 @@ const Mutation = {
                         id: userId
                     }
                 },
+                orderSteps: {
+                    create: [{
+                        orderStatus: 'Ordered'
+                    }]
+                },
                 grandTotal,
                 subTotal
             }
         },`{
             id
+            orderNumber
             items{
                 id
                 price
@@ -571,7 +580,7 @@ const Mutation = {
                             QRCode: bodyObj.url,
                             createdAt: moment(order.createdAt).format("DD-MM-YYYY"),
                             logo: 'http://18.191.134.82/images/logo/logo.png',
-                            orderId: order.id,
+                            orderId: order.orderNumber,
                             recipientName: order.customer.fullName?order.customer.fullName:order.customer.email,
                             userEmail: order.customer.email,
                             paid: order.paymentStatus?order.grandTotal:0,
@@ -643,7 +652,12 @@ const Mutation = {
                     id: orderId,
                 },
                 data: {
-                    orderStatus
+                    orderStatus,
+                    orderSteps: {
+                        create: [{
+                            orderStatus
+                        }]
+                    }
                 }
             }, info);
         } else if (role === "Admin") {
@@ -652,8 +666,13 @@ const Mutation = {
                     id: orderId,
                 },
                 data: {
-                    orderStatus
-                }
+                    orderStatus,
+                    orderSteps: {
+                        create: [{
+                            orderStatus
+                        }]
+                    }
+                },
             }, info);
         }
         throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");

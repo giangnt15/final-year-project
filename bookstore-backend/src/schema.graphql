@@ -61,6 +61,7 @@ type Collection{
 
 type Order{
     id: ID!
+    orderNumber: String
     customer: User!
     recipientAddress: String!
     recipientProvince: Province!
@@ -80,6 +81,15 @@ type Order{
     createdAt: String!
     updatedAt: String!
     pickupQR: String
+    orderSteps: [OrderStep!]! 
+}
+
+type OrderStep{
+    id: ID!
+    orderStatus: OrderStatus!
+    order: Order! 
+    createdAt: String! 
+    updatedAt: String! 
 }
 
 type PaymentMethod{
@@ -244,7 +254,12 @@ enum UserRole{
 
 enum OrderStatus{
     Ordered
+    Recieved
     Processing
+    GettingProduct
+    Packaged
+    HandOver
+    Shipping
     Completed
     Canceled
 }

@@ -37,6 +37,7 @@ import CheckoutScreen from './src/screens/CheckoutScreen';
 import BestSellerScreen from './src/screens/BestSellerScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import ScanScreen from './src/screens/ScanScreen';
+import OrderStatusScreen from './src/screens/OrderStatusScreen';
 
 const composeEnhancers = composeWithDevTools({
   // Specify here name, actionsBlacklist, actionsCreators and other options
@@ -144,13 +145,16 @@ export default function App() {
             <Stack.Screen name="OrderDetailScreen" options={{
               headerShown: false,
             }} component={OrderDetailScreen} />
+            <Stack.Screen name="OrderStatusScreen" options={{
+              headerShown: false,
+            }} component={OrderStatusScreen} />
             <Stack.Screen name="CheckoutScreen" options={{
               headerShown: false,
             }} component={CheckoutScreen} />
             <Stack.Screen name="ForgotPasswordScreen" options={{
               headerShown: false,
             }} component={ForgotPasswordScreen} />
-             <Stack.Screen name="ScanScreen" options={{
+            <Stack.Screen name="ScanScreen" options={{
               headerShown: false,
             }} component={ScanScreen} />
           </Stack.Navigator>

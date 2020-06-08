@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     commonText: {
-        color: '#a1a1a1'
+        color: '#626063'
     }
 })
 

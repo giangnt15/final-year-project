@@ -237,7 +237,7 @@ function DiscountEdit(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info m-r-12"></i>Thông tin giảm giá</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info m-r-12"></i><b>Thông tin giảm giá</b></span>} key="1" showArrow={false}>
                         <div className="">
                             <div className="m-b-8" >
                                 <label style={{ minWidth: 200 }}>
@@ -265,7 +265,7 @@ function DiscountEdit(props) {
                             </div>
                         </div>
                     </Panel>
-                    <Panel header={<span><i className="fa fa-book m-r-12"></i>Áp dụng cho các sách</span>} key="2" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-book m-r-12"></i><b>Áp dụng cho các sách</b></span>} key="2" showArrow={false}>
                         <Fragment><div className="actions">
                             <Button type="primary" onClick={() => setDrawerActive(true)}><span><PlusOutlined /> Thêm sách</span></Button>
                             <Button disabled={selectedRowKeys.length === 0}

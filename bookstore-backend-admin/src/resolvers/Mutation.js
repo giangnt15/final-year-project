@@ -547,7 +547,12 @@ const Mutation = {
                     id: orderId,
                 },
                 data: {
-                    orderStatus
+                    orderStatus,
+                    orderSteps: {
+                        create: [{
+                            orderStatus
+                        }]
+                    }
                 }
             }, info);
         } else if (role === "Admin") {
@@ -556,8 +561,13 @@ const Mutation = {
                     id: orderId,
                 },
                 data: {
-                    orderStatus
-                }
+                    orderStatus,
+                    orderSteps: {
+                        create: [{
+                            orderStatus
+                        }]
+                    }
+                },
             }, info);
         }
         throw new Error("Không tìm thấy đơn hàng hoặc bạn không có quyền.");

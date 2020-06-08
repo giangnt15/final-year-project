@@ -6,6 +6,9 @@ import { useSelector } from 'react-redux';
 const shippingMethods = [{
     id: 'STD_DELIVERY',
     name: 'Giao hàng tiêu chuẩn'
+},{
+        id: 'FAST_DELIVERY',
+        name: 'Giao hàng nhanh trong 4h'
 }]
 
 function CheckoutShippingMethod(props) {

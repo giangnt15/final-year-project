@@ -66,7 +66,7 @@ function CollectionCreate(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info m-r-12"></i>Thông tin thể loại</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info m-r-12"></i><b>Thông tin thể loại</b></span>} key="1" showArrow={false}>
                         <div className="d-grid grid-columns-2">
                             <div className="p-r-8">
                                 <Form.Item
@@ -116,7 +116,7 @@ function CollectionCreate(props) {
                             </Form.Item>
                         </div>
                     </Panel>
-                    <Panel header={<span><i className="fa fa-book m-r-12"></i>Sách</span>} key="2" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-book m-r-12"></i><b>Sách</b></span>} key="2" showArrow={false}>
                         Bạn cần tạo tuyển tập trước khi truy cập chức năng này
                         {/* {isCreating ? "Bạn cần tạo thể loại trước khi truy cập chức năng này" :
                             <Fragment><div className="actions">

@@ -1,17 +1,49 @@
 import moment from 'moment';
 
-function getOrderStatusText(status){
-    switch(status){
-        case "Ordered": 
+function getOrderStatusText(status) {
+    switch (status) {
+        case "Ordered":
             return "Đặt hàng thành công"
-        case "Processing": 
+        case "Processing":
             return "Đang xử lý"
-        case "Completed": 
+        case "GettingProduct":
+            return "Đang lấy hàng";
+        case "Packaged":
+            return "Đóng gói";
+        case "HandOver":
+            return "Bàn giao vận chuyển";
+        case "Shipping":
+            return "Đang vận chuyển"
+        case "Completed":
             return "Giao hàng thành công"
-        case "Canceled": 
+        case "Canceled":
             return "Đã hủy"
         default: return "Đặt hàng thành công"
     }
+}
+
+function generateOrderNumber(count){
+    let orderNumber = ""
+    if (count<10){
+        orderNumber = "00000000" + count
+    }else if (count >=10&&count<100){
+        orderNumber = "0000000" + count
+    }else if (count >=100&&count<1000){
+        orderNumber = "000000" + count
+    }else if (count >=1000&&count<10000){
+        orderNumber = "00000" + count
+    }else if (count >=10000&&count<100000){
+        orderNumber = "0000" + count
+    }else if (count >=100000&&count<1000000){
+        orderNumber = "000" + count
+    }else if (count >=1000000&&count<10000000){
+        orderNumber = "00" + count
+    }else if (count >=10000000&&count<100000000){
+        orderNumber = "0" + count
+    }else if (count >=100000000&&count<1000000000){
+        orderNumber = ""+ count;
+    }
+    return orderNumber;
 }
 
 function calculateDiscount(basePrice, discounts){
@@ -36,4 +68,4 @@ function calculateDiscount(basePrice, discounts){
     discountRate = discountAmount/basePrice;
     return [discountedPrice, discountRate, discountAmount];
 }
-export {getOrderStatusText,calculateDiscount};
+export {getOrderStatusText,calculateDiscount,generateOrderNumber};

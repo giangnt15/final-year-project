@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     percentageText: {
         fontSize: 11,
-        color: '#a1a1a1',
+        color: '#626063',
     },
     bar: {
         height: 7,
@@ -78,7 +78,7 @@ function RatingSummary(props) {
                         readonly startingValue={isNaN(avgRating) && !avgRating ? 0 : avgRating}
                         ratingBackgroundColor="#ccc"
                         imageSize={13} ratingCount={5} />
-                    <Text style={{ color: '#a1a1a1', fontSize: 11, textAlign: 'center' }}>{Intl.NumberFormat().format(bookReviews.getBookReviewsByBook.totalCount)} đánh giá</Text>
+                    <Text style={{ color: '#626063', fontSize: 11, textAlign: 'center' }}>{Intl.NumberFormat().format(bookReviews.getBookReviewsByBook.totalCount)} đánh giá</Text>
                 </>}
             </View>
             <View style={styles.starPercentageRowCtn}>

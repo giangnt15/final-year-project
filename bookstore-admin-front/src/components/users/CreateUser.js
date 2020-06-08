@@ -100,7 +100,7 @@ function CreateUser(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info m-r-12"></i>Thông tin người dùng</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info m-r-12"></i><b>Thông tin người dùng</b></span>} key="1" showArrow={false}>
                         <Row gutter={16}>
                             <form className="d-flex flex-column p-r-8 p-l-8"
                                 noValidate autoComplete="off">
@@ -148,12 +148,6 @@ function CreateUser(props) {
                                 </Fragment>
                             </form>
                         </Row>
-                    </Panel>
-                    <Panel header={<span><i className="fa fa-address-book m-r-12"></i>Sổ địa chỉ</span>} key="2" showArrow={false}>
-                        Bạn cần tạo người dùng để sử dụng chức năng này
-                    </Panel>
-                    <Panel header={<span><i className="fa fa-shopping-cart m-r-12"></i>Đơn hàng</span>} key="3" showArrow={false}>
-                        Bạn cần tạo người dùng để sử dụng chức năng này
                     </Panel>
                 </Collapse>
             </div>

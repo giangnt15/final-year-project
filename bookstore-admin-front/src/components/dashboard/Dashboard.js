@@ -267,7 +267,7 @@ function Dashboard(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-area-chart m-r-12"></i>Thống kê chung</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-area-chart m-r-12"></i><b>Thống kê chung</b></span>} key="1" showArrow={false}>
                         {loadingCommonStatistics ?
                             <Skeleton active /> :
                             <Row gutter={16}>
@@ -295,7 +295,7 @@ function Dashboard(props) {
                                 </Col>
                             </Row>}
                     </Panel>
-                    <Panel header={<span><i className="fa fa-line-chart m-r-12"></i>Đơn hàng và doanh thu</span>} key="2" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-line-chart m-r-12"></i><b>Đơn hàng và doanh thu</b></span>} key="2" showArrow={false}>
                         <div>
                             <label>Hiển thị dữ liệu cho: </label> &nbsp;
                             <Select style={{ width: 150 }} value={timeRange} onChange={(val) => setTimeRange(val)}>
@@ -362,7 +362,7 @@ function Dashboard(props) {
 
                         </LineChart>
                     </Panel>
-                    <Panel header={<span><i className="fa fa-users m-r-12"></i>Khách hàng</span>} key="4" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-users m-r-12"></i><b>Khách hàng</b></span>} key="4" showArrow={false}>
                         <div>
                             <label>Hiển thị dữ liệu cho: </label> &nbsp;
                             <Select style={{ width: 150 }} value={timeRangeUsers} onChange={(val) => setTimeRangeUsers(val)}>
@@ -409,7 +409,7 @@ function Dashboard(props) {
                         }} data={dataUsersChart}>
                         </LineChart>
                     </Panel>
-                    <Panel header={<span><i className="fa fa-star m-r-12"></i>Sách bán chạy</span>} key="3" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-star m-r-12"></i><b>Sách bán chạy</b></span>} key="3" showArrow={false}>
                         <BestSellerListWrapper standAlone={true}/>
                     </Panel>
                 </Collapse>

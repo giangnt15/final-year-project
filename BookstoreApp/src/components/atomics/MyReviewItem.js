@@ -21,7 +21,7 @@ function MyReviewItem(props) {
                         readonly startingValue={rating} />
                     <Text style={{ fontWeight: '700', fontSize: 16, maxWidth: width-100 }}>{reviewHeader}</Text>
                 </View>
-                <Text style={{ color: '#a1a1a1', marginTop: 4,maxWidth: width-100 }}>
+                <Text style={{ color: '#626063', marginTop: 4,maxWidth: width-100 }}>
                     {reviewText}
                 </Text>
             </View>

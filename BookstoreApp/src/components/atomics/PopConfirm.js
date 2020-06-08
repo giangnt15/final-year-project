@@ -18,7 +18,7 @@ function PopConfirm({ isVisible, onBackdropPress, title, text, onConfirm, onCanc
          onBackdropPress={onBackdropPress}>
             {loading ? <ActivityIndicator animating /> :
                 <><RNText h4 h4Style={{ fontSize: 20,marginBottom: 8 }}>{title}</RNText>
-                    <Text style={{ color: '#a1a1a1' ,marginBottom: 16}}>{text}</Text>
+                    <Text style={{ color: '#626063' ,marginBottom: 16}}>{text}</Text>
                     <View style={{ display: 'flex', 
                     flexDirection: 'row',
                     alignItems: 'center',

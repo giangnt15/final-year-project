@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import { Collapse, Button, Form, Input, message, Drawer, Select, Table, Row, Col, Skeleton, Card } from 'antd';
+import { Collapse, Button, Form, Input, message, Drawer, Select, Table, Row, Col, Skeleton, Card, Steps } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useHistory, NavLink, useParams } from 'react-router-dom';
@@ -12,9 +12,29 @@ import { DATE_TIME_VN_24H } from '../../constants';
 import { getOrderStatusText } from '../../utils/common';
 import { GET_WARDS, GET_DISTRICTS, GET_PROVINCES } from '../../api/userAddressApi';
 import TextArea from 'antd/lib/input/TextArea';
+import './order-step.css';
 
+function getStepOrder(orderStatus) {
+    switch (orderStatus) {
+        case "Ordered":
+            return 0;
+        case "Processing":
+            return 1;
+        case "GettingProduct":
+            return 2;
+        case "Packaged":
+            return 3;
+        case "HandOver":
+            return 4;
+        case "Shipping":
+            return 5;
+        case "Completed":
+            return 6;
+    }
+}
 const { Panel } = Collapse;
 const { Option } = Select;
+const { Step } = Steps;
 
 function OrderDetail(props) {
 
@@ -30,7 +50,8 @@ function OrderDetail(props) {
         recipientProvince: '',
         recipientFullName: '',
         recipientPhone: '',
-        recipientAddress: ''
+        recipientAddress: '',
+        orderSteps: []
     });
 
     const [edittingAddress, setEdittingAddress] = useState(false);
@@ -80,7 +101,8 @@ function OrderDetail(props) {
                         recipientProvince: getOrderById.recipientProvince.id,
                         recipientFullName: getOrderById.recipientFullName,
                         recipientPhone: getOrderById.recipientPhone,
-                        recipientAddress: getOrderById.recipientAddress
+                        recipientAddress: getOrderById.recipientAddress,
+                        orderSteps: getOrderById.orderSteps
                     });
                 }
             },
@@ -237,27 +259,27 @@ function OrderDetail(props) {
             refetch();
             setEdittingPaymentStatus(false);
         }
-    })
+    });
 
     return (
         <div className="content-wrapper">
             <div className={`content-header m-b-20`}>
                 {loading ? <Skeleton active /> : <Fragment>
-                    <h3>Chi tiết đơn hàng - {data.getOrderById.id}</h3>
+                    <h3>Chi tiết đơn hàng - {data.getOrderById.orderNumber}</h3>
                     {/* <div className="pull-right">
                     <Button type="primary"><SaveOutlined className="m-l-2" /> Lưu</Button>
                 </div> */}
                 </Fragment>}
             </div>
             <div className="content-body">
-                <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info m-r-12"></i>Thông tin đơn hàng</span>} key="1" showArrow={false}>
+                <Collapse bordered defaultActiveKey={['1']}>
+                    <Panel header={<span><i className="fa fa-info m-r-12"></i><b>Thông tin đơn hàng</b></span>} key="1" showArrow={false}>
                         {loading ? <Skeleton active /> :
                             <Row gutter={16}>
                                 <Col span={12}>
                                     <div>
                                         <label>Mã đơn hàng: &nbsp;</label>
-                                        <div className="m-l-16">{data.getOrderById.id}</div>
+                                        <div className="m-l-16">{data.getOrderById.orderNumber}</div>
                                     </div>
                                     <div>
                                         <label>Ngày tạo: &nbsp;</label>
@@ -277,6 +299,10 @@ function OrderDetail(props) {
                                                 value={orderUpdateInfo.orderStatus}>
                                                 <Option value="Ordered">Đặt hàng thành công</Option>
                                                 <Option value="Processing">Đang xử lý</Option>
+                                                <Option value="GettingProduct">Đang lấy hàng</Option>
+                                                <Option value="Packaged">Đóng gói</Option>
+                                                <Option value="HandOver">Bàn giao vận chuyển</Option>
+                                                <Option value="Shipping">Đang vận chuyển</Option>
                                                 <Option value="Completed">Giao hàng thành công</Option>
                                                 <Option value="Canceled">Đã hủy</Option>
                                             </Select>}
@@ -317,7 +343,7 @@ function OrderDetail(props) {
                                     <div>
                                         <label>Trạng thái thanh toán: &nbsp;</label>
                                         <div className="m-l-16">
-                                        {edittingPaymentStatus && <Select style={{ minWidth: 200 }} name="paymentStatus"
+                                            {edittingPaymentStatus && <Select style={{ minWidth: 200 }} name="paymentStatus"
                                                 onChange={(val) => setOrderUpdateInfo(prev => ({ ...prev, paymentStatus: val }))}
                                                 value={orderUpdateInfo.paymentStatus}>
                                                 <Option value={false}>Chưa thanh toán</Option>
@@ -334,7 +360,7 @@ function OrderDetail(props) {
                                                             }
                                                         })
                                                     }}  ><SaveOutlined />&nbsp; Lưu</Button>}
-                                                <Button onClick={() => setEdittingPaymentStatus(prev=>!prev)}
+                                                <Button onClick={() => setEdittingPaymentStatus(prev => !prev)}
                                                     type="ghost">{edittingPaymentStatus ? "Hủy" : "Sửa"}</Button>
                                             </div>
                                         </div>
@@ -343,7 +369,36 @@ function OrderDetail(props) {
                             </Row>}
 
                     </Panel>
-                    <Panel header={<span><i className="fa fa-truck m-r-12"></i>Giao hàng</span>} key="2" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-file-text m-r-12"></i><b>Chi tiết trạng thái đơn hàng</b></span>} key="2" showArrow={false}>
+                        <div className="d-flex flex-column" >
+                            <div className=" p-l-20 p-r-20" style={{ flex: 1 }}>
+                                <div>Trạng thái hiện tại: <b>{getOrderStatusText(orderUpdateInfo.orderStatus)}</b></div>
+                                <br />
+                                <Steps size="small" direction="horizontal" className="order-status-steps" progressDot current={getStepOrder(orderUpdateInfo.orderStatus)}>
+                                    <Step description="Đặt hàng thành công" />
+                                    <Step description="Đang xử lý" />
+                                    <Step description="Đang lấy hàng" />
+                                    <Step description="Đóng gói" />
+                                    <Step description="Bàn giao vận chuyển" />
+                                    <Step description="Đang vận chuyển" />
+                                    <Step description="Giao hàng thành công" />
+                                </Steps>
+                            </div>
+                            <hr />
+                            <div className="p-l-20">
+                                <div style={{width: 500}}>
+                                    <h5>Chi tiết trạng thái</h5>
+                                    {orderUpdateInfo.orderSteps.map((item, index) => (<div key={item.id}>
+                                        <div className="d-flex justify-content-between wrap" style={{ maxWidth: 500 }}>
+                                            <p>{moment(item.createdAt).format("HH:mm DD/MM/YYYY")}</p>
+                                            <p><b>{getOrderStatusText(item.orderStatus)}</b></p>
+                                        </div>
+                                    </div>))}
+                                </div>
+                            </div>
+                        </div>
+                    </Panel>
+                    <Panel header={<span><i className="fa fa-truck m-r-12"></i><b>Giao hàng</b></span>} key="3" showArrow={false}>
                         {loading ? <Skeleton active /> : <Row gutter={16}>
                             <Col span={12}>
                                 <div className="card" >
@@ -438,7 +493,7 @@ function OrderDetail(props) {
                             </Col>
                         </Row>}
                     </Panel>
-                    <Panel header={<span><i className="fa fa-book m-r-12"></i>Sách</span>} key="3" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-book m-r-12"></i><b>Sách</b></span>} key="4" showArrow={false}>
                         {loading ? <Skeleton active /> : <Table columns={columns}
                             loading={loading}
                             pagination={false}

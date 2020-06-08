@@ -62,7 +62,7 @@ function OrderDetail(props) {
     }
     console.log(data)
     const order = data.getOrderById ? data.getOrderById : {};
-    const {  recipientDistrict: district= {}, recipientWard: ward = {}, recipientProvince: province = {} ,
+    const {  recipientDistrict: district= {}, recipientWard: ward = {},orderNumber, recipientProvince: province = {} ,
         recipientAddress: address, recipientPhone: phone, recipientFullName: fullName,
         shippingMethod = {}, paymentMethod = {}, orderStatus, id, createdAt,
         items = [{ item: {} }], grandTotal, subTotal } = order;
@@ -83,9 +83,10 @@ function OrderDetail(props) {
     }
     return (
         <div style={{ flex: 2, padding: '0 0 0 0' }}>
-            <h5 style={{ fontWeight: 300 }}>Chi tiết đơn hàng {id} - <b>{getOrderStatusText(orderStatus)}</b></h5>
+            <h5 style={{ fontWeight: 300 }}>Chi tiết đơn hàng #{orderNumber} - <b>{getOrderStatusText(orderStatus)}</b></h5>
             <p className="fs-12"><i>Ngày đặt hàng: {moment(createdAt).format(DATE_TIME_VN_24H)}</i></p>
-            <br />
+            <NavLink to={`/auth/account/order/tracking/${id}`}><Button style={{marginTop: 6, marginBottom: 36}} type="primary"> Theo dõi đơn hàng</Button></NavLink>
+
             <div className="row">
                 <div className="col-12 col-md-4">
                     <div className="card" style={{ height: "100%" }}>
@@ -137,7 +138,7 @@ function OrderDetail(props) {
                     </div>
                     <div className="d-flex w-100 m-b-8" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                         <p>Phí vận chuyển</p>
-                        <NumberFormat value={0} displayType={'text'}
+                        <NumberFormat value={shippingMethod.id==="FAST_DELIVERY"?16000:0} displayType={'text'}
                             suffix="đ" thousandSeparator={true} />
                     </div>
                     <div className="d-flex w-100 m-b-8" style={{ justifyContent: 'space-between', alignItems: 'center' }}>

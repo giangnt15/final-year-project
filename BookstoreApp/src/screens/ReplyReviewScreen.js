@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     createdAt: {
-        color: "#a1a1a1",
+        color: "#626063",
         fontSize: 13
     },
     reviewText: {

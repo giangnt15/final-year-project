@@ -17,7 +17,6 @@ function OrderDetailScreen(props) {
     const route = useRoute();
     const navigation = useNavigation();
     const { id,canRefetch } = route.params;
-
     const { loading, data = { getOrderById: {} }, refetch } = useQuery(GET_ORDER_BY_ID, {
         onError() {
             showToast("Có lỗi xảy ra khi lấy dữ liệu");
@@ -48,7 +47,7 @@ function OrderDetailScreen(props) {
         }
     },[navigation]));
 
-    const { createdAt, orderStatus, grandTotal, subTotal, recipientFullName,
+    const { createdAt, orderStatus, grandTotal, subTotal, recipientFullName, orderSteps,
         recipientPhone, recipientWard = {}, recipientDistrict = {},
         recipientProvince = {}, recipientAddress, items = [], paymentMethod = {}, shippingMethod = {} } = data.getOrderById;
     const fullAddress = `${recipientAddress}, ${recipientWard.name}, ${recipientDistrict.name}, ${recipientProvince.name}`;
@@ -67,6 +66,9 @@ function OrderDetailScreen(props) {
                     <Text style={styles.fs15}>Mã đơn hàng: {id}</Text>
                     <Text style={styles.text}>Ngày đặt hàng: {moment(createdAt).format(DATE_TIME_VN_24H)}</Text>
                     <Text style={styles.text}>Trạng thái: {getOrderStatusText(orderStatus)}</Text>
+                    {orderStatus!=="Canceled" &&<Button containerStyle={styles.buttonOrderStatus} title="Theo dõi đơn hàng" onPress={()=>navigation.navigate("OrderStatusScreen", {
+                        id
+                    })}></Button>}
                 </View>
                 <Divider style={styles.sectionDivider} />
                 <View style={styles.section}>
@@ -121,7 +123,7 @@ function OrderDetailScreen(props) {
                     </View>
                     <View style={{ ...styles.section, display: "flex", flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.text}>Phí vận chuyển</Text>
-                        <NumberFormat value={0} suffix={`đ`}
+                        <NumberFormat value={shippingMethod.id==="FAST_DELIVERY"?16000:0} suffix={`đ`}
                             renderText={value => <Text>{value}</Text>}
                             displayType={'text'} thousandSeparator={true} />
                     </View>
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc'
     },
     text: {
-        color: '#a1a1a1'
+        color: '#626063'
     },
     sectionHeader: {
         fontSize: 15,
@@ -225,6 +227,11 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderColor: '#ccc',
         borderTopWidth: 1
+    },
+    buttonOrderStatus: {
+        width: '50%',
+        marginTop: 12,
+        alignSelf: 'center'
     }
 })
 

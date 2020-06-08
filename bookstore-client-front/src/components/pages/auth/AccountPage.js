@@ -14,6 +14,7 @@ import OrderDetail from '../orders/OrderDetail';
 import UserAddressList from '../../userAddress/UserAddressList';
 import UserBookReviewList from '../../reivews/UserBookReviewList';
 import UserWishList from '../../products/UserWishList';
+import OrderStatus from '../orders/OrderStatus';
 
 const { TabPane } = Tabs;
 
@@ -92,6 +93,7 @@ function AccountPage(props) {
                         <Switch>
                             <Route path="/auth/account/orders/history" exact render={() => <PrivateRoute render={() => <OrderList />} />}></Route>
                             <Route path="/auth/account/order/:orderId" exact render={() => <PrivateRoute render={() => <OrderDetail />} />}></Route>
+                            <Route path="/auth/account/order/tracking/:orderId" exact render={() => <PrivateRoute render={() => <OrderStatus />} />}></Route>
                             <Route path="/auth/account/address" exact render={() => <PrivateRoute render={() => <UserAddressList />} />}></Route>
                             <Route path="/auth/account/review" exact render={() => <PrivateRoute render={() => <UserBookReviewList />} />}></Route>
                             <Route path="/auth/account/wish-list" exact render={() => <PrivateRoute render={() => <UserWishList />} />}></Route>

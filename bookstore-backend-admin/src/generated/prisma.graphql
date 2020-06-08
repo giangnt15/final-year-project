@@ -1,5 +1,5 @@
 # source: http://localhost:4466/bookstore/dev
-# timestamp: Thu May 21 2020 10:03:24 GMT+0700 (Indochina Time)
+# timestamp: Sun Jun 07 2020 18:31:00 GMT+0700 (Indochina Time)
 
 type AggregateAuthor {
   count: Int!
@@ -42,6 +42,10 @@ type AggregateOrder {
 }
 
 type AggregateOrderItem {
+  count: Int!
+}
+
+type AggregateOrderStep {
   count: Int!
 }
 
@@ -6244,6 +6248,7 @@ type Mutation {
   createAuthToken(data: AuthTokenCreateInput!): AuthToken!
   createCollection(data: CollectionCreateInput!): Collection!
   createOrder(data: OrderCreateInput!): Order!
+  createOrderStep(data: OrderStepCreateInput!): OrderStep!
   createOrderItem(data: OrderItemCreateInput!): OrderItem!
   createUserEvent(data: UserEventCreateInput!): UserEvent!
   createUserAddress(data: UserAddressCreateInput!): UserAddress!
@@ -6263,6 +6268,7 @@ type Mutation {
   updateAuthToken(data: AuthTokenUpdateInput!, where: AuthTokenWhereUniqueInput!): AuthToken
   updateCollection(data: CollectionUpdateInput!, where: CollectionWhereUniqueInput!): Collection
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
+  updateOrderStep(data: OrderStepUpdateInput!, where: OrderStepWhereUniqueInput!): OrderStep
   updateOrderItem(data: OrderItemUpdateInput!, where: OrderItemWhereUniqueInput!): OrderItem
   updateUserEvent(data: UserEventUpdateInput!, where: UserEventWhereUniqueInput!): UserEvent
   updateUserAddress(data: UserAddressUpdateInput!, where: UserAddressWhereUniqueInput!): UserAddress
@@ -6282,6 +6288,7 @@ type Mutation {
   deleteAuthToken(where: AuthTokenWhereUniqueInput!): AuthToken
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteOrder(where: OrderWhereUniqueInput!): Order
+  deleteOrderStep(where: OrderStepWhereUniqueInput!): OrderStep
   deleteOrderItem(where: OrderItemWhereUniqueInput!): OrderItem
   deleteUserEvent(where: UserEventWhereUniqueInput!): UserEvent
   deleteUserAddress(where: UserAddressWhereUniqueInput!): UserAddress
@@ -6301,6 +6308,7 @@ type Mutation {
   upsertAuthToken(where: AuthTokenWhereUniqueInput!, create: AuthTokenCreateInput!, update: AuthTokenUpdateInput!): AuthToken!
   upsertCollection(where: CollectionWhereUniqueInput!, create: CollectionCreateInput!, update: CollectionUpdateInput!): Collection!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
+  upsertOrderStep(where: OrderStepWhereUniqueInput!, create: OrderStepCreateInput!, update: OrderStepUpdateInput!): OrderStep!
   upsertOrderItem(where: OrderItemWhereUniqueInput!, create: OrderItemCreateInput!, update: OrderItemUpdateInput!): OrderItem!
   upsertUserEvent(where: UserEventWhereUniqueInput!, create: UserEventCreateInput!, update: UserEventUpdateInput!): UserEvent!
   upsertUserAddress(where: UserAddressWhereUniqueInput!, create: UserAddressCreateInput!, update: UserAddressUpdateInput!): UserAddress!
@@ -6320,6 +6328,7 @@ type Mutation {
   updateManyAuthTokens(data: AuthTokenUpdateManyMutationInput!, where: AuthTokenWhereInput): BatchPayload!
   updateManyCollections(data: CollectionUpdateManyMutationInput!, where: CollectionWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
+  updateManyOrderSteps(data: OrderStepUpdateManyMutationInput!, where: OrderStepWhereInput): BatchPayload!
   updateManyOrderItems(data: OrderItemUpdateManyMutationInput!, where: OrderItemWhereInput): BatchPayload!
   updateManyUserEvents(data: UserEventUpdateManyMutationInput!, where: UserEventWhereInput): BatchPayload!
   updateManyUserAddresses(data: UserAddressUpdateManyMutationInput!, where: UserAddressWhereInput): BatchPayload!
@@ -6339,6 +6348,7 @@ type Mutation {
   deleteManyAuthTokens(where: AuthTokenWhereInput): BatchPayload!
   deleteManyCollections(where: CollectionWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
+  deleteManyOrderSteps(where: OrderStepWhereInput): BatchPayload!
   deleteManyOrderItems(where: OrderItemWhereInput): BatchPayload!
   deleteManyUserEvents(where: UserEventWhereInput): BatchPayload!
   deleteManyUserAddresses(where: UserAddressWhereInput): BatchPayload!
@@ -6372,6 +6382,7 @@ interface Node {
 
 type Order implements Node {
   id: ID!
+  orderNumber: String
   customer: User!
   recipientAddress: String!
   recipientProvince: Province!
@@ -6392,6 +6403,7 @@ type Order implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   pickupQR: String
+  orderSteps(where: OrderStepWhereInput, orderBy: OrderStepOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderStep!]
 }
 
 """A connection to a list of items."""
@@ -6406,6 +6418,7 @@ type OrderConnection {
 
 input OrderCreateInput {
   id: ID
+  orderNumber: String
   recipientAddress: String!
   recipientPhone: String!
   recipientFullName: String!
@@ -6424,6 +6437,7 @@ input OrderCreateInput {
   paymentMethod: PaymentMethodCreateOneInput!
   shippingMethod: ShippingMethodCreateOneInput!
   items: OrderItemCreateManyWithoutOrderInput
+  orderSteps: OrderStepCreateManyWithoutOrderInput
 }
 
 input OrderCreateManyWithoutCustomerInput {
@@ -6436,8 +6450,14 @@ input OrderCreateOneWithoutItemsInput {
   connect: OrderWhereUniqueInput
 }
 
+input OrderCreateOneWithoutOrderStepsInput {
+  create: OrderCreateWithoutOrderStepsInput
+  connect: OrderWhereUniqueInput
+}
+
 input OrderCreateWithoutCustomerInput {
   id: ID
+  orderNumber: String
   recipientAddress: String!
   recipientPhone: String!
   recipientFullName: String!
@@ -6455,10 +6475,12 @@ input OrderCreateWithoutCustomerInput {
   paymentMethod: PaymentMethodCreateOneInput!
   shippingMethod: ShippingMethodCreateOneInput!
   items: OrderItemCreateManyWithoutOrderInput
+  orderSteps: OrderStepCreateManyWithoutOrderInput
 }
 
 input OrderCreateWithoutItemsInput {
   id: ID
+  orderNumber: String
   recipientAddress: String!
   recipientPhone: String!
   recipientFullName: String!
@@ -6476,6 +6498,30 @@ input OrderCreateWithoutItemsInput {
   recipientWard: WardCreateOneInput!
   paymentMethod: PaymentMethodCreateOneInput!
   shippingMethod: ShippingMethodCreateOneInput!
+  orderSteps: OrderStepCreateManyWithoutOrderInput
+}
+
+input OrderCreateWithoutOrderStepsInput {
+  id: ID
+  orderNumber: String
+  recipientAddress: String!
+  recipientPhone: String!
+  recipientFullName: String!
+  orderStatus: OrderStatus!
+  paymentStatus: Boolean!
+  discount: Float
+  subTotal: Float!
+  grandTotal: Float!
+  receivedDate: DateTime
+  beginDeliveryDate: DateTime
+  pickupQR: String
+  customer: UserCreateOneWithoutOrdersInput!
+  recipientProvince: ProvinceCreateOneInput!
+  recipientDistrict: DistrictCreateOneInput!
+  recipientWard: WardCreateOneInput!
+  paymentMethod: PaymentMethodCreateOneInput!
+  shippingMethod: ShippingMethodCreateOneInput!
+  items: OrderItemCreateManyWithoutOrderInput
 }
 
 """An edge in a connection."""
@@ -7094,6 +7140,8 @@ input OrderItemWhereUniqueInput {
 enum OrderOrderByInput {
   id_ASC
   id_DESC
+  orderNumber_ASC
+  orderNumber_DESC
   recipientAddress_ASC
   recipientAddress_DESC
   recipientPhone_ASC
@@ -7124,6 +7172,7 @@ enum OrderOrderByInput {
 
 type OrderPreviousValues {
   id: ID!
+  orderNumber: String
   recipientAddress: String!
   recipientPhone: String!
   recipientFullName: String!
@@ -7188,6 +7237,46 @@ input OrderScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  orderNumber: String
+
+  """All values that are not equal to given value."""
+  orderNumber_not: String
+
+  """All values that are contained in given list."""
+  orderNumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  orderNumber_not_in: [String!]
+
+  """All values less than the given value."""
+  orderNumber_lt: String
+
+  """All values less than or equal the given value."""
+  orderNumber_lte: String
+
+  """All values greater than the given value."""
+  orderNumber_gt: String
+
+  """All values greater than or equal the given value."""
+  orderNumber_gte: String
+
+  """All values containing the given string."""
+  orderNumber_contains: String
+
+  """All values not containing the given string."""
+  orderNumber_not_contains: String
+
+  """All values starting with the given string."""
+  orderNumber_starts_with: String
+
+  """All values not starting with the given string."""
+  orderNumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  orderNumber_ends_with: String
+
+  """All values not ending with the given string."""
+  orderNumber_not_ends_with: String
   recipientAddress: String
 
   """All values that are not equal to given value."""
@@ -7521,8 +7610,370 @@ input OrderScalarWhereInput {
 enum OrderStatus {
   Ordered
   Processing
+  GettingProduct
+  Packaged
+  HandOver
+  Shipping
   Completed
   Canceled
+}
+
+type OrderStep implements Node {
+  id: ID!
+  orderStatus: OrderStatus!
+  order: Order!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type OrderStepConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [OrderStepEdge]!
+  aggregate: AggregateOrderStep!
+}
+
+input OrderStepCreateInput {
+  id: ID
+  orderStatus: OrderStatus!
+  order: OrderCreateOneWithoutOrderStepsInput!
+}
+
+input OrderStepCreateManyWithoutOrderInput {
+  create: [OrderStepCreateWithoutOrderInput!]
+  connect: [OrderStepWhereUniqueInput!]
+}
+
+input OrderStepCreateWithoutOrderInput {
+  id: ID
+  orderStatus: OrderStatus!
+}
+
+"""An edge in a connection."""
+type OrderStepEdge {
+  """The item at the end of the edge."""
+  node: OrderStep!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum OrderStepOrderByInput {
+  id_ASC
+  id_DESC
+  orderStatus_ASC
+  orderStatus_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type OrderStepPreviousValues {
+  id: ID!
+  orderStatus: OrderStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input OrderStepScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OrderStepScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OrderStepScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OrderStepScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  orderStatus: OrderStatus
+
+  """All values that are not equal to given value."""
+  orderStatus_not: OrderStatus
+
+  """All values that are contained in given list."""
+  orderStatus_in: [OrderStatus!]
+
+  """All values that are not contained in given list."""
+  orderStatus_not_in: [OrderStatus!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type OrderStepSubscriptionPayload {
+  mutation: MutationType!
+  node: OrderStep
+  updatedFields: [String!]
+  previousValues: OrderStepPreviousValues
+}
+
+input OrderStepSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OrderStepSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OrderStepSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OrderStepSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: OrderStepWhereInput
+}
+
+input OrderStepUpdateInput {
+  orderStatus: OrderStatus
+  order: OrderUpdateOneRequiredWithoutOrderStepsInput
+}
+
+input OrderStepUpdateManyDataInput {
+  orderStatus: OrderStatus
+}
+
+input OrderStepUpdateManyMutationInput {
+  orderStatus: OrderStatus
+}
+
+input OrderStepUpdateManyWithoutOrderInput {
+  create: [OrderStepCreateWithoutOrderInput!]
+  connect: [OrderStepWhereUniqueInput!]
+  set: [OrderStepWhereUniqueInput!]
+  disconnect: [OrderStepWhereUniqueInput!]
+  delete: [OrderStepWhereUniqueInput!]
+  update: [OrderStepUpdateWithWhereUniqueWithoutOrderInput!]
+  updateMany: [OrderStepUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderStepScalarWhereInput!]
+  upsert: [OrderStepUpsertWithWhereUniqueWithoutOrderInput!]
+}
+
+input OrderStepUpdateManyWithWhereNestedInput {
+  where: OrderStepScalarWhereInput!
+  data: OrderStepUpdateManyDataInput!
+}
+
+input OrderStepUpdateWithoutOrderDataInput {
+  orderStatus: OrderStatus
+}
+
+input OrderStepUpdateWithWhereUniqueWithoutOrderInput {
+  where: OrderStepWhereUniqueInput!
+  data: OrderStepUpdateWithoutOrderDataInput!
+}
+
+input OrderStepUpsertWithWhereUniqueWithoutOrderInput {
+  where: OrderStepWhereUniqueInput!
+  update: OrderStepUpdateWithoutOrderDataInput!
+  create: OrderStepCreateWithoutOrderInput!
+}
+
+input OrderStepWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OrderStepWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OrderStepWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OrderStepWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  orderStatus: OrderStatus
+
+  """All values that are not equal to given value."""
+  orderStatus_not: OrderStatus
+
+  """All values that are contained in given list."""
+  orderStatus_in: [OrderStatus!]
+
+  """All values that are not contained in given list."""
+  orderStatus_not_in: [OrderStatus!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  order: OrderWhereInput
+}
+
+input OrderStepWhereUniqueInput {
+  id: ID
 }
 
 type OrderSubscriptionPayload {
@@ -7563,6 +8014,7 @@ input OrderSubscriptionWhereInput {
 }
 
 input OrderUpdateInput {
+  orderNumber: String
   recipientAddress: String
   recipientPhone: String
   recipientFullName: String
@@ -7581,9 +8033,11 @@ input OrderUpdateInput {
   paymentMethod: PaymentMethodUpdateOneRequiredInput
   shippingMethod: ShippingMethodUpdateOneRequiredInput
   items: OrderItemUpdateManyWithoutOrderInput
+  orderSteps: OrderStepUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateManyDataInput {
+  orderNumber: String
   recipientAddress: String
   recipientPhone: String
   recipientFullName: String
@@ -7598,6 +8052,7 @@ input OrderUpdateManyDataInput {
 }
 
 input OrderUpdateManyMutationInput {
+  orderNumber: String
   recipientAddress: String
   recipientPhone: String
   recipientFullName: String
@@ -7635,7 +8090,15 @@ input OrderUpdateOneRequiredWithoutItemsInput {
   upsert: OrderUpsertWithoutItemsInput
 }
 
+input OrderUpdateOneRequiredWithoutOrderStepsInput {
+  create: OrderCreateWithoutOrderStepsInput
+  connect: OrderWhereUniqueInput
+  update: OrderUpdateWithoutOrderStepsDataInput
+  upsert: OrderUpsertWithoutOrderStepsInput
+}
+
 input OrderUpdateWithoutCustomerDataInput {
+  orderNumber: String
   recipientAddress: String
   recipientPhone: String
   recipientFullName: String
@@ -7653,9 +8116,11 @@ input OrderUpdateWithoutCustomerDataInput {
   paymentMethod: PaymentMethodUpdateOneRequiredInput
   shippingMethod: ShippingMethodUpdateOneRequiredInput
   items: OrderItemUpdateManyWithoutOrderInput
+  orderSteps: OrderStepUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithoutItemsDataInput {
+  orderNumber: String
   recipientAddress: String
   recipientPhone: String
   recipientFullName: String
@@ -7673,6 +8138,29 @@ input OrderUpdateWithoutItemsDataInput {
   recipientWard: WardUpdateOneRequiredInput
   paymentMethod: PaymentMethodUpdateOneRequiredInput
   shippingMethod: ShippingMethodUpdateOneRequiredInput
+  orderSteps: OrderStepUpdateManyWithoutOrderInput
+}
+
+input OrderUpdateWithoutOrderStepsDataInput {
+  orderNumber: String
+  recipientAddress: String
+  recipientPhone: String
+  recipientFullName: String
+  orderStatus: OrderStatus
+  paymentStatus: Boolean
+  discount: Float
+  subTotal: Float
+  grandTotal: Float
+  receivedDate: DateTime
+  beginDeliveryDate: DateTime
+  pickupQR: String
+  customer: UserUpdateOneRequiredWithoutOrdersInput
+  recipientProvince: ProvinceUpdateOneRequiredInput
+  recipientDistrict: DistrictUpdateOneRequiredInput
+  recipientWard: WardUpdateOneRequiredInput
+  paymentMethod: PaymentMethodUpdateOneRequiredInput
+  shippingMethod: ShippingMethodUpdateOneRequiredInput
+  items: OrderItemUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithWhereUniqueWithoutCustomerInput {
@@ -7683,6 +8171,11 @@ input OrderUpdateWithWhereUniqueWithoutCustomerInput {
 input OrderUpsertWithoutItemsInput {
   update: OrderUpdateWithoutItemsDataInput!
   create: OrderCreateWithoutItemsInput!
+}
+
+input OrderUpsertWithoutOrderStepsInput {
+  update: OrderUpdateWithoutOrderStepsDataInput!
+  create: OrderCreateWithoutOrderStepsInput!
 }
 
 input OrderUpsertWithWhereUniqueWithoutCustomerInput {
@@ -7740,6 +8233,46 @@ input OrderWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  orderNumber: String
+
+  """All values that are not equal to given value."""
+  orderNumber_not: String
+
+  """All values that are contained in given list."""
+  orderNumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  orderNumber_not_in: [String!]
+
+  """All values less than the given value."""
+  orderNumber_lt: String
+
+  """All values less than or equal the given value."""
+  orderNumber_lte: String
+
+  """All values greater than the given value."""
+  orderNumber_gt: String
+
+  """All values greater than or equal the given value."""
+  orderNumber_gte: String
+
+  """All values containing the given string."""
+  orderNumber_contains: String
+
+  """All values not containing the given string."""
+  orderNumber_not_contains: String
+
+  """All values starting with the given string."""
+  orderNumber_starts_with: String
+
+  """All values not starting with the given string."""
+  orderNumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  orderNumber_ends_with: String
+
+  """All values not ending with the given string."""
+  orderNumber_not_ends_with: String
   recipientAddress: String
 
   """All values that are not equal to given value."""
@@ -8077,6 +8610,9 @@ input OrderWhereInput {
   items_every: OrderItemWhereInput
   items_some: OrderItemWhereInput
   items_none: OrderItemWhereInput
+  orderSteps_every: OrderStepWhereInput
+  orderSteps_some: OrderStepWhereInput
+  orderSteps_none: OrderStepWhereInput
 }
 
 input OrderWhereUniqueInput {
@@ -8975,6 +9511,7 @@ type Query {
   authTokens(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthToken]!
   collections(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Collection]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
+  orderSteps(where: OrderStepWhereInput, orderBy: OrderStepOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderStep]!
   orderItems(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderItem]!
   userEvents(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserEvent]!
   userAddresses(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserAddress]!
@@ -8994,6 +9531,7 @@ type Query {
   authToken(where: AuthTokenWhereUniqueInput!): AuthToken
   collection(where: CollectionWhereUniqueInput!): Collection
   order(where: OrderWhereUniqueInput!): Order
+  orderStep(where: OrderStepWhereUniqueInput!): OrderStep
   orderItem(where: OrderItemWhereUniqueInput!): OrderItem
   userEvent(where: UserEventWhereUniqueInput!): UserEvent
   userAddress(where: UserAddressWhereUniqueInput!): UserAddress
@@ -9013,6 +9551,7 @@ type Query {
   authTokensConnection(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthTokenConnection!
   collectionsConnection(where: CollectionWhereInput, orderBy: CollectionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CollectionConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
+  orderStepsConnection(where: OrderStepWhereInput, orderBy: OrderStepOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderStepConnection!
   orderItemsConnection(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderItemConnection!
   userEventsConnection(where: UserEventWhereInput, orderBy: UserEventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserEventConnection!
   userAddressesConnection(where: UserAddressWhereInput, orderBy: UserAddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserAddressConnection!
@@ -9295,6 +9834,7 @@ type Subscription {
   authToken(where: AuthTokenSubscriptionWhereInput): AuthTokenSubscriptionPayload
   collection(where: CollectionSubscriptionWhereInput): CollectionSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
+  orderStep(where: OrderStepSubscriptionWhereInput): OrderStepSubscriptionPayload
   orderItem(where: OrderItemSubscriptionWhereInput): OrderItemSubscriptionPayload
   userEvent(where: UserEventSubscriptionWhereInput): UserEventSubscriptionPayload
   userAddress(where: UserAddressSubscriptionWhereInput): UserAddressSubscriptionPayload
@@ -10627,6 +11167,7 @@ type UserPreviousValues {
 
 enum UserRole {
   User
+  Staff
   Admin
 }
 

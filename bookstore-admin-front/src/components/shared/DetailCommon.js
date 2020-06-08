@@ -21,16 +21,16 @@ function DetailCommon(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;Thông tin sách</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;<b>Thông tin sách</b></span>} key="1" showArrow={false}>
 
                     </Panel>
-                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;Giá</span>} key="2" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;<b>Giá</b></span>} key="2" showArrow={false}>
 
                     </Panel>
-                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;Kho hàng</span>} key="3" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;<b>Kho hàng</b></span>} key="3" showArrow={false}>
 
                     </Panel>
-                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;Ảnh</span>} showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info"></i>&nbsp;<b>Ảnh</b></span>} showArrow={false}>
 
                     </Panel>
                 </Collapse>

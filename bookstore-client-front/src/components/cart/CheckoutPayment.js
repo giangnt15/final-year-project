@@ -53,8 +53,9 @@ function CheckoutPayment(props) {
                         <h5 className="m-b-12">1. Chọn hình thức giao hàng</h5>
                         <div className="card">
                             <div className="card-body">
-                                <RadioGroup value={shippingMethod}>
+                                <RadioGroup onChange={(e)=>{setOrderInfo(prev=>({...prev,shippingMethod: e.target.value}))}} value={shippingMethod}>
                                     <Radio value="STD_DELIVERY">Giao hàng tiêu chuẩn</Radio>
+                                    <Radio value="FAST_DELIVERY">Giao hàng nhanh trong 4h (Phí vận chuyển 16,000VNĐ)</Radio>
                                 </RadioGroup>
                             </div>
                         </div>
@@ -125,7 +126,7 @@ function CheckoutPayment(props) {
                                     justifyContent: 'space-between',
                                 }}>
                                     <p className="fs-11">Phí vận chuyển</p>
-                                    <NumberFormat value={0} displayType={'text'}
+                                    <NumberFormat value={shippingMethod==="FAST_DELIVERY"?16000:0} displayType={'text'}
                                         suffix="đ" thousandSeparator={true} />
                                 </div>
                             </div>
@@ -135,7 +136,7 @@ function CheckoutPayment(props) {
                                     alignItems: 'center'
                                 }}>
                                     <h6 className="fs-11">Thành tiền: </h6>
-                                    <NumberFormat style={{ fontSize: 19, color: 'red', fontWeight: 600 }} value={cartSubTotal} displayType={'text'}
+                                    <NumberFormat style={{ fontSize: 19, color: 'red', fontWeight: 600 }} value={cartSubTotal+(shippingMethod==="FAST_DELIVERY"?16000:0)} displayType={'text'}
                                         suffix="đ" thousandSeparator={true} />
                                 </div>
                                 <div className="d-flex fs-12" style={{

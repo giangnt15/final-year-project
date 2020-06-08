@@ -67,7 +67,7 @@ function DiscountCreate(props) {
             </div>
             <div className="content-body">
                 <Collapse defaultActiveKey={['1']}>
-                    <Panel header={<span><i className="fa fa-info m-r-12"></i>Thông tin giảm giá</span>} key="1" showArrow={false}>
+                    <Panel header={<span><i className="fa fa-info m-r-12"></i><b>Thông tin giảm giá</b></span>} key="1" showArrow={false}>
                         <div className="">
                             <div className="m-b-8" >
                                 <label style={{ minWidth: 200 }}>
@@ -94,9 +94,6 @@ function DiscountCreate(props) {
                                     onChange={(val) => setInputs(prev => ({ ...prev, from: val[0], to: val[1] }))} />
                             </div>
                         </div>
-                    </Panel>
-                    <Panel header={<span><i className="fa fa-book m-r-12"></i>Áp dụng cho các sách</span>} key="2" showArrow={false}>
-                        Bạn cần tạo tuyển tập trước khi truy cập chức năng này
                     </Panel>
                 </Collapse>
             </div>

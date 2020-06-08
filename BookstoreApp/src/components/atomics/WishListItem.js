@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     oldPrice: {
-        color: '#a1a1a1',
+        color: '#626063',
         textDecorationLine: 'line-through'
     }
 });

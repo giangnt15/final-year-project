@@ -11,9 +11,8 @@ import { NavLink } from 'react-router-dom';
 const columns = [
     {
         title: <b>Mã đơn hàng</b>,
-        dataIndex: 'id',
-        key: 'id',
-        render: text => <NavLink to={`/auth/account/order/${text}`}>{text}</NavLink>,
+        dataIndex: 'orderNumber',
+        key: 'orderNumber',
     },
     {
         title: <b>Ngày đặt hàng</b>,
@@ -57,6 +56,7 @@ function OrderList(props) {
                 orderBy: 'createdAt_DESC',
                 selection: `{
                     id
+                    orderNumber
                     items{
                         id
                         price
@@ -104,7 +104,7 @@ function OrderList(props) {
         return orders.map(item => {
             return {
                 key: item.id,
-                id: item.id,
+                orderNumber: <NavLink className="text-primary" to={`/auth/account/order/${item.id}`}>{item.orderNumber}</NavLink>,
                 orderStatus: getOrderStatusText(item.orderStatus),
                 createdAt: moment(item.createdAt).format(DATE_VN),
                 grandTotal: <NumberFormat value={item.grandTotal} displayType={'text'}
