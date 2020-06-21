@@ -82,7 +82,7 @@ function App() {
           <Route path="/catalog/book/edit/:id" exact render={(props) => <PrivateRoute render={() => <ProductDetail isCreating={false} {...props} />} />} />
           <Route path="/catalog/category/create" exact render={(props) => <PrivateRoute render={() => <CategoryDetail isCreating {...props} />} />} />
           <Route path="/catalog/category/edit/:id" exact render={(props) => <PrivateRoute render={() => <CategoryDetail isCreating={false} {...props} />} />} />
-          <Route path="/sale/order/list" exact render={(props) => <PrivateRoute render={() => <OrderListWrapper {...props} showDelete={false} />} />} />
+          <Route path="/sale/order/list" exact render={(props) => <PrivateRoute render={() => <OrderListWrapper {...props} showCreate={false} showDelete={false} />} />} />
           <Route path="/users/users" exact render={(props) => <PrivateRoute render={() => <UserListWrapper
             showDelete={false}
             onClickCreate={() => history.push('/users/create')} {...props} />} />} />

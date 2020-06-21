@@ -12,7 +12,7 @@ function ListCommon(Component, defaultOrderBy, listName, deleteManyApi) {
 
     return function ListCommonWrapper(props) {
 
-        const { onClickCreate, showDelete = true, standAlone } = props;
+        const { onClickCreate, showDelete = true, showCreate=true,standAlone } = props;
 
         const location = useLocation();
 
@@ -194,7 +194,7 @@ function ListCommon(Component, defaultOrderBy, listName, deleteManyApi) {
                     <div className={`content-header m-b-20${isScrolled ? ' sticky' : ''}`}>
                         <h3>{listName}</h3>
                         <div className="pull-right">
-                            <Button type="primary" onClick={onClickCreate} ><PlusOutlined /> Thêm mới</Button>
+                            {showCreate&&<Button type="primary" onClick={onClickCreate} ><PlusOutlined /> Thêm mới</Button>}
                             {showDelete && <Button disabled={selectedRowKeys.length === 0}
                                 loading={deletingMany}
                                 onClick={() => deleteMany({

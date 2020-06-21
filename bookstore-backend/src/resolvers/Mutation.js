@@ -460,7 +460,7 @@ const Mutation = {
                 items: {
                     create: orderItemsInOrder
                 },
-                orderNumber: generateOrderNumber(count.aggregate.count),
+                orderNumber: generateOrderNumber(count.aggregate.count+1),
                 orderStatus: "Ordered",
                 paymentStatus: false,
                 shippingMethod: {

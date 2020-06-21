@@ -4,8 +4,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4001',
-  // uri: 'http://18.191.134.82:30307',
+  // uri: 'http://localhost:4001',
+  uri: 'http://18.191.134.82:30307',
 
 });
 
