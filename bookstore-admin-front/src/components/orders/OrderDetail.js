@@ -340,7 +340,7 @@ function OrderDetail(props) {
                                             {data.getOrderById.paymentMethod.name}
                                         </div>
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         <label>Trạng thái thanh toán: &nbsp;</label>
                                         <div className="m-l-16">
                                             {edittingPaymentStatus && <Select style={{ minWidth: 200 }} name="paymentStatus"
@@ -364,7 +364,7 @@ function OrderDetail(props) {
                                                     type="ghost">{edittingPaymentStatus ? "Hủy" : "Sửa"}</Button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </Col>
                             </Row>}
 

@@ -47,7 +47,7 @@ function OrderDetailScreen(props) {
         }
     },[navigation]));
 
-    const { createdAt, orderStatus, grandTotal, subTotal, recipientFullName, orderSteps,
+    const { createdAt,orderNumber, orderStatus, grandTotal, subTotal, recipientFullName, orderSteps,
         recipientPhone, recipientWard = {}, recipientDistrict = {},
         recipientProvince = {}, recipientAddress, items = [], paymentMethod = {}, shippingMethod = {} } = data.getOrderById;
     const fullAddress = `${recipientAddress}, ${recipientWard.name}, ${recipientDistrict.name}, ${recipientProvince.name}`;
@@ -63,7 +63,7 @@ function OrderDetailScreen(props) {
             <HeaderBackAction title="Chi tiết đơn hàng" />
             <ScrollView>
                 <View style={styles.section}>
-                    <Text style={styles.fs15}>Mã đơn hàng: {id}</Text>
+                    <Text style={styles.fs15}>Mã đơn hàng: {orderNumber}</Text>
                     <Text style={styles.text}>Ngày đặt hàng: {moment(createdAt).format(DATE_TIME_VN_24H)}</Text>
                     <Text style={styles.text}>Trạng thái: {getOrderStatusText(orderStatus)}</Text>
                     {orderStatus!=="Canceled" &&<Button containerStyle={styles.buttonOrderStatus} title="Theo dõi đơn hàng" onPress={()=>navigation.navigate("OrderStatusScreen", {

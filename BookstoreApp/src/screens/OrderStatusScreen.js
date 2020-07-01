@@ -76,8 +76,8 @@ function OrderStatusScreen(props) {
                         <View style={{ marginRight: 8 }}>
                             <Text style={styles.statusText}>{moment(createdAt).format("DD/MM")}</Text>
                         </View>
-                        <View style={{ width: 10, height: 210, backgroundColor: '#ddd', borderRadius: 15, overflow: "hidden" }}>
-                            <View style={{ width: '100%', height: position * 19.4 + (position - 1) * 12.2, backgroundColor: '#59A238', borderRadius: 15 }}></View>
+                        <View style={{ width: 10, height: 222.5, backgroundColor: '#ddd', borderRadius: 15, overflow: "hidden" }}>
+                            <View style={{ width: '100%', height: position * 21.2 + (position - 1) * 12.2, backgroundColor: '#59A238', borderRadius: 15 }}></View>
                         </View>
                         <View style={{ marginLeft: 8 }}>
                             <Text style={styles.statusText}>Đặt hàng thành công</Text>

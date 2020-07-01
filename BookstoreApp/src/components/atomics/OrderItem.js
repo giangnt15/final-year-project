@@ -10,7 +10,7 @@ function OrderItem(props) {
     const { order } = props;
     const navigation = useNavigation();
 
-    const { id, createdAt, orderStatus, items = [] } = order;
+    const { id, orderNumber, createdAt, orderStatus, items = [] } = order;
 
     return (
         <TouchableOpacity style={styles.container} onPress={
@@ -25,7 +25,7 @@ function OrderItem(props) {
                     return <Text style={styles.title}>{b.item.title}</Text>
                 })}
             </View>
-            <Text style={styles.text}>Mã đơn hàng: {id}</Text>
+            <Text style={styles.text}>Mã đơn hàng: {orderNumber}</Text>
             <Text style={styles.text}>Ngày đặt hàng: {moment(createdAt).format(DATE_TIME_VN_24H)}</Text>
             <Text style={styles.text}>Trạng thái: {getOrderStatusText(orderStatus)}</Text>
         </TouchableOpacity>

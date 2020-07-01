@@ -106,35 +106,35 @@ function OrderList(props) {
             }],
             filterDropdown: filterDropdownCustom('orderStatus', undefined, undefined, false)
         },
-        {
-            title: <div className="d-flex">
-                <span className="m-r-12">Trạng thái thanh toán</span>
-                {/* <div className="d-flex" style={{flexDirection: 'column'}}>
-                    <i className="fa fa-sort-asc"></i>
-                    <i className="fa fa-sort-desc"></i>
-                </div> */}
-            </div>,
-            dataIndex: 'paymentStatus',
-            ellipsis: true,
-            colSpan: 1,
-            key: 'paymentStatus',
-            render: (paymentStatus) => {
-                return {
-                    children: paymentStatus,
-                    props: {
-                        colSpan: 1
-                    }
-                }
-            },
-            filters: [{
-                text: "Đã thanh toán",
-                value: true
-            }, {
-                text: "Chưa thanh toán",
-                value: false
-            }],
-            filterDropdown: filterDropdownCustom('paymentStatus', undefined, undefined, false)
-        },
+        // {
+        //     title: <div className="d-flex">
+        //         <span className="m-r-12">Trạng thái thanh toán</span>
+        //         {/* <div className="d-flex" style={{flexDirection: 'column'}}>
+        //             <i className="fa fa-sort-asc"></i>
+        //             <i className="fa fa-sort-desc"></i>
+        //         </div> */}
+        //     </div>,
+        //     dataIndex: 'paymentStatus',
+        //     ellipsis: true,
+        //     colSpan: 1,
+        //     key: 'paymentStatus',
+        //     render: (paymentStatus) => {
+        //         return {
+        //             children: paymentStatus,
+        //             props: {
+        //                 colSpan: 1
+        //             }
+        //         }
+        //     },
+        //     filters: [{
+        //         text: "Đã thanh toán",
+        //         value: true
+        //     }, {
+        //         text: "Chưa thanh toán",
+        //         value: false
+        //     }],
+        //     filterDropdown: filterDropdownCustom('paymentStatus', undefined, undefined, false)
+        // },
         {
             title: 'Khách hàng',
             dataIndex: 'customer',
@@ -163,7 +163,7 @@ function OrderList(props) {
                 grandTotal: <NumberFormat value={item.grandTotal} displayType={'text'}
                     suffix="đ" thousandSeparator={true} />,
                 orderStatus: <Tag color={getOrderStatusColor(item.orderStatus)}> {getOrderStatusText(item.orderStatus)}</Tag>,
-                paymentStatus: <Tag color={item.paymentStatus ? "#87d068" : "#f50"}> {item.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán"}</Tag>,
+                // paymentStatus: <Tag color={item.paymentStatus ? "#87d068" : "#f50"}> {item.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán"}</Tag>,
             }
         })
     }

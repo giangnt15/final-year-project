@@ -63,6 +63,7 @@ function OrderListScreen(props) {
                             thumbnail
                         }
                     }
+                    orderNumber
                     grandTotal
                     recipientFullName
                     recipientPhone
@@ -118,6 +119,7 @@ function OrderListScreen(props) {
                                 thumbnail
                             }
                         }
+                        orderNumber
                         grandTotal
                         recipientFullName
                         recipientPhone

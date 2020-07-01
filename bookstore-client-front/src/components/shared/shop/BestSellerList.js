@@ -185,8 +185,8 @@ function BestSellerList(props) {
                                         <div className="shop__list nav justify-content-center" role="tablist">
                                             <a className={`nav-item nav-link${viewMode === VIEW_MODE_GRID ? " active" : ""}`}
                                                 onClick={() => setViewMode(VIEW_MODE_GRID)} data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
-                                            <a className={`nav-item nav-link${viewMode === VIEW_MODE_LIST ? " active" : ""}`}
-                                                data-toggle="tab" onClick={() => setViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
+                                            {/* <a className={`nav-item nav-link${viewMode === VIEW_MODE_LIST ? " active" : ""}`}
+                                                data-toggle="tab" onClick={() => setViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a> */}
                                         </div>
                                         <p>Hiển thị {(currentPage - 1) * 20 + 1 > data.getBestSellerForBrowsing.totalCount ? data.getBestSellerForBrowsing.totalCount : (currentPage - 1) * 20 + 1} – {(currentPage - 1) * 20 + 20 >
                                             data.getBestSellerForBrowsing.totalCount ? data.getBestSellerForBrowsing.totalCount : (currentPage - 1) * 20 + 20} trên {data.getBestSellerForBrowsing.totalCount} kết quả</p>

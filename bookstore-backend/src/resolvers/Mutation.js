@@ -453,7 +453,7 @@ const Mutation = {
             }
         }, `{id fullName phone address ward{id} district{id} province{id}}`);
         console.log(shippingAddress);
-        const count = await prisma.query.booksConnection(undefined, `{aggregate {count}}`);
+        const count = await prisma.query.ordersConnection(undefined, `{aggregate {count}}`);
         
         const order = await prisma.mutation.createOrder({
             data: {
@@ -610,7 +610,7 @@ const Mutation = {
                                                 </td>
                                             </tr>`
                         }),
-                        subject: "[Bookstore] Hóa đơn "+order.id,
+                        subject: "[Bookstore] Hóa đơn "+order.orderNumber,
                     });
                     prisma.mutation.updateOrder({
                         where: {

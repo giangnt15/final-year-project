@@ -24,6 +24,7 @@ export const GET_ORDERS = gql`
                    }
                }
                grandTotal
+               orderNumber
                recipientFullName
                recipientPhone
                recipientWard{
@@ -70,6 +71,7 @@ export const GET_ORDER_BY_ID = gql`
                     thumbnail
                 }
             }
+            orderNumber
             grandTotal
             subTotal
             recipientFullName

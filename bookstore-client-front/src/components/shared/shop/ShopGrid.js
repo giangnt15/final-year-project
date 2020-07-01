@@ -433,8 +433,8 @@ function ShopGrid(props) {
                     <div className="shop__list nav justify-content-center" role="tablist">
                       <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_GRID ? " active" : ""}`}
                         onClick={() => changeViewMode(VIEW_MODE_GRID)} data-toggle="tab" href="#nav-grid" role="tab"><i className="fa fa-th" /></a>
-                      <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_LIST ? " active" : ""}`}
-                        data-toggle="tab" onClick={() => changeViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a>
+                      {/* <a className={`nav-item nav-link${userSettings.viewMode === VIEW_MODE_LIST ? " active" : ""}`}
+                        data-toggle="tab" onClick={() => changeViewMode(VIEW_MODE_LIST)} href="#nav-list" role="tab"><i className="fa fa-list" /></a> */}
                     </div>
                     <p>Hiển thị {(userSettings.shopPage - 1) * 9 + 1 > books.totalCount ? books.totalCount : (userSettings.shopPage - 1) * 9 + 1} – {(userSettings.shopPage - 1) * 9 + 9 >
                       books.totalCount ? books.totalCount : (userSettings.shopPage - 1) * 9 + 9} trên {books.totalCount} kết quả</p>
