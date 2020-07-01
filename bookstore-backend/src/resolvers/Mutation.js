@@ -421,7 +421,7 @@ const Mutation = {
             where: {
                 id_in: data.items.map(item => item.book)
             }
-        }, `{id basePrice discounts{id discountRate from to usePercentage discountAmount}}`);
+        }, `{id basePrice availableCopies discounts{id discountRate from to usePercentage discountAmount}}`);
         let subTotal = 0;
         let orderItemsInOrder = []
         for (let orderItem of orderItems) {
@@ -629,6 +629,17 @@ const Mutation = {
         }catch(err){
             console.log(err);
             // throw new Error("Có lỗi xảy ra khi tạo QR code");
+        }
+        for (let orderItem of orderItems) {
+            const correspondingDataItem = data.items.find(dt => dt.book === orderItem.id);
+            await prisma.mutation.updateBook({
+                where: {
+                    id: orderItem.id
+                },
+                data: {
+                    availableCopies: orderItem.availableCopies - correspondingDataItem.quantity
+                }
+            })
         }
         return order;
     },
