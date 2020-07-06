@@ -136,9 +136,10 @@ function Dashboard(props) {
                 data.labels.push(temp.month(i).format(MONTH_VN));
             }
             var groupedByMonths = _.groupBy(orders, (o) => moment(o.createdAt).format(MONTH_VN));
+            var groupedByMonthsUpdated = _.groupBy(orders, (o) => moment(o.updatedAt).format(MONTH_VN));
             for (let label of data.labels) {
                 data.datasets[0].data.push(groupedByMonths[label] ? groupedByMonths[label].length : 0);
-                data.datasets[1].data.push(groupedByMonths[label] ? _.sumBy(groupedByMonths[label], 'grandTotal') : 0);
+                data.datasets[1].data.push(groupedByMonthsUpdated[label] ? _.sumBy(groupedByMonthsUpdated[label], 'grandTotal') : 0);
             }
         } else {
             while (temp.isSameOrBefore(endDate)) {
@@ -146,9 +147,10 @@ function Dashboard(props) {
                 temp.add(1, 'days');
             }
             var groupedByDays = _.groupBy(orders, (o) => moment(o.createdAt).format(DATE_VN));
+            var groupedByDaysUpdated = _.groupBy(orders, (o) => moment(o.updatedAt).format(DATE_VN));
             for (let label of data.labels) {
                 data.datasets[0].data.push(groupedByDays[label] ? groupedByDays[label].length : 0);
-                data.datasets[1].data.push(groupedByDays[label] ? _.sumBy(groupedByDays[label], (item)=> item.orderStatus==="Completed"?item.grandTotal:0) : 0);
+                data.datasets[1].data.push(groupedByDaysUpdated[label] ? _.sumBy(groupedByDaysUpdated[label], (item)=> item.orderStatus==="Completed"?item.grandTotal:0) : 0);
             }
         }
         return data;
@@ -235,12 +237,12 @@ function Dashboard(props) {
                     orderStatus
                     paymentStatus
                     createdAt
+                    updatedAt
                 }
             `
         }
     });
 
-    console.log(startDateUser)
     const { loading: loadingUsers, data: dataUsers = { getUsers: {} } } = useQuery(GET_USERS_BASIC, {
         onError() {
             message.error("Có lỗi xảy ra khi lấy dữ liệu");

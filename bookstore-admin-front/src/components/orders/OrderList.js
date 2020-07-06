@@ -53,6 +53,7 @@ function OrderList(props) {
                     orderStatus
                     paymentStatus
                     createdAt
+                    updatedAt
                 }
             `
         }

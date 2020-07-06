@@ -32,6 +32,7 @@ export const GET_ORDERS = gql`
                orderStatus
                paymentStatus
                createdAt
+               updatedAt
            }
            totalCount
         }
