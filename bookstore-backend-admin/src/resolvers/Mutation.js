@@ -161,7 +161,7 @@ const Mutation = {
                 id: item
             }));
             opArgs.data.categories = {
-                connect: categories
+                set: categories
             }
         }
         if (data.authors) {
@@ -169,7 +169,7 @@ const Mutation = {
                 id: item
             }));
             opArgs.data.authors = {
-                connect: authors
+                set: authors
             }
         }
         if (data.publisher) {

@@ -30,6 +30,7 @@ function CollectionCreate(props) {
             message.error("Có lỗi xảy ra khi tạo tuyển tập");
         },
         onCompleted(data) {
+            message.success("Tạo thành công");
             history.push('/catalog/collection/edit/' + data.createCollection.id);
         }
     });

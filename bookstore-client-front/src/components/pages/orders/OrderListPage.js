@@ -109,7 +109,7 @@ function OrderList(props) {
                 createdAt: moment(item.createdAt).format(DATE_VN),
                 grandTotal: <NumberFormat value={item.grandTotal} displayType={'text'}
                     suffix="đ" thousandSeparator={true} />,
-                items: <Fragment>{item.items.map(orderItem => <div key={orderItem.id}>{orderItem.item.title}</div>)}</Fragment>
+                items: <Fragment>{item.items.map(orderItem => <div key={orderItem.id}>{orderItem.item?orderItem.item.title:'(Sản phẩm không tồn tại)'}</div>)}</Fragment>
             }
         });
     }

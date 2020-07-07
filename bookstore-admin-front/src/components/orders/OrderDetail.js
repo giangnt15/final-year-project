@@ -165,14 +165,14 @@ function OrderDetail(props) {
         return orderItems.map((item, index) => {
             return {
                 key: item.id,
-                title: <NavLink to={`/catalog/book/edit/${item.item.id}`}>{item.item.title}</NavLink>,
+                title: item.item?<NavLink to={`/catalog/book/edit/${item.item.id}`}>{item.item.title}</NavLink>:<span>(Sản phẩm không tồn tại)</span>,
                 price: <NumberFormat value={item.price} displayType={'text'}
                     suffix="đ" thousandSeparator={true} />,
                 totalItemPrice: <NumberFormat value={item.totalItemPrice} displayType={'text'}
                     suffix="đ" thousandSeparator={true} />,
                 quantity: <NumberFormat value={item.quantity} displayType={'text'}
                     thousandSeparator={true} />,
-                thumbnail: <img width="50" src={item.item.thumbnail} />,
+                thumbnail: <img width="50" src={item.item?item.item.thumbnail:'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'} />,
                 discount: <NumberFormat value={item.discount} displayType={'text'}
                     suffix="đ" thousandSeparator={true} />
             }

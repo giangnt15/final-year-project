@@ -103,7 +103,7 @@ type ShippingMethod{
 type OrderItem{
     id: ID!
     order: Order!
-    item: Book!
+    item: Book
     discount: Float
     totalItemPrice: Float! # giá 1 sp nhân số lượng
     price: Float! #giá 1 sp sau khi tính km

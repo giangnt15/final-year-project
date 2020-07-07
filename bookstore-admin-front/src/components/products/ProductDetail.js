@@ -103,6 +103,7 @@ function ProductDetail(props) {
             message.error("Có lỗi xảy ra khi tạo mới sách");
         },
         onCompleted(data) {
+            message.success("Tạo thành công");
             history.push('/catalog/book/edit/' + data.createBook.id);
         }
     });
@@ -178,29 +179,6 @@ function ProductDetail(props) {
                                     }
                                 })
                         }} ><SaveOutlined className="m-l-2" /> Lưu</Button>
-                    {/* <Button className="m-l-8"
-                    onClick={() => {
-                        isCreating ?
-                            createBook({
-                                variables: {
-                                    data: {
-                                        ...inputs,
-                                        publishedDate: inputs.publishedDate.format(DATE_US)
-                                    }
-                                }
-                            }) : updateBook({
-                                variables: {
-                                    id,
-                                    data: {
-                                        ...inputs,
-                                        publishedDate: inputs.publishedDate.format(DATE_US)
-                                    }
-                                }
-                            })
-                    }}
-                    loading={isCreating?creatingBook:updatingBook}
-                    type="primary"><SaveOutlined
-                        className="m-l-2"  /> Lưu và tiếp tục sửa</Button> */}
                 </div>
             </div>
             <div className="content-body">
@@ -348,7 +326,7 @@ function ProductDetail(props) {
                                         mode="multiple"
                                         name="authors"
                                         style={{ width: '100%' }}
-                                        placeholder="Please select"
+                                        placeholder="Chọn tác giả"
                                         value={inputs.authors}
                                         onChange={(value) => setInputs(prev => ({
                                             ...prev,

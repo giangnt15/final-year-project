@@ -14,7 +14,7 @@ const columns = [
         dataIndex: 'product',
         key: 'product',
         width: '60%',
-        render: product => <NavLink to={`/book/${product.id}`}>{product.title}</NavLink>,
+        render: product => product?<NavLink to={`/book/${product.id}`}>{product.title}</NavLink>:<div>(Sản phẩm không tồn tại)</div>,
     },
     {
         title: <b>Giá</b>,
@@ -71,10 +71,10 @@ function OrderDetail(props) {
         return orderItems.map(orderItem => {
             return {
                 key: orderItem.id,
-                product: {
+                product: orderItem.item?{
                     title: orderItem.item.title,
                     id: orderItem.item.id
-                },
+                }:null,
                 price: orderItem.price,
                 quantity: orderItem.quantity,
 

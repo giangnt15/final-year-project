@@ -66,6 +66,7 @@ function CategoryDetail(props) {
             message.error("Có lỗi xảy ra khi tạo thể loại");
         },
         onCompleted(data) {
+            message.success("Tạo thành công");
             history.push('/catalog/category/edit/' + data.createBookCategory.id)
         }
     });

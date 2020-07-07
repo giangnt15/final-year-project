@@ -178,7 +178,7 @@ type BookReview{
     reviewText: String
     rating: Int!
     author: User! @relation(name: "ReviewToUser")
-    book: Book! @relation(name: "ReviewToBook")
+    book: Book @relation(name: "ReviewToBook")
     replies: [BookReviewReply!]! @relation(name: "ReplyToReview")
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
@@ -188,8 +188,8 @@ type BookReviewReply{
     id: ID! @id
     text: String
     author: User!
-    book: Book!
-    bookReview: BookReview! @relation(name: "ReplyToReview")
+    book: Book
+    bookReview: BookReview @relation(name: "ReplyToReview")
     createdAt: DateTime! @createdAt
     updatedAt: DateTime! @updatedAt
 }

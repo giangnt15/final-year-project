@@ -30,6 +30,7 @@ function DiscountCreate(props) {
             message.error("Có lỗi xảy ra khi tạo giảm giá");
         },
         onCompleted(data) {
+            message.success("Tạo thành công");
             history.push('/promotion/discount/edit/' + data.createDiscount.id);
         }
     });

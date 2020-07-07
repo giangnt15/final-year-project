@@ -31,6 +31,7 @@ function AuthorCreate(props) {
             message.error("Có lỗi xảy ra khi tạo tác giả");
         },
         onCompleted(data) {
+            message.success("Tạo thành công");
             history.push('/catalog/author/edit/' + data.createAuthor.id);
         }
     });

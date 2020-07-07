@@ -22,7 +22,7 @@ function OrderItem(props) {
         }>
             <View style={styles.titleCtn}>
                 {items.map(b => {
-                    return <Text style={styles.title}>{b.item.title}</Text>
+                    return <Text style={styles.title}>{b.item?b.item.title:'(Sản phẩm không tồn tại)'}</Text>
                 })}
             </View>
             <Text style={styles.text}>Mã đơn hàng: {orderNumber}</Text>

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useApolloClient, useLazyQuery } from '@apollo/re
 import { GET_BOOK, ADD_BOOK_TO_WISH_LIST } from '../api/bookApi';
 import { GET_REVIEWS_BY_BOOK } from '../api/reviewApi';
 import { showToast, calculateDiscount, roundHalf } from '../utils/common';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet, RefreshControl } from 'react-native';
 import { Image, Icon, Rating, Button, Divider } from 'react-native-elements';
 import { calculateReviewScore } from '../utils/common';
 import { COLOR_PRIMARY, COLOR_BUTTON_PRIMARY, DATE_VN } from '../constants';
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 function BookDetailScreen(props) {
     const { route, navigation } = props;
     const { id } = route.params;
-    const { loading: gettingBook, data: dataBook = { getBook: {} } } = useQuery(GET_BOOK, {
+    const { loading: gettingBook, data: dataBook = { getBook: {} }, refetch: refetchBook } = useQuery(GET_BOOK, {
         onError(err) {
             showToast("Có lỗi xảy ra khi lấy dữ liệu sách" + err.message);
         },
@@ -133,9 +133,9 @@ function BookDetailScreen(props) {
         }
     })
 
-    useFocusEffect(useCallback(()=>{
+    useFocusEffect(useCallback(() => {
         getBookReviews();
-    },[navigation]))
+    }, [navigation]))
 
     const [showDropdown, setShowDropdown] = useState(false);
     useEffect(() => {
@@ -146,7 +146,7 @@ function BookDetailScreen(props) {
     }, [navigation]);
     const [, , tokenValid] = useToken();
     function navigateToLogin(params) {
-        navigation.navigate("LoginSignupScreen",params)
+        navigation.navigate("LoginSignupScreen", params)
     }
 
     const [addToWishList, { loading: addingToWishList }] = useMutation(ADD_BOOK_TO_WISH_LIST, {
@@ -191,7 +191,7 @@ function BookDetailScreen(props) {
     // const fiveStarPercent = roundHalf(fiveStar / totalCount * 100);
     // const oneStarPercent = roundHalf(oneStar / totalCount * 100);
 
-    function navigateToReviewScreen(){
+    function navigateToReviewScreen() {
         navigation.navigate("ReviewScreen", {
             bookId: id,
             title,
@@ -199,7 +199,7 @@ function BookDetailScreen(props) {
         })
     };
 
-    
+
     function navigateToCreateReviewScreen() {
         if (!tokenValid) {
             navigation.navigate("LoginSignupScreen", {
@@ -247,7 +247,11 @@ function BookDetailScreen(props) {
                     })
                 }
             }} />}
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container} refreshControl={
+                <RefreshControl
+                    refreshing={gettingBook}
+                    onRefresh={refetchBook}
+                />}>
                 <View style={styles.section}>
                     <TouchableOpacity style={styles.sectionItem}>
                         <Image source={{
@@ -283,7 +287,7 @@ function BookDetailScreen(props) {
                     </View>
                     <View style={styles.sectionItem}>
                         <Button buttonStyle={{ backgroundColor: COLOR_BUTTON_PRIMARY }}
-                            loading={cart.adding} disabled={cart.adding} disabledStyle={{backgroundColor: COLOR_BUTTON_PRIMARY}}
+                            loading={cart.adding} disabled={cart.adding} disabledStyle={{ backgroundColor: COLOR_BUTTON_PRIMARY }}
                             onPress={() => dispatch(addSingleItemToCartAysnc(client, dataBook.getBook, 1))}
                             title="Chọn Mua"></Button>
                     </View>
@@ -368,7 +372,7 @@ function BookDetailScreen(props) {
                         borderColor: "#ccc",
                         borderBottomWidth: 1
                     }}>
-                        <TouchableOpacity onPress={navigateToReviewScreen}><Text style={{color: COLOR_PRIMARY}}>Xem tất cả {bookReviews.getBookReviewsByBook.totalCount} đánh giá</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={navigateToReviewScreen}><Text style={{ color: COLOR_PRIMARY }}>Xem tất cả {bookReviews.getBookReviewsByBook.totalCount} đánh giá</Text></TouchableOpacity>
                     </View>
                     }
                     <View style={styles.sectionItem}>
