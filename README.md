@@ -2,8 +2,6 @@
 
 #### Cách chạy project ####
 
-## Em xin lỗi vì hơi nhiều bước ạ, sắp tới em sẽ thuê AWS và đẩy webapp lên ạ ##
-
 B1: Cài nodejs
 B2: Clone project về máy
 B3: Cài docker & docker-compose vào máy
